@@ -1,13 +1,18 @@
-
-using WebApplication1.Models;
-
+using DotNetCore_Routing.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace DotnetRouting.Controllers
+namespace DotNetCore_Routing.Controllers
 {
+    
+    //[Route("Home")]
+    //[Route("[Controller]/[Action]")]
+
     public class HomeController : Controller
     {
+       
+        [Route("~/")]
+        [Route("Home/Index")]
         public IActionResult Index()
         {
             return View();

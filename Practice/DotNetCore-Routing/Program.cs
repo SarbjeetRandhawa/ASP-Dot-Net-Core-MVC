@@ -20,19 +20,17 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}")
-//    .WithStaticAssets();
 
-app.Use(async (Context, Next) =>
-{
-    await (Context.Response.WriteAsync("this is asp .net core 10\n"));
-    await Next(Context);
 
-});
-app.Run(async (Context) =>
-{
-    await (Context.Response.WriteAsync("this is asp .net core 10"));
-});
+
+//Conventional Routing
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}")
+    .WithStaticAssets();
+
+//attribute Routing
+app.MapControllers();
+
+
 app.Run();
