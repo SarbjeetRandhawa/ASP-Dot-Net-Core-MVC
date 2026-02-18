@@ -11,6 +11,12 @@ namespace BASIC_FORM.Controllers
             return View();
         }
 
+        [HttpPost]
+        public string Index(FormData f)
+        {
+            return f.name + " " + " " +  f.age + " "+ f.Gender+ " " + f.Married ;
+        }
+
         public IActionResult Privacy()
         {
             return View();
