@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../Strongly-typede-view/Strongly-typede-view.csproj" />
   <Project Path="Repositry-Pattern.csproj" />
 </Solution>
