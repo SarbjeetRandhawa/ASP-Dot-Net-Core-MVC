@@ -4,7 +4,7 @@ using System.Reflection.PortableExecutable;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly,includeInternalTypes : true);
 builder.Services.AddControllersWithViews();
 
