@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model Studentdto
+
+
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+<div class="row">
+    <div class="col-sm-4">
+        <form asp-controller="Home" asp-action="Index" method="post" class="d-grid">
+            <input asp-for="email" class="form-control"/>
+            <input asp-for="password"  class="form-control " />
+            <input asp-for="DOB" class="form-control"/>
+            <input asp-for="Age"   class="form-control"  />
+            <input type="submit" placeholder="submit" class="btn btn-dark" />
+
+         </form>
+    </div>
+</div>
