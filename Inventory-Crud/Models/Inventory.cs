@@ -38,6 +38,7 @@ namespace Inventory_Crud.Models
 
         [Required(ErrorMessage = "CreatedDate is Required")]
         [Display(Name = "CreatedDate")]
+        [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
 
 
