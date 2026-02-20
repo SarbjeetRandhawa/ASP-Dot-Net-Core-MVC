@@ -39,7 +39,7 @@ namespace Fluent_validation.Controllers
             // If valid, you can process the data (e.g., save
             // to DB)
             ViewBag.Message = "Student data is valid!";
-            return View(std);
+            return View();
         }
 
 
