@@ -9,6 +9,7 @@ namespace Inventory_Crud.Models
         public int Id { get; set; }
         [Required(ErrorMessage ="Name is Required")]
         [StringLength(20)]
+        [RegularExpression(@"^[a-zA-Z' .-]{3,40}$", ErrorMessage ="Invalid Format")]
         public string Name { get; set; }
 
 
@@ -25,7 +26,7 @@ namespace Inventory_Crud.Models
         public decimal Price { get; set; }
 
 
-        [Range(0,10000)]
+        [Range(0,1000 , ErrorMessage ="Max Order Quantity is 1000")]
         [Required(ErrorMessage = "Quantity is Required")]
         public int? Quantity { get; set; }
 

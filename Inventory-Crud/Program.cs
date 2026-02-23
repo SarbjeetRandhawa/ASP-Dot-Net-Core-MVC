@@ -1,4 +1,6 @@
 using Inventory_Crud.Models;
+using Inventory_Crud.Repository.Interface;
+using Inventory_Crud.Repository.Service;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,7 @@ builder.Services.AddControllersWithViews();
 //2nd way of adding db service
 builder.Services.AddDbContext<InventoryDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dbcs")));
+builder.Services.AddTransient<Iinventory, InventoryServiceClass>();
 
 var app = builder.Build();
 

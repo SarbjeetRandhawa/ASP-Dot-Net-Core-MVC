@@ -1,4 +1,6 @@
+using Inventory_Crud.Controllers;
 using Inventory_Crud.Models;
+using Inventory_Crud.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -8,26 +10,33 @@ namespace Inventory_Crud.Controllers
     public class HomeController : Controller
     {
 
-        
-        private readonly InventoryDbContext inventoryDb;
 
-       
+        //private readonly InventoryDbContext inventoryDb;
 
-        public HomeController( InventoryDbContext inventoryDb)
+
+
+        //public HomeController( InventoryDbContext inventoryDb)
+        //{
+        //    this.inventoryDb = inventoryDb;
+        //}
+
+        private readonly IInventory inventoryService;
+        public HomeController(IInventory inventory)
         {
-            this.inventoryDb = inventoryDb;
+            this.inventoryService = inventory;
         }
 
         public async Task<IActionResult> Index()    
         {
-            var std = await inventoryDb.Products.ToListAsync();
+            //var std = await inventoryDb.Products.ToListAsync();
+            var std = await inventoryService.GetallData();
             
             return View(std);
         }
 
 
 
-        
+
         public IActionResult Create()
         {
             return View();
@@ -39,8 +48,10 @@ namespace Inventory_Crud.Controllers
         {
             if (ModelState.IsValid)
             {
-                await inventoryDb.Products.AddAsync(inv);
-                await inventoryDb.SaveChangesAsync();
+                //await inventoryDb.Products.AddAsync(inv);
+                //await inventoryDb.SaveChangesAsync();
+
+                await inventoryService.CreateNew(inv);
                 return RedirectToAction("index", "Home");
             }
 
@@ -49,28 +60,29 @@ namespace Inventory_Crud.Controllers
 
 
 
-        public async Task<IActionResult> Details(int? id)
+
+
+        public async Task<IActionResult> Details(int id)
         {
-            if(id == null || inventoryDb.Products == null)
-            {
-                return NotFound();
-            }
-            var data = await inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);
+            var data = await inventoryService.Details(id);
+            
             if (data == null)
             {
                 return NotFound();
             }
             return View(data);
         }
-        public async Task<IActionResult> Edit(int? id)
+        
+
+
+
+
+
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || inventoryDb.Products == null)
-            {
-                return NotFound();
-            }
-            
-            
-            var data = await inventoryDb.Products.FindAsync(id);
+            //var data = await inventoryDb.Products.FindAsync(id);
+            var data = await inventoryService.Details(id);
+           
             if (data == null)
             {
                 return NotFound();
@@ -78,35 +90,39 @@ namespace Inventory_Crud.Controllers
 
             return View(data);
         }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Edit(int? id , Inventory inv)
+        public async Task<IActionResult> Edit(int id, Inventory inv)
         {
 
-            if(id != inv.Id)
+            if (id != inv.Id)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
 
-            inventoryDb.Update(inv);
-            await inventoryDb.SaveChangesAsync();
-            return RedirectToAction("index", "Home");
+               await inventoryService.Update(inv);
+                return RedirectToAction("index", "Home");
             }
             return View(inv);
-            
+
         }
 
-        public async Task<IActionResult> Delete(int? id)
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || inventoryDb.Products == null)
-            {
-                return NotFound();
-            }
-            var data = await inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);
+            //var data = await inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);
+            var data = await inventoryService.Details(id);
+            
             if (data == null)
             {
                 return NotFound();
@@ -116,22 +132,16 @@ namespace Inventory_Crud.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        public async Task<IActionResult> Delete(int id)
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> Delete2(int id)
         {
-            
-            var data = await inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);
-            
-            if(data != null)
-            {
-            inventoryDb.Products.Remove(data);
-            }
-            await inventoryDb.SaveChangesAsync();
-            return RedirectToAction("Index" , "Home");
-
-           
-
+            await inventoryService.Remove(id);
+            return RedirectToAction("Index", "Home");
         }
+
+
+
+
 
         public IActionResult Privacy()
         {
@@ -145,3 +155,6 @@ namespace Inventory_Crud.Controllers
         }
     }
 }
+
+
+
