@@ -16,10 +16,7 @@ namespace Inventory_Crud.Repository.Service
         {
             this.inventoryDb = inventoryDb;
         }
-    //    return await inventoryDb.Products
-    //.Where(x => EF.Functions.Like(x.ProductName, $"%{searchTerm}%") ||
-    //            EF.Functions.Like(x.Category, $"%{searchTerm}%"))
-    //.ToListAsync();
+    
 
         public async Task<List<Inventory>> GetallData(string search, string sortColumn, string sortOrder)
         {
@@ -28,8 +25,8 @@ namespace Inventory_Crud.Repository.Service
              //searching
             if (!string.IsNullOrEmpty(search))
             {
-                return await inventoryDb.Products.Where(x => EF.Functions.Like(x.Name, $"%{search}%") ||
-                EF.Functions.Like(x.Category, $"%{search}%")).ToListAsync();
+                query = query.Where(x => EF.Functions.Like(x.Name, $"%{search}%") ||
+                EF.Functions.Like(x.Category, $"%{search}%"));
             }
 
             //sorting
