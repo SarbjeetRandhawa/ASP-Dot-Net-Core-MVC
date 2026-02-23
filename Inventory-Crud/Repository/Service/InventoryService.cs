@@ -1,16 +1,17 @@
 ﻿using Humanizer;
 using Inventory_Crud.Models;
 using Inventory_Crud.Repository.Interface;
+using Inventory_Crud.Validator;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 
 namespace Inventory_Crud.Repository.Service
 {
-    public class InventoryServiceClass : IInventory
+    public class InventoryService : IInventory
     {
         private readonly InventoryDbContext inventoryDb;
-        public InventoryServiceClass(InventoryDbContext inventoryDb)
+        public InventoryService(InventoryDbContext inventoryDb)
         {
             this.inventoryDb = inventoryDb;
         }
@@ -24,6 +25,7 @@ namespace Inventory_Crud.Repository.Service
 
         public  async Task CreateNew(Inventory inventory)
         {
+           
             await inventoryDb.Products.AddAsync(inventory);
             await inventoryDb.SaveChangesAsync();
         }

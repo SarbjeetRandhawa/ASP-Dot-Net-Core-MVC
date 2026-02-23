@@ -13,7 +13,7 @@
 
         <form asp-action="Edit">
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
             <div class="row">
                 <input type="hidden" asp-for="Id" />
                 <div class="form-group col-6" >
@@ -45,6 +45,8 @@
                     <label asp-for="CreatedDate" class="control-label"></label>
                     <input asp-for="CreatedDate" class="form-control" />
                     <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                     <div class="form-group mt-3">
                         <label asp-for="ExpiryDate" class="control-label"></label>
                         <input asp-for="ExpiryDate" class="form-control" />

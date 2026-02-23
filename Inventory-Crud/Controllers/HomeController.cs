@@ -1,6 +1,7 @@
 using Inventory_Crud.Controllers;
 using Inventory_Crud.Models;
 using Inventory_Crud.Repository.Interface;
+using Inventory_Crud.Validator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -21,6 +22,7 @@ namespace Inventory_Crud.Controllers
         //}
 
         private readonly IInventory inventoryService;
+        InventoryValidator validator = new InventoryValidator();
         public HomeController(IInventory inventory)
         {
             this.inventoryService = inventory;
@@ -46,6 +48,17 @@ namespace Inventory_Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Inventory inv)
         {
+            
+            var result = validator.Validate(inv);
+
+            if (result != null)
+            {
+                foreach (var errors in result.Errors)
+                {
+                    ModelState.AddModelError(errors.PropertyName , errors.ErrorMessage);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 //await inventoryDb.Products.AddAsync(inv);
@@ -77,7 +90,6 @@ namespace Inventory_Crud.Controllers
 
 
 
-
         public async Task<IActionResult> Edit(int id)
         {
             //var data = await inventoryDb.Products.FindAsync(id);
@@ -98,6 +110,16 @@ namespace Inventory_Crud.Controllers
         public async Task<IActionResult> Edit(int id, Inventory inv)
         {
 
+
+            var result = validator.Validate(inv);
+
+            if (result != null)
+            {
+                foreach (var errors in result.Errors)
+                {
+                    ModelState.AddModelError(errors.PropertyName, errors.ErrorMessage);
+                }
+            }
             if (id != inv.Id)
             {
                 return NotFound();
