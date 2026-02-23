@@ -1,7 +1,26 @@
 ﻿@model IEnumerable<Inventory>
 
 @{
-    ViewData["Title"] = "Index";
+
+
+    string GetSortDirection(string column)
+    {
+        if (ViewBag.sortColumn == column)
+        {
+            return ViewBag.sortOrder == "asc" ? "desc" : "asc";
+        }
+        return "asc";
+    }
+    string GetArrow(string column)
+    {
+        if (ViewBag.sortColumn == column)
+        {
+            return ViewBag.sortOrder == "asc" ? "⬆️" : "⬇️";
+        }
+        return "";
+    }
+
+
     // Layout = ;
 }
 
@@ -13,43 +32,60 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a asp-action="Index" asp-route-sortOrder="@GetSortDirection("Name")" asp-route-sortColumn="Name"
+                   asp-route-search="@ViewBag.search" style="text-decoration:none; color:grey">
+                    @Html.DisplayNameFor(model => model.Name)
+                    @GetArrow("Name")
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                <a asp-action="Index" asp-route-sortOrder="@GetSortDirection("Category")" asp-route-sortColumn="Category"
+                   asp-route-search="@ViewBag.search" style="text-decoration:none; color:grey">
+                    @Html.DisplayNameFor(model => model.Category)
+                    @GetArrow("Category")
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                <a asp-action="Index" asp-route-sortOrder="@GetSortDirection("Price")" asp-route-sortColumn="Price"
+                   asp-route-search="@ViewBag.search" style="text-decoration:none; color:grey">
+                    @Html.DisplayNameFor(model => model.Price)
+                    @GetArrow("Price")
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                <a asp-action="Index" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
+                   asp-route-search="@ViewBag.search" style="text-decoration:none; color:grey">
+                    @Html.DisplayNameFor(model => model.Quantity)
+                    @GetArrow("Quantity")
+                </a>
             </th>
-          
+
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-           
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Update</a> |
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Update</a> |
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

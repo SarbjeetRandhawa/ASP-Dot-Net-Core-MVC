@@ -21,14 +21,41 @@ namespace Inventory_Crud.Repository.Service
     //            EF.Functions.Like(x.Category, $"%{searchTerm}%"))
     //.ToListAsync();
 
-        public async Task<List<Inventory>> GetallData(string search)
+        public async Task<List<Inventory>> GetallData(string search, string sortColumn, string sortOrder)
         {
-            if (string.IsNullOrEmpty(search))
+            var query = inventoryDb.Products.AsQueryable();
+
+             //searching
+            if (!string.IsNullOrEmpty(search))
             {
-                return await inventoryDb.Products.ToListAsync();
+                return await inventoryDb.Products.Where(x => EF.Functions.Like(x.Name, $"%{search}%") ||
+                EF.Functions.Like(x.Category, $"%{search}%")).ToListAsync();
             }
-            return await inventoryDb.Products.Where(x => EF.Functions.Like(x.Name, $"%{search}%")||
-            EF.Functions.Like(x.Category, $"%{search}%")).ToListAsync();
+
+            //sorting
+
+            if (!string.IsNullOrEmpty(sortColumn))
+            {
+                query = (sortColumn, sortOrder) switch
+                {
+                    ("Name", "desc") => query.OrderByDescending(x => x.Name),
+                    ("Name", _) => query.OrderBy(x => x.Name),
+
+                    ("Category", "desc") => query.OrderByDescending(x => x.Category),
+                    ("Category", _) => query.OrderBy(x => x.Category),
+
+                    ("Price", "desc") => query.OrderByDescending(x => x.Price),
+                    ("Price", _) => query.OrderBy(x => x.Price),
+
+                    ("Quantity", "desc") => query.OrderByDescending(x => x.Quantity),
+                    ("Quantity", _) => query.OrderBy(x => x.Quantity)
+
+                };
+            }
+
+
+            return await query.ToListAsync();
+
         }
 
 
