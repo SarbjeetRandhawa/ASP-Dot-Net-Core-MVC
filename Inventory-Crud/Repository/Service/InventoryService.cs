@@ -4,6 +4,7 @@ using Inventory_Crud.Repository.Interface;
 using Inventory_Crud.Validator;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Headers;
 
 namespace Inventory_Crud.Repository.Service
@@ -15,11 +16,19 @@ namespace Inventory_Crud.Repository.Service
         {
             this.inventoryDb = inventoryDb;
         }
+    //    return await inventoryDb.Products
+    //.Where(x => EF.Functions.Like(x.ProductName, $"%{searchTerm}%") ||
+    //            EF.Functions.Like(x.Category, $"%{searchTerm}%"))
+    //.ToListAsync();
 
-
-        public async Task<List<Inventory>> GetallData()
+        public async Task<List<Inventory>> GetallData(string search)
         {
-            return await inventoryDb.Products.ToListAsync(); ;
+            if (string.IsNullOrEmpty(search))
+            {
+                return await inventoryDb.Products.ToListAsync();
+            }
+            return await inventoryDb.Products.Where(x => EF.Functions.Like(x.Name, $"%{search}%")||
+            EF.Functions.Like(x.Category, $"%{search}%")).ToListAsync();
         }
 
 

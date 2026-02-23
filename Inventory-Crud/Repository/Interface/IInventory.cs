@@ -4,7 +4,7 @@ namespace Inventory_Crud.Repository.Interface
 {
     public interface IInventory
     {
-        Task<List<Inventory>> GetallData();
+        Task<List<Inventory>> GetallData(string search);
         Task CreateNew(Inventory n);
 
         Task Update(Inventory inv);

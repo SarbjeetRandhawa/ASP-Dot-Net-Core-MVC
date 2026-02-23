@@ -28,10 +28,10 @@ namespace Inventory_Crud.Controllers
             this.inventoryService = inventory;
         }
 
-        public async Task<IActionResult> Index()    
+        public async Task<IActionResult> Index(string search)    
         {
             //var std = await inventoryDb.Products.ToListAsync();
-            var std = await inventoryService.GetallData();
+            var std = await inventoryService.GetallData(search);
             
             return View(std);
         }
