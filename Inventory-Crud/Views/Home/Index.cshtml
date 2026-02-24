@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<Inventory>
+@using Inventory_Crud.Models.Pagination;
 
+<style>
+    .font{
+        font-size: 10px;
+    }
+</style>
 @{
 
 
@@ -20,20 +26,29 @@
         return "";
     }
 
+    Pager pager = new Pager();
 
-    // Layout = ;
+   
+    int pageNo = 0;
+
+    if(ViewBag.pager != null)
+    {
+        pager = ViewBag.pager;
+        pageNo = pager.CurrentPage;
+    }
+
 }
 
-<h1>Inventory Data</h1>
+<h1>Inventory </h1>
 
 
 
-<table class="table  w-100">
+<table class="table  w-100" style="font-size: 0.75rem;">
     <thead>
         <tr>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@GetSortDirection("Name")" asp-route-sortColumn="Name"
-                   asp-route-search="@ViewBag.search" style="text-decoration:none; color:grey">
+                   asp-route-search="@ViewBag.search" asp-route-pg="@(pager.CurrentPage - 1)" style="text-decoration:none; color:grey">
                     @Html.DisplayNameFor(model => model.Name)
                     @GetArrow("Name")
                 </a>
@@ -81,11 +96,43 @@
                 </td>
 
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Update</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary font" >Update</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info font">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger font">Delete</a>
                 </td>
             </tr>
         }
+
     </tbody>
 </table>
+
+@if( pager.TotalPages > 0)
+{
+    <div class="d-flex justify-content-center mt-4 ">
+      
+        @if(pager.CurrentPage > 1)
+        {
+            <a asp-action="index" asp-route-pg="@(pager.CurrentPage - 1) " asp-route-search="@ViewBag.search"
+            asp-route-sortColumn="@ViewBag.sortColumn" asp-route-sortOrder="@ViewBag.sortOrder" class="btn btn-outline-primary btn-sm mx-1">
+        Prev</a>
+
+
+        }
+
+        @for(int p = pager.StartPage ; p <= pager.EndPage ; p++)
+        {
+            <a asp-action="index" asp-route-pg="@p " asp-route-search="@ViewBag.search"
+               asp-route-sortColumn="@ViewBag.sortColumn" asp-route-sortOrder="@ViewBag.sortOrder" class="btn @(p == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm ">
+               @p
+           </a>
+        }
+
+        @if(pager.CurrentPage < pager.TotalPages)
+        {
+            <a asp-action="index" asp-route-pg="@(pager.CurrentPage + 1) " asp-route-search="@ViewBag.search"
+               asp-route-sortColumn="@ViewBag.sortColumn" asp-route-sortOrder="@ViewBag.sortOrder" class="btn btn-outline-primary btn-sm">
+           Next
+           </a>
+        }
+    </div>
+}

@@ -1,5 +1,7 @@
 ﻿using Humanizer;
 using Inventory_Crud.Models;
+using Inventory_Crud.Models.Domain;
+using Inventory_Crud.Models.Pagination;
 using Inventory_Crud.Repository.Interface;
 using Inventory_Crud.Validator;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -18,7 +20,7 @@ namespace Inventory_Crud.Repository.Service
         }
     
 
-        public async Task<List<Inventory>> GetallData(string search, string sortColumn, string sortOrder)
+        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(string search, string sortColumn, string sortOrder, int pg=1)
         {
             var query = inventoryDb.Products.AsQueryable();
 
@@ -50,8 +52,19 @@ namespace Inventory_Crud.Repository.Service
                 };
             }
 
+            int pageSize = 7;
+            if(pg < 1)
+            {
+                pg = 1;
+            }
 
-            return await query.ToListAsync();
+            int InventoryCount = await query.CountAsync();
+            var Pager = new Pager(pg, InventoryCount, pageSize);
+            int ProductSkip = (pg - 1) * pageSize;
+
+            var data = await query.Skip(ProductSkip).Take(Pager.PageSize).ToListAsync();
+
+            return (data , Pager);
 
         }
 

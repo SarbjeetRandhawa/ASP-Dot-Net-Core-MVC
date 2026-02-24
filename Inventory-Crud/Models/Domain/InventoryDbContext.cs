@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Inventory_Crud.Models
+namespace Inventory_Crud.Models.Domain
 {
     public class InventoryDbContext : DbContext
     {

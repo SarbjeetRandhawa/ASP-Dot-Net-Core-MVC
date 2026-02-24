@@ -1,5 +1,5 @@
 using FluentValidation;
-using Inventory_Crud.Models;
+using Inventory_Crud.Models.Domain;
 using Inventory_Crud.Repository.Interface;
 using Inventory_Crud.Repository.Service;
 using Microsoft.EntityFrameworkCore;
