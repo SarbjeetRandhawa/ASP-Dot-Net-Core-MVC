@@ -3,6 +3,8 @@ using Inventory_Crud.Models.Domain;
 using Inventory_Crud.Repository.Interface;
 using Inventory_Crud.Repository.Service;
 using Microsoft.EntityFrameworkCore;
+using Inventory_Crud.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,8 @@ builder.Services.AddControllersWithViews();
 //2nd way of adding db service
 builder.Services.AddDbContext<InventoryDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dbcs")));
+
+builder.Services.AddDefaultIdentity<UserData>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<UserDataDBContext>();
 
 builder.Services.AddTransient<IInventory, InventoryService>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);

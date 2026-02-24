@@ -37,6 +37,8 @@ namespace Inventory_Crud.Repository.Service
             {
                 query = (sortColumn, sortOrder) switch
                 {
+                    
+
                     ("Name", "desc") => query.OrderByDescending(x => x.Name),
                     ("Name", _) => query.OrderBy(x => x.Name),
 
@@ -47,9 +49,13 @@ namespace Inventory_Crud.Repository.Service
                     ("Price", _) => query.OrderBy(x => x.Price),
 
                     ("Quantity", "desc") => query.OrderByDescending(x => x.Quantity),
-                    ("Quantity", _) => query.OrderBy(x => x.Quantity)
-
+                    ("Quantity", _) => query.OrderBy(x => x.Quantity),
+                   
                 };
+            }
+            else
+            {
+                query = query.OrderBy(x => x.Name);
             }
 
             int pageSize = 7;
