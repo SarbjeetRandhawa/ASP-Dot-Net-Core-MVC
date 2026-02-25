@@ -32,10 +32,11 @@ namespace Inventory_Crud.Controllers
         {
             //var std = await inventoryDb.Products.ToListAsync();
             ViewBag.search = search;
-            ViewBag.sortColumn = sortColumn ;
-            ViewBag.sortOrder = sortOrder;
+            ViewBag.sortColumn = sortColumn ?? "Name" ;
+            ViewBag.sortOrder = sortOrder ?? "asc" ;
 
-            var std = await inventoryService.GetallData(search , sortColumn , sortOrder, pg);
+            //var std = await inventoryService.GetallData(search , sortColumn , sortOrder, pg);
+            var std = await inventoryService.GetallData(search, sortColumn, sortOrder, pg);
             ViewBag.pager = std.Pager;
             return View(std.Items);
         }

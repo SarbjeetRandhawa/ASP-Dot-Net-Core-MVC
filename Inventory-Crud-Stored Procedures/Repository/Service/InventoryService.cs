@@ -5,9 +5,11 @@ using Inventory_Crud.Models.Pagination;
 using Inventory_Crud.Repository.Interface;
 using Inventory_Crud.Validator;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Headers;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Inventory_Crud.Repository.Service
 {
@@ -22,64 +24,58 @@ namespace Inventory_Crud.Repository.Service
 
         public async Task<(List<Inventory> Items , Pager Pager)> GetallData(string search, string sortColumn, string sortOrder, int pg=1)
         {
-            var query = inventoryDb.Products.AsQueryable();
-
-             //searching
-            if (!string.IsNullOrEmpty(search))
-            {
-                query = query.Where(x => EF.Functions.Like(x.Name, $"%{search}%") ||
-                EF.Functions.Like(x.Category, $"%{search}%"));
-            }
-
-            //sorting
-
-            if (!string.IsNullOrEmpty(sortColumn))
-            {
-                query = (sortColumn, sortOrder) switch
-                {
-                    
-
-                    ("Name", "desc") => query.OrderByDescending(x => x.Name),
-                    ("Name", _) => query.OrderBy(x => x.Name),
-
-                    ("Category", "desc") => query.OrderByDescending(x => x.Category),
-                    ("Category", _) => query.OrderBy(x => x.Category),
-
-                    ("Price", "desc") => query.OrderByDescending(x => x.Price),
-                    ("Price", _) => query.OrderBy(x => x.Price),
-
-                    ("Quantity", "desc") => query.OrderByDescending(x => x.Quantity),
-                    ("Quantity", _) => query.OrderBy(x => x.Quantity),
-                   
-                };
-            }
-            else
-            {
-                query = query.OrderBy(x => x.Name);
-            }
-
+            
             int pageSize = 7;
+             
+            if (string.IsNullOrEmpty(sortColumn))
+            {
+                sortColumn = "Name";
+                sortOrder = "asc";
+            }
+            
             if(pg < 1)
             {
                 pg = 1;
             }
 
-            int InventoryCount = await query.CountAsync();
-            var Pager = new Pager(pg, InventoryCount, pageSize);
-            int ProductSkip = (pg - 1) * pageSize;
+            //inventoryDb.Database.SetCommandTimeout(180);
 
-            var data = new List<Inventory>();
-            if(pg <= Pager.TotalPages)
+            var result = await inventoryDb.InventorySpModels.FromSqlRaw(
+                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize",
+                new SqlParameter("@Search", search ?? (object)DBNull.Value),
+                new SqlParameter("@SearchColumn", sortColumn ?? (object)DBNull.Value),
+                new SqlParameter("@SearchOrder", sortOrder ?? (object)DBNull.Value),
+                new SqlParameter("@PageNo", pg ),
+                new SqlParameter("@PageSize", pageSize)
+            ).ToListAsync();
+            
+            int totalCount = result.FirstOrDefault()?.TotalCount ?? 0;
+
+           
+            var Pager = new Pager(pg, totalCount, pageSize);
+
+            var items = result.Select(x => new Inventory
             {
+                Id = x.Id,
+                Name = x.Name,
+                Category = x.Category,
+                Price = x.Price,
+                Quantity = x.Quantity
+            }).ToList();
 
-             data = await query.Skip(ProductSkip).Take(Pager.PageSize).ToListAsync();
-            }
-            else
-            {
-                 data = await query.Skip(0).Take(Pager.PageSize).ToListAsync();
-            }
+            //var data = new List<Inventory>();
+            //if (pg <= Pager.TotalPages)
+            //{
 
-            return (data , Pager);
+            //    data = await query.Skip(ProductSkip).Take(Pager.PageSize).ToListAsync();
+            //}
+            //else
+            //{
+            //    data = await query.Skip(0).Take(Pager.PageSize).ToListAsync();
+            //}
+
+
+            return (items , Pager);
 
         }
 

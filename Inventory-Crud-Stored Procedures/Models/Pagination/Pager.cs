@@ -42,8 +42,8 @@
             TotalPages = totalPages;
             StartPage = startPage;
             EndPage = endPage;
-
-
+            
+            
         }
 
 
