@@ -60,7 +60,10 @@ namespace Inventory_Crud.Repository.Service
                 Name = x.Name,
                 Category = x.Category,
                 Price = x.Price,
-                Quantity = x.Quantity
+                Quantity = x.Quantity,
+                Discription = x.Discription,
+                CreatedDate = x.CreatedDate,
+                ExpiryDate = x.ExpiryDate
             }).ToList();
 
             //var data = new List<Inventory>();
@@ -85,6 +88,7 @@ namespace Inventory_Crud.Repository.Service
            
             await inventoryDb.Products.AddAsync(inventory);
             await inventoryDb.SaveChangesAsync();
+
         }
 
 

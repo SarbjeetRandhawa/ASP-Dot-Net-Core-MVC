@@ -14,8 +14,6 @@ namespace Inventory_Crud.Controllers
 
         //private readonly InventoryDbContext inventoryDb;
 
-
-
         //public HomeController( InventoryDbContext inventoryDb)
         //{
         //    this.inventoryDb = inventoryDb;
