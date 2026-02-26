@@ -38,7 +38,7 @@ namespace Inventory_Crud.Repository.Service
                 pg = 1;
             }
 
-            //inventoryDb.Database.SetCommandTimeout(180);
+            
 
             var result = await inventoryDb.InventorySpModels.FromSqlRaw(
                 "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize",
@@ -65,17 +65,6 @@ namespace Inventory_Crud.Repository.Service
                 CreatedDate = x.CreatedDate,
                 ExpiryDate = x.ExpiryDate
             }).ToList();
-
-            //var data = new List<Inventory>();
-            //if (pg <= Pager.TotalPages)
-            //{
-
-            //    data = await query.Skip(ProductSkip).Take(Pager.PageSize).ToListAsync();
-            //}
-            //else
-            //{
-            //    data = await query.Skip(0).Take(Pager.PageSize).ToListAsync();
-            //}
 
 
             return (items , Pager);
