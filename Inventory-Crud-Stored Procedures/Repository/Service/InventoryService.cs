@@ -53,6 +53,7 @@ namespace Inventory_Crud.Repository.Service
 
            
             var Pager = new Pager(pg, totalCount, pageSize);
+            //
 
             var items = result.Select(x => new Inventory
             {
