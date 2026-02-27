@@ -50,11 +50,8 @@ namespace Inventory_Crud.Repository.Service
             ).ToListAsync();
             
             int totalCount = result.FirstOrDefault()?.TotalCount ?? 0;
-
-           
             var Pager = new Pager(pg, totalCount, pageSize);
       
-
             var items = result.Select(x => new Inventory
             {
                 Id = x.Id,
