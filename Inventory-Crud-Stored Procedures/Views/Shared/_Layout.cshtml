@@ -172,13 +172,36 @@
                             <div class="input-group">
                                 <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
                                        aria-label="Search" aria-describedby="basic-addon2" name="search" value="@Context.Request.Query["search"]">
+                                     
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit">
                                         <i class="fas fa-search fa-sm"></i>
                                     </button>
                                 </div>
+
                             </div>
                         </form>
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" href="@Url.Action("Index" , "Home")" method="get">
+                        <div class="input-group">
+                           
+                            
+                            @* <input asp-for="Category" class="form-control"  placeholder="Enter Category"/> *@
+                            <select  name="category" class="form-control">
+                                <option value="">All</option>
+                                @foreach(var items in Html.GetEnumSelectList<Category>())
+                                        {
+                                            <option value="@items.Value" selected="@(Context.Request.Query["Category"]==items.Value ? "selected" : null)">@items.Text</option>
+                                            
+                                        }
+                                    </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
 
                         <!-- Topbar Navbar -->
                         @* <ul class="navbar-nav ml-auto">

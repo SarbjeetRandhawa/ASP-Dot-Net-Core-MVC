@@ -22,7 +22,7 @@ namespace Inventory_Crud.Repository.Service
         }
     
 
-        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(string search, string sortColumn, string sortOrder, int pg=1)
+        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(string search, string sortColumn, string sortOrder, int pg = 1, Category? category = null)
         {
             
             int pageSize = 7;
@@ -41,12 +41,13 @@ namespace Inventory_Crud.Repository.Service
             
 
             var result = await inventoryDb.InventorySpModels.FromSqlRaw(
-                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize",
+                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize, @Category",
                 new SqlParameter("@Search", search ?? (object)DBNull.Value),
                 new SqlParameter("@SearchColumn", sortColumn ?? (object)DBNull.Value),
                 new SqlParameter("@SearchOrder", sortOrder ?? (object)DBNull.Value),
                 new SqlParameter("@PageNo", pg ),
-                new SqlParameter("@PageSize", pageSize)
+                new SqlParameter("@PageSize", pageSize),
+                new SqlParameter("@Category" , category ?? (object)DBNull.Value)
             ).ToListAsync();
             
             int totalCount = result.FirstOrDefault()?.TotalCount ?? 0;

@@ -21,22 +21,25 @@
 
                 <div class="form-group col-6">
                     <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" placeholder="Enter Your Name"/>
+                    <input asp-for="Name" class="form-control" placeholder="Enter Your Name" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="Category" class="control-label"></label>
-                    <input asp-for="Category" class="form-control"  placeholder="Enter Category"/>
+                    @* <input asp-for="Category" class="form-control"  placeholder="Enter Category"/> *@
+                    <select asp-for="Category" asp-items="Html.GetEnumSelectList<Category>()" class="form-control">
+                        <option value="value">Select Category</option>
+                    </select>
                     <span asp-validation-for="Category" class="text-danger"></span>
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="Price" class="control-label"></label>
-                    <input asp-for="Price" class="form-control"  type="number" placeholder="₹" />
+                    <input asp-for="Price" class="form-control" type="number" placeholder="₹" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="Quantity" class="control-label"></label>
-                    <input asp-for="Quantity" class="form-control" type="number" placeholder="Enter Quantity"/>
+                    <input asp-for="Quantity" class="form-control" type="number" placeholder="Enter Quantity" />
                     <span asp-validation-for="Quantity" class="text-danger"></span>
                 </div>
 

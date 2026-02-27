@@ -26,17 +26,21 @@ namespace Inventory_Crud.Controllers
             this.inventoryService = inventory;
         }
 
-        public async Task<IActionResult> Index(string search, string sortColumn, string sortOrder , int pg =1)    
+        public async Task<IActionResult> Index(string search, string sortColumn, string sortOrder, int pg = 1, Category? category = null)
         {
             //var std = await inventoryDb.Products.ToListAsync();
             ViewBag.search = search;
             ViewBag.sortColumn = sortColumn ?? "Name" ;
             ViewBag.sortOrder = sortOrder ?? "asc" ;
+            ViewBag.category = category ;
+       
+
 
             //var std = await inventoryService.GetallData(search , sortColumn , sortOrder, pg);
-            var std = await inventoryService.GetallData(search, sortColumn, sortOrder, pg);
+            var std = await inventoryService.GetallData(search, sortColumn, sortOrder, pg , category);
             ViewBag.pager = std.Pager;
             return View(std.Items);
+            
         }
 
 

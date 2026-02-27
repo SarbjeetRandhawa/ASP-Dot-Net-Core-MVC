@@ -14,8 +14,8 @@ namespace Inventory_Crud.Models
 
 
         [Required(ErrorMessage = "Category is Required")]
-        [StringLength(30)]
-        public string Category { get; set; }
+        
+        public Category Category { get; set; }
 
 
 
@@ -47,6 +47,16 @@ namespace Inventory_Crud.Models
         [Required(ErrorMessage = "ExpiryDate is Required")]
         [DataType(DataType.Date)]
         public DateTime ExpiryDate { get; set; }
+    }
+    public enum Category
+    {
+        Groceries =1,
+        Beverages =2,
+        Fruits=3,
+        Snacks=4,
+        Confectionery=5,
+        Fashion=6
+
     }
 
 }
