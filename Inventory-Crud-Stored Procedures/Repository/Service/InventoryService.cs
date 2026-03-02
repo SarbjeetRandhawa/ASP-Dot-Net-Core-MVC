@@ -1,5 +1,5 @@
 ﻿using Humanizer;
-using Inventory_Crud.Models;
+using Inventory_Crud.Models.DataBases;
 using Inventory_Crud.Models.Domain;
 using Inventory_Crud.Models.Pagination;
 using Inventory_Crud.Repository.Interface;
@@ -22,7 +22,7 @@ namespace Inventory_Crud.Repository.Service
         }
     
 
-        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(Category? category, string searchOn ,string search, string sortColumn, string sortOrder, int pg = 1)
+        public async Task<(List<Inventory> Items , Pager Pager)> GetallData( string searchOn ,string search, string sortColumn, string sortOrder, int pg = 1)
         {
             
             int pageSize = 7;
@@ -41,26 +41,27 @@ namespace Inventory_Crud.Repository.Service
             
 
             var result = await inventoryDb.InventorySpModels.FromSqlRaw(
-                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize, @Category , @searchOn",
+                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize, @searchOn",
                 new SqlParameter("@Search", search ?? (object)DBNull.Value),
                 new SqlParameter("@SearchColumn", sortColumn ?? (object)DBNull.Value),
                 new SqlParameter("@SearchOrder", sortOrder ?? (object)DBNull.Value),
                 new SqlParameter("@PageNo", pg ),
                 new SqlParameter("@PageSize", pageSize),
-                new SqlParameter("@Category" , category ?? (object)DBNull.Value),
                 new SqlParameter("@searchOn", searchOn ?? (object)DBNull.Value)
 
-            ).ToListAsync();
+            ).ToListAsync(); 
             
             int totalCount = result.FirstOrDefault()?.TotalCount ?? 0;
             var Pager = new Pager(pg, totalCount, pageSize);
-      
+            
             var items = result.Select(x => new Inventory
             {
-                Id = x.Id,
+                Id = x.Id,  
                 Name = x.Name,
-                Category = x.Category,
                 Price = x.Price,
+                Category = new Categories { 
+                    Id = x.CategoryId,
+                    Name = x.CategoryName }   ,
                 Quantity = x.Quantity,
                 Discription = x.Discription,
                 CreatedDate = x.CreatedDate,
@@ -68,14 +69,12 @@ namespace Inventory_Crud.Repository.Service
             }).ToList();
             return (items , Pager);
         }
+
         public  async Task CreateNew(Inventory inventory)
         {
-           
             await inventoryDb.Products.AddAsync(inventory);
             await inventoryDb.SaveChangesAsync();
-
         }
-
 
         public async Task Remove(int id)
         {

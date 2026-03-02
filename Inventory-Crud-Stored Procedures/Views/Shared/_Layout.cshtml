@@ -195,11 +195,11 @@
 
 
                                 <option value="">All</option>
-                                @foreach (var items in Html.GetEnumSelectList<Category>())
+                                @* @foreach (var items in Html.GetEnumSelectList<Category>())
                                 {
                                     <option value="@items.Value" selected="@(Context.Request.Query["Category"] == items.Value ? "selected" : null)">@items.Text</option>
 
-                                }
+                                } *@
                             </select>
                             <div class="">
                                 <button class="btn btn-primary" type="submit">

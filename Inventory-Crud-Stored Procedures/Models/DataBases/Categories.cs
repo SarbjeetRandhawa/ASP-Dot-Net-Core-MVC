@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Inventory_Crud.Models
+namespace Inventory_Crud.Models.DataBases
 {
     public class Categories
     {
@@ -9,6 +9,8 @@ namespace Inventory_Crud.Models
         [Required(ErrorMessage = "Name is Required")]
         [StringLength(20)]
         public string Name { get; set; }
-        
+        public List<Inventory> Inventories { get; set; }
+
+
     }
 }

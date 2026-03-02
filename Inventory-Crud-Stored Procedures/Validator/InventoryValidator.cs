@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Inventory_Crud.Models;
+using Inventory_Crud.Models.DataBases;
 
 namespace Inventory_Crud.Validator
 {

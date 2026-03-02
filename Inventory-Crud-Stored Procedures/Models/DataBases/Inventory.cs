@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Inventory_Crud.Models
+namespace Inventory_Crud.Models.DataBases
 {
     public class Inventory
     {
@@ -16,7 +16,7 @@ namespace Inventory_Crud.Models
         [Required(ErrorMessage = "Category is Required")]
         
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Categories Category { get; set; }
 
 
 

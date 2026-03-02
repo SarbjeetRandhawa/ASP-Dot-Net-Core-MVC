@@ -1,5 +1,6 @@
 using Inventory_Crud.Controllers;
 using Inventory_Crud.Models;
+using Inventory_Crud.Models.DataBases;
 using Inventory_Crud.Repository.Interface;
 using Inventory_Crud.Validator;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +17,20 @@ namespace Inventory_Crud.Controllers
 
         //public HomeController( InventoryDbContext inventoryDb)
         //{
-        //    this.inventoryDb = inventoryDb;
+        //    this.inventoryDb = inventoryDb;S
         //}
 
+        private readonly IDashBoardVM dashboardVM;
         private readonly IInventory inventoryService;
         InventoryValidator validator = new InventoryValidator();
-        public HomeController(IInventory inventory)
+
+        public HomeController(IDashBoardVM dashBoardVM , IInventory inventoryService)
         {
-            this.inventoryService = inventory;
+            this.dashboardVM = dashBoardVM;
+            this.inventoryService = inventoryService;
         }
 
-        public async Task<IActionResult> Index(Category? category, string searchOn,string search, string sortColumn, string sortOrder, int pg = 1)
+        public async Task<IActionResult> Index( string searchOn,string search, string sortColumn, string sortOrder, int pg = 1)
         {
 
            
@@ -34,15 +38,17 @@ namespace Inventory_Crud.Controllers
             ViewBag.search = search;
             ViewBag.sortColumn = sortColumn ?? "Name" ;
             ViewBag.sortOrder = sortOrder ?? "asc" ;
-            ViewBag.category = category ;
+            //ViewBag.category = category ;
             ViewBag.searchOn = searchOn;
 
 
 
             //var std = await inventoryService.GetallData(search , sortColumn , sortOrder, pg);
-            var std = await inventoryService.GetallData(category , searchOn, search, sortColumn, sortOrder, pg);
+            var std = await dashboardVM.GetDashBoardData(searchOn, search, sortColumn, sortOrder, pg);
             ViewBag.pager = std.Pager;
-            return View(std.Items);
+            return View(std.Pager);
+           
+            
             
         }
 
