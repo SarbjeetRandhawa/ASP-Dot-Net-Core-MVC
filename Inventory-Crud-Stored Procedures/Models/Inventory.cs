@@ -15,6 +15,7 @@ namespace Inventory_Crud.Models
 
         [Required(ErrorMessage = "Category is Required")]
         
+        public int CategoryId { get; set; }
         public Category Category { get; set; }
 
 
@@ -25,12 +26,9 @@ namespace Inventory_Crud.Models
         [Column(TypeName = "decimal(18,2)" ) ]
         public decimal Price { get; set; }
 
-
         [Range(0,1000 , ErrorMessage ="Max Order Quantity is 1000")]
         [Required(ErrorMessage = "Quantity is Required")]
         public int? Quantity { get; set; }
-
-
 
         [Required(ErrorMessage = "Discription is Required")]
         [StringLength(250)]
@@ -42,21 +40,10 @@ namespace Inventory_Crud.Models
         [DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
 
-
-
         [Required(ErrorMessage = "ExpiryDate is Required")]
         [DataType(DataType.Date)]
         public DateTime ExpiryDate { get; set; }
     }
-    public enum Category
-    {
-        Groceries =1,
-        Beverages =2,
-        Fruits=3,
-        Snacks=4,
-        Confectionery=5,
-        Fashion=6
-
-    }
+   
 
 }

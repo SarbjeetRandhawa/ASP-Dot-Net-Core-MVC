@@ -5,7 +5,7 @@ namespace Inventory_Crud.Repository.Interface
 {
     public interface IInventory
     {
-        Task<(List<Inventory>Items , Pager Pager)> GetallData(string search , string sortColumn , string sortOrder, int pg = 1, Category? category = null);
+        Task<(List<Inventory>Items , Pager Pager)> GetallData(Category? category, string searchOn ,string search , string sortColumn , string sortOrder, int pg = 1);
         Task CreateNew(Inventory n);
 
         Task Update(Inventory inv);

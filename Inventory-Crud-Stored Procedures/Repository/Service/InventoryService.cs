@@ -22,7 +22,7 @@ namespace Inventory_Crud.Repository.Service
         }
     
 
-        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(string search, string sortColumn, string sortOrder, int pg = 1, Category? category = null)
+        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(Category? category, string searchOn ,string search, string sortColumn, string sortOrder, int pg = 1)
         {
             
             int pageSize = 7;
@@ -41,13 +41,15 @@ namespace Inventory_Crud.Repository.Service
             
 
             var result = await inventoryDb.InventorySpModels.FromSqlRaw(
-                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize, @Category",
+                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize, @Category , @searchOn",
                 new SqlParameter("@Search", search ?? (object)DBNull.Value),
                 new SqlParameter("@SearchColumn", sortColumn ?? (object)DBNull.Value),
                 new SqlParameter("@SearchOrder", sortOrder ?? (object)DBNull.Value),
                 new SqlParameter("@PageNo", pg ),
                 new SqlParameter("@PageSize", pageSize),
-                new SqlParameter("@Category" , category ?? (object)DBNull.Value)
+                new SqlParameter("@Category" , category ?? (object)DBNull.Value),
+                new SqlParameter("@searchOn", searchOn ?? (object)DBNull.Value)
+
             ).ToListAsync();
             
             int totalCount = result.FirstOrDefault()?.TotalCount ?? 0;
@@ -64,13 +66,8 @@ namespace Inventory_Crud.Repository.Service
                 CreatedDate = x.CreatedDate,
                 ExpiryDate = x.ExpiryDate
             }).ToList();
-
-
             return (items , Pager);
-
         }
-
-
         public  async Task CreateNew(Inventory inventory)
         {
            
