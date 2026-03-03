@@ -15,15 +15,15 @@ namespace Inventory_Crud.Repository.Service
             this._categoryRepository = categoryRepository;
         }
 
-        public async Task<(DashBoardVM , Pager Pager)> GetDashBoardData(string searchOn, string search, string sortColumn, string sortOrder, int pg = 1)
+        public async Task<(DashBoardVM , Pager Pager)> GetDashBoardData(int? category, string searchOn, string search, string sortColumn, string sortOrder, int pg = 1)
         {
-            // Deconstruct the tuple returned by GetallData into items and pager
-            var (items, pager) = await _inventoryRepository.GetallData(searchOn, search, sortColumn, sortOrder, pg);
+            
+            var (items, pager) = await _inventoryRepository.GetallData(category ,searchOn, search, sortColumn, sortOrder, pg);
 
             var dashBoardData = new DashBoardVM
             {
                 Inventories = items,
-                Category = _categoryRepository.GetAll()
+                Category = await  _categoryRepository.GetAll()
             };
             return (dashBoardData, pager);
         }

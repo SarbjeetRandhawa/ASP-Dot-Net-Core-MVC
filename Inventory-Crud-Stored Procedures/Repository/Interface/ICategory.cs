@@ -4,7 +4,7 @@ namespace Inventory_Crud.Repository.Interface
 {
     public interface ICategory
     {
-        List<Categories> GetAll();
+        Task<List<Categories>> GetAll();
          
     }
 }

@@ -6,7 +6,7 @@ namespace Inventory_Crud.Repository.Interface
 {
     public interface IDashBoardVM
     {
-        Task<(DashBoardVM, Pager Pager)> GetDashBoardData(string searchOn, string search, string sortColumn, string sortOrder, int pg = 1);
+        Task<(DashBoardVM, Pager Pager)> GetDashBoardData(int? category ,string searchOn, string search, string sortColumn, string sortOrder, int pg = 1);
 
     }
 }

@@ -3,9 +3,12 @@ using Inventory_Crud.Models;
 using Inventory_Crud.Models.DataBases;
 using Inventory_Crud.Repository.Interface;
 using Inventory_Crud.Validator;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+
 
 namespace Inventory_Crud.Controllers
 {
@@ -22,15 +25,17 @@ namespace Inventory_Crud.Controllers
 
         private readonly IDashBoardVM dashboardVM;
         private readonly IInventory inventoryService;
+        private readonly ICategory Categoryservice;
         InventoryValidator validator = new InventoryValidator();
 
-        public HomeController(IDashBoardVM dashBoardVM , IInventory inventoryService)
+        public HomeController(IDashBoardVM dashBoardVM , IInventory inventoryService , ICategory categoryService)
         {
             this.dashboardVM = dashBoardVM;
             this.inventoryService = inventoryService;
+            this.Categoryservice = categoryService;
         }
 
-        public async Task<IActionResult> Index( string searchOn,string search, string sortColumn, string sortOrder, int pg = 1)
+        public async Task<IActionResult> Index(int? category ,string searchOn, string search, string sortColumn, string sortOrder, int pg = 1)
         {
 
            
@@ -38,15 +43,15 @@ namespace Inventory_Crud.Controllers
             ViewBag.search = search;
             ViewBag.sortColumn = sortColumn ?? "Name" ;
             ViewBag.sortOrder = sortOrder ?? "asc" ;
-            //ViewBag.category = category ;
+            ViewBag.category = category;
             ViewBag.searchOn = searchOn;
 
 
 
             //var std = await inventoryService.GetallData(search , sortColumn , sortOrder, pg);
-            var std = await dashboardVM.GetDashBoardData(searchOn, search, sortColumn, sortOrder, pg);
+            var std = await dashboardVM.GetDashBoardData(category , searchOn, search, sortColumn, sortOrder, pg);
             ViewBag.pager = std.Pager;
-            return View(std.Pager);
+            return View(std.Item1);
            
             
             
@@ -55,9 +60,11 @@ namespace Inventory_Crud.Controllers
 
 
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var categories = await  Categoryservice.GetAll();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+            return View(new Inventory());
         }
 
         [HttpPost]
@@ -76,13 +83,15 @@ namespace Inventory_Crud.Controllers
             }
 
             if (ModelState.IsValid)
-            {
+            {   
                 //await inventoryDb.Products.AddAsync(inv);
                 //await inventoryDb.SaveChangesAsync();
 
                 await inventoryService.CreateNew(inv);
                 return RedirectToAction("index", "Home");
             }
+            var categories = await Categoryservice.GetAll();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
             return View(inv);
         }
@@ -136,10 +145,12 @@ namespace Inventory_Crud.Controllers
                     ModelState.AddModelError(errors.PropertyName, errors.ErrorMessage);
                 }
             }
+
             if (id != inv.Id)
             {
                 return NotFound();
             }
+
             if (ModelState.IsValid)
             {
 
@@ -149,12 +160,6 @@ namespace Inventory_Crud.Controllers
             return View(inv);
 
         }
-
-
-
-
-
-
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {

@@ -1,4 +1,5 @@
-﻿using Inventory_Crud.Models.DataBases;
+﻿using Microsoft.EntityFrameworkCore;
+using Inventory_Crud.Models.DataBases;
 using Inventory_Crud.Models.Domain;
 using Inventory_Crud.Repository.Interface;
 
@@ -13,9 +14,9 @@ namespace Inventory_Crud.Repository.Service
             this.inventoryDb = inventoryDb;
         }
 
-        public List<Categories> GetAll()
+        public async Task<List<Categories>> GetAll()
         {
-            return inventoryDb.Categories.ToList();
+            return await inventoryDb.Categories.ToListAsync();
         }
     }
 }

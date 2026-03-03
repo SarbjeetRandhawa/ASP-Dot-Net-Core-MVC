@@ -22,7 +22,7 @@
 <body id="page-top">
 
     <!-- Page Wrapper -->
-    <div id="wrapper" >
+    <div id="wrapper">
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar" style="transition:all .3s ease-in-out">
@@ -174,7 +174,9 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <form class="d-flex w-50 m-auto "href="@Url.Action("Index" , "Home")" method="get">
+                    <form class="d-flex w-50 m-auto " href="@Url.Action("Index" , "Home")" method="get">
+
+
                         <div class="d-flex col-6" style="gap:10px">
                             <select class="form-control bg-light border-0 small col-4" name="searchOn">
                                 <option value="Name" selected="@(Context.Request.Query["searchOn"] == "Name" ? "selected" : null)">Name</option>
@@ -190,17 +192,7 @@
                         </div>
                         <div class=" d-flex col-6 " style="gap:10px">
 
-
-                            <select name="category" class=" form-control bg-light border-0 small">
-
-
-                                <option value="">All</option>
-                                @* @foreach (var items in Html.GetEnumSelectList<Category>())
-                                {
-                                    <option value="@items.Value" selected="@(Context.Request.Query["Category"] == items.Value ? "selected" : null)">@items.Text</option>
-
-                                } *@
-                            </select>
+                            @await Component.InvokeAsync("CategoryMenu")
                             <div class="">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>

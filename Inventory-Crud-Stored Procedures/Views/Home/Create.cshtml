@@ -1,4 +1,4 @@
-﻿@model Inventory_Crud.Models.DashBoardVM
+﻿@model Inventory_Crud.Models.DataBases.Inventory
 
 @{
     ViewData["Title"] = "Create";
@@ -15,51 +15,50 @@
 <div class="row">
 
     <div class="col-md-8">
-        <form asp-action="Create" class="d-grid">
+        <form asp-action="Create" class="d-grid" method="post">
             @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
             <div class="row">
 
                 <div class="form-group col-6">
-                    <label asp-for="Inventories.First().Name" class="control-label"></label>
-                    <input asp-for="Inventories.First().Name" class="form-control" placeholder="Enter Your Name" />
-                    <span asp-validation-for="Inventories.First().Name" class="text-danger"></span>
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter Your Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group col-6">
-                    <label asp-for="Category" class="control-label"></label>
-                    @* <input asp-for="Category" class="form-control"  placeholder="Enter Category"/> *@
+                    <label asp-for="CategoryId" class="control-label"></label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
+                        <option value="">-- Select Category --</option>
 
-                   
+                    </select>
+
                     <span asp-validation-for="Category" class="text-danger"></span>
                 </div>
                 <div class="form-group col-6">
-                    <label asp-for="Inventories.First().Price" class="control-label"></label>
-                    <input asp-for="Inventories.First().Price" class="form-control" type="number" placeholder="₹" />
-                    <span asp-validation-for="Inventories.First().Price" class="text-danger"></span>
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" type="number" placeholder="₹" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="form-group col-6">
-                    <label asp-for="Inventories.First().Quantity" class="control-label"></label>
-                    <input asp-for="Inventories.First().Quantity" class="form-control" type="number" placeholder="Enter Quantity" />
-                    <span asp-validation-for="Inventories.First().Quantity" class="text-danger"></span>
+                    <label asp-for="Quantity" class="control-label"></label>
+                    <input asp-for="Quantity" class="form-control" type="number" placeholder="Enter Quantity" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
                 </div>
 
-
-
                 <div class="form-group col-6">
-                    <label asp-for="Inventories.First().Discription" class="control-label"></label>
-                    <Textarea asp-for="Inventories.First().Discription" class="form-control " rows="5" style="resize:none;">  </Textarea>
-                    <span asp-validation-for="Inventories.First().Discription" class="text-danger"></span>
+                    <label asp-for="Discription" class="control-label"></label>
+                    <Textarea asp-for="Discription" class="form-control " rows="5" style="resize:none;">  </Textarea>
+                    <span asp-validation-for="Discription" class="text-danger"></span>
                 </div>
                 <div class="form-group col-6 mt-2">
-                    <label asp-for="Inventories.First().CreatedDate" class="control-label"></label>
-                    <input asp-for="Inventories.First().CreatedDate" class="form-control" />
-
-                    <span asp-validation-for="Inventories.First().CreatedDate" class="text-danger"></span>
+                    <label asp-for="CreatedDate" class="control-label"></label>
+                    <input asp-for="CreatedDate" class="form-control" />
+                    <span asp-validation-for="CreatedDate" class="text-danger"></span>
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="form-group mt-3">
-                        <label asp-for="Inventories.First().ExpiryDate" class="control-label"></label>
-                        <input asp-for="Inventories.First().ExpiryDate" class="form-control" />
-                        <span asp-validation-for="Inventories.First().ExpiryDate" class="text-danger"></span>
+                        <label asp-for="ExpiryDate" class="control-label"></label>
+                        <input asp-for="ExpiryDate" class="form-control" />
+                        <span asp-validation-for="ExpiryDate" class="text-danger"></span>
 
                     </div>
                 </div>

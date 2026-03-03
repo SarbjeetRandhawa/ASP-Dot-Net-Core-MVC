@@ -4,7 +4,6 @@ namespace Inventory_Crud.Models.DataBases
 {
     public class Categories
     {
-        
         public int Id { get; set; }
         [Required(ErrorMessage = "Name is Required")]
         [StringLength(20)]

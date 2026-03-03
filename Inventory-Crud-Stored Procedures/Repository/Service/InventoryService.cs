@@ -22,7 +22,7 @@ namespace Inventory_Crud.Repository.Service
         }
     
 
-        public async Task<(List<Inventory> Items , Pager Pager)> GetallData( string searchOn ,string search, string sortColumn, string sortOrder, int pg = 1)
+        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(int? category, string searchOn ,string search, string sortColumn, string sortOrder, int pg = 1)
         {
             
             int pageSize = 7;
@@ -41,13 +41,15 @@ namespace Inventory_Crud.Repository.Service
             
 
             var result = await inventoryDb.InventorySpModels.FromSqlRaw(
-                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize, @searchOn",
+                "EXEC sp_InventoryGetData @Search, @SearchColumn, @SearchOrder, @PageNo, @PageSize, @searchOn , @category",
                 new SqlParameter("@Search", search ?? (object)DBNull.Value),
                 new SqlParameter("@SearchColumn", sortColumn ?? (object)DBNull.Value),
                 new SqlParameter("@SearchOrder", sortOrder ?? (object)DBNull.Value),
                 new SqlParameter("@PageNo", pg ),
                 new SqlParameter("@PageSize", pageSize),
-                new SqlParameter("@searchOn", searchOn ?? (object)DBNull.Value)
+                new SqlParameter("@searchOn", searchOn ?? (object)DBNull.Value),
+                new SqlParameter("@category" ,category ?? (object)DBNull.Value)
+           
 
             ).ToListAsync(); 
             
@@ -92,14 +94,10 @@ namespace Inventory_Crud.Repository.Service
         { 
             return await inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
-
-       
         public async Task Update(Inventory inv)
         {
             inventoryDb.Products.Update(inv);
             await inventoryDb.SaveChangesAsync();
         }
-
-        
     }
 }
