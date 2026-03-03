@@ -78,6 +78,8 @@ namespace Inventory_Crud.Repository.Service
             await inventoryDb.SaveChangesAsync();
         }
 
+
+
         public async Task Remove(int id)
         {
             var data = await  inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);

@@ -71,14 +71,14 @@ namespace Inventory_Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Inventory inv)
         {
-            
+
             var result = validator.Validate(inv);
 
             if (result != null)
             {
                 foreach (var errors in result.Errors)
                 {
-                    ModelState.AddModelError(errors.PropertyName , errors.ErrorMessage);
+                    ModelState.AddModelError(errors.PropertyName, errors.ErrorMessage);
                 }
             }
 
@@ -96,10 +96,6 @@ namespace Inventory_Crud.Controllers
             return View(inv);
         }
 
-
-
-
-
         public async Task<IActionResult> Details(int id)
         {
             var data = await inventoryService.Details(id);
@@ -110,11 +106,7 @@ namespace Inventory_Crud.Controllers
             }
             return View(data);
         }
-        
-
-
-
-
+     
         public async Task<IActionResult> Edit(int id)
         {
             //var data = await inventoryDb.Products.FindAsync(id);
