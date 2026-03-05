@@ -12,7 +12,7 @@ namespace Inventory_Crud.Repository.Service
         public CategoryService(InventoryDbContext inventoryDb)
         {
             this.inventoryDb = inventoryDb;
-        }
+        } 
 
         public async Task<List<Categories>> GetAll()
         {

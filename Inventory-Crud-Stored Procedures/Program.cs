@@ -23,7 +23,7 @@ builder.Services.AddDbContext<InventoryDbContext>(
 
 builder.Services.AddTransient<IInventory, InventoryService>();
 builder.Services.AddTransient<ICategory, CategoryService>();
-builder.Services.AddTransient<IDashBoardVM,  DashBoardService>();
+
 
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);

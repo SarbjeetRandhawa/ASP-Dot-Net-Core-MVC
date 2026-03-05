@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Inventory_Crud.Models.DataBases
 {
@@ -12,11 +13,9 @@ namespace Inventory_Crud.Models.DataBases
         [RegularExpression(@"^[a-zA-Z' .-]{3,40}$", ErrorMessage ="Invalid Format")]
         public string Name { get; set; }
 
-
-        [Required(ErrorMessage = "Category is Required")]
-        
         public int CategoryId { get; set; }
-        public Categories Category { get; set; }
+        [ValidateNever]
+        public Categories? Category { get; set; }
 
 
 

@@ -1,4 +1,5 @@
 ﻿using Inventory_Crud.Models.DataBases;
+using Inventory_Crud.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Crud.Models.Domain

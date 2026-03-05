@@ -94,7 +94,7 @@ namespace Inventory_Crud.Repository.Service
 
         public async Task<Inventory> Details(int id)
         { 
-            return await inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);
+            return await inventoryDb.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task Update(Inventory inv)
         {

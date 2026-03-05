@@ -1,6 +1,6 @@
 ﻿using Inventory_Crud.Models.DataBases;
 
-namespace Inventory_Crud.Models
+namespace Inventory_Crud.Models.DTOs
 {
     public class InventorySpModel
     {
