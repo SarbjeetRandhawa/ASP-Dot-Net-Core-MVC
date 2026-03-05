@@ -1,0 +1,37 @@
+﻿@model Inventory_Crud.Models.DTOs.DeleteCategoryDTO
+
+@{
+    ViewData["Title"] = "DeleteCategory";
+}
+
+<h1>Delete Category</h1>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div>
+    @if(TempData["Error"] != null)
+    {
+        <script>
+
+              Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "@TempData["Error"]",
+            });
+
+        </script>
+    }
+    
+    <form asp-action="DeleteCategory" method="post">
+        <div class="form-group">
+            <label>Select Category</label>
+
+            <select asp-for="id" class="form-control" asp-items="ViewBag.Categories">
+                <option value="">-- Select Category --</option>
+            </select>
+            <span asp-validation-for="id" class="text-danger"></span>
+        </div>
+        <input type="submit" value="Delete" class="btn btn-danger" />  | 
+        <a asp-action="Index" class="btn btn-outline-primary">Back to List</a>
+    </form>
+
+</div>

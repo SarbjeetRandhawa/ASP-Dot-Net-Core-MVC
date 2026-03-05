@@ -37,7 +37,7 @@ namespace Inventory_Crud.Controllers
             this.Categoryservice = categoryService;
         }
 
-        public async Task<IActionResult> Index(int? category ,string searchOn, string search, string sortColumn, string sortOrder, int pg = 1)
+        public async Task<IActionResult> Index(int? category ,string searchOn, string search, string sortColumn, string sortOrder, int pg)
         {
             var _inventories = await inventoryService.GetallData(category, searchOn, search, sortColumn, sortOrder, pg);
             var categories = await Categoryservice.GetAll();
@@ -96,7 +96,7 @@ namespace Inventory_Crud.Controllers
             var entity = new Inventory
             {
                 Name = inv.Name,
-                Price = inv.Price,
+                Price = inv.Price.Value,
                 CategoryId = inv.CategoryId,
                 Quantity = inv.Quantity,
                 Discription = inv.Discription,
@@ -182,7 +182,7 @@ namespace Inventory_Crud.Controllers
                 {
                     Id = inv.Id,
                     Name = inv.Name,
-                    Price = inv.Price,
+                    Price = inv.Price.Value,
                     CategoryId = inv.CategoryId,
                     Quantity = inv.Quantity,
                     Discription = inv.Discription,
@@ -192,7 +192,7 @@ namespace Inventory_Crud.Controllers
             await inventoryService.Update(entity);
             return RedirectToAction("index", "Home");
 
-
+                
         }
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
@@ -205,7 +205,6 @@ namespace Inventory_Crud.Controllers
                 return NotFound();
             }
             return View(data);
-
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -217,7 +216,57 @@ namespace Inventory_Crud.Controllers
         }
 
 
+        public async Task<IActionResult> AddCategory()
+        {
+            return View(new AddCategoryDTO());
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> AddCategory(AddCategoryDTO category)
+        {
+            var entity = new Categories
+            {
+                Name = category.Name,
+                
+            };
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
+            await Categoryservice.CreateNew(entity);
+            return RedirectToAction("index", "Home");
+        }
+
+        public async Task<IActionResult> DeleteCategory() 
+        {
+            var data = await Categoryservice.GetAll();
+            
+            ViewBag.Categories = new SelectList(data, "Id", "Name");
+
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return View(new DeleteCategoryDTO());
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory(DeleteCategoryDTO dto)
+        {
+            
+            if (!ModelState.IsValid) {
+                var data = await Categoryservice.GetAll();
+
+                ViewBag.Categories = new SelectList(data, "Id", "Name");
+                return View(dto);
+            }
+            var result = await Categoryservice.Remove(dto.id.Value);
+            if (!result) {
+                TempData["Error"] = "This Category is used by Products, Cannot Delete";
+                return RedirectToAction("DeleteCategory"); 
+            }
+
+            return RedirectToAction("index", "Home");
+        }
 
 
         public IActionResult Privacy()

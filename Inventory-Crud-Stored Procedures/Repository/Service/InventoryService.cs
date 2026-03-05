@@ -22,7 +22,7 @@ namespace Inventory_Crud.Repository.Service
         }
     
 
-        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(int? category, string searchOn ,string search, string sortColumn, string sortOrder, int pg = 1)
+        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(int? category, string searchOn ,string search, string sortColumn, string sortOrder, int pg)
         {
             
             int pageSize = 7;
@@ -82,7 +82,7 @@ namespace Inventory_Crud.Repository.Service
 
         public async Task Remove(int id)
         {
-            var data = await  inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);
+            var data = await  inventoryDb.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.Id == id);
 
             if (data != null)
             {

@@ -10,9 +10,11 @@ namespace Inventory_Crud.Models.DataBases
         public int Id { get; set; }
         [Required(ErrorMessage ="Name is Required")]
         [StringLength(20)]
+        [DataType(DataType.Text)]
         [RegularExpression(@"^[a-zA-Z' .-]{3,40}$", ErrorMessage ="Invalid Format")]
         public string Name { get; set; }
 
+        [Required (ErrorMessage = "Category is Required")]
         public int CategoryId { get; set; }
         [ValidateNever]
         public Categories? Category { get; set; }
@@ -23,7 +25,7 @@ namespace Inventory_Crud.Models.DataBases
         [Range(0.01,100000,ErrorMessage ="price must be greater then 0")]
 
         [Column(TypeName = "decimal(18,2)" ) ]
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
         [Range(0,1000 , ErrorMessage ="Max Order Quantity is 1000")]
         [Required(ErrorMessage = "Quantity is Required")]

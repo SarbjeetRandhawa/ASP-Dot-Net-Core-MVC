@@ -22,6 +22,7 @@ namespace Inventory_Crud.Models.Domain
         public DbSet<Inventory> Products { get; set; }
         public DbSet<Categories> Categories { get; set; }
         public DbSet<InventorySpModel> InventorySpModels { get; set; }
+        public DbSet<Inventory_Crud.Models.DTOs.AddCategoryDTO> AddCategoryDTO { get; set; } = default!;
 
     }
 }

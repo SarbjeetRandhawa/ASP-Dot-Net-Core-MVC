@@ -19,10 +19,10 @@
             int totalPages = (int)Math.Ceiling((decimal)totalItems / (decimal)pagesize);
             int currentPage = Page;
 
-            int startPage = currentPage - 5;
-            int endPage = currentPage + 4;
+            int startPage = currentPage - 3;
+            int endPage = currentPage + 3;
 
-            if(StartPage <= 0)
+            if(startPage <= 0)
             {
                 endPage = endPage - (startPage - 1);
                 startPage = 1;
@@ -32,7 +32,7 @@
                 endPage = totalPages;
                 if(endPage > 10)
                 {
-                    startPage = endPage - 9;
+                    startPage = endPage - 6;
                 }
             }
 

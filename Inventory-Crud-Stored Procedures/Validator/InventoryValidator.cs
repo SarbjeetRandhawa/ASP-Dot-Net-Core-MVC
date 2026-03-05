@@ -9,7 +9,8 @@ namespace Inventory_Crud.Validator
         public InventoryValidator()
         {
             RuleFor(x => x.CreatedDate)
-            .NotEmpty().WithMessage("Start Date is required");
+            .NotEmpty().WithMessage("Start Date is required")
+            .LessThanOrEqualTo(DateTime.Today).WithMessage("Date must not be greater then present date");
 
             RuleFor(x => x.ExpiryDate)
                 .NotEmpty().WithMessage("Expiry Date is required");
@@ -17,8 +18,7 @@ namespace Inventory_Crud.Validator
             RuleFor(x => x)
                 .Must(x => x.CreatedDate < x.ExpiryDate)
                 .WithMessage("Start Date must be earlier than Expiry Date");
-            RuleFor(x => x.CategoryId)
-                .GreaterThan(0).WithMessage("Category is required");
+           
 
         }
     }
