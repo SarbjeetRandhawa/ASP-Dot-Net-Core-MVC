@@ -21,10 +21,10 @@ namespace Inventory_Crud.Repository.Service
         {
             this.inventoryDb = inventoryDb;
         }
-        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(int? category, string searchOn ,string search, string sortColumn, string sortOrder, int pg)
+        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(int? category, string searchOn ,string search, string sortColumn, string sortOrder, int pg , int pageSize)
         {
             
-            int pageSize = 7;   
+                
              
             if (string.IsNullOrEmpty(sortColumn))
             {
@@ -38,6 +38,12 @@ namespace Inventory_Crud.Repository.Service
             {
 
                 pg = 1;
+
+            }
+            if (pageSize <= 0)
+            {
+
+                pageSize = 7;
 
             }
 

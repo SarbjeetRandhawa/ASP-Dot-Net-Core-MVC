@@ -12,7 +12,8 @@ namespace Inventory_Crud.Repository.Interface
             string search ,
             string sortColumn , 
             string sortOrder, 
-            int pg = 1);
+            int pg = 1,
+            int pageSize = 7);
         Task CreateNew(Inventory inv);
 
         Task Update(Inventory inv);

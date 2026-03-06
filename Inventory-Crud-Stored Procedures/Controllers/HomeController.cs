@@ -36,9 +36,9 @@ namespace Inventory_Crud.Controllers
             this.Categoryservice = categoryService;
         }
 
-        public async Task<IActionResult> Index(int? category ,string searchOn, string search, string sortColumn, string sortOrder, int pg)
+        public async Task<IActionResult> Index(int? category ,string searchOn, string search, string sortColumn, string sortOrder, int pg ,int pageSize)
         {
-            var _inventories = await inventoryService.GetallData(category, searchOn, search, sortColumn, sortOrder, pg);
+            var _inventories = await inventoryService.GetallData(category, searchOn, search, sortColumn, sortOrder, pg , pageSize);
             var categories = await Categoryservice.GetAll();
             var vm = new DashBoardVM
             {
@@ -51,6 +51,8 @@ namespace Inventory_Crud.Controllers
             ViewBag.sortOrder = sortOrder ?? "asc" ;
             ViewBag.category = category;
             ViewBag.searchOn = searchOn;
+            ViewBag.pageSize = pageSize;
+            ViewBag.pg = pg;
 
             
             //var std = await dashboardVM.GetDashBoardData(category , searchOn, search, sortColumn, sortOrder, pg);
