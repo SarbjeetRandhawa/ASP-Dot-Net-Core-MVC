@@ -10,7 +10,6 @@ namespace Inventory_Crud.Models.DataBases
         public int Id { get; set; }
         [Required(ErrorMessage ="Name is Required")]
         [StringLength(20)]
-        [DataType(DataType.Text)]
         [RegularExpression(@"^[a-zA-Z' .-]{3,40}$", ErrorMessage ="Invalid Format")]
         public string Name { get; set; }
 

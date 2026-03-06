@@ -31,8 +31,7 @@ namespace Inventory_Crud.Controllers
         InventoryValidator validator = new InventoryValidator();
          
         public HomeController(IInventory inventoryService , ICategory categoryService)
-        {
-            
+        { 
             this.inventoryService = inventoryService;
             this.Categoryservice = categoryService;
         }
