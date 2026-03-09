@@ -24,7 +24,7 @@ namespace Inventory_Crud.Repository.Service
 
             inventoryDb.Categories.Add(category);
 
-            await inventoryDb.SaveChangesAsync();
+            //await inventoryDb.SaveChangesAsync();
 
         }
         public async Task<bool> Remove(int id)
@@ -38,7 +38,7 @@ namespace Inventory_Crud.Repository.Service
             if (category != null)
             {
                 inventoryDb.Categories.Remove(category);
-                await inventoryDb.SaveChangesAsync();
+                //await inventoryDb.SaveChangesAsync();
             }
             return true;
         }

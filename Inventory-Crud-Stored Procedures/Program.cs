@@ -5,6 +5,7 @@ using Inventory_Crud.Repository.Service;
 using Microsoft.EntityFrameworkCore;
 
 using Microsoft.AspNetCore.Identity;
+using Inventory_Crud.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,7 @@ builder.Services.AddDbContext<InventoryDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dbcs")));
 
 
-
+builder.Services.AddTransient<IUnitOfWork,UnitOfWork>();
 builder.Services.AddTransient<IInventory, InventoryService>();
 builder.Services.AddTransient<ICategory, CategoryService>();
 

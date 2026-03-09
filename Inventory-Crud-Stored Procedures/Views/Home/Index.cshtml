@@ -34,7 +34,6 @@
         pager = ViewBag.pager;
         pageNo = pager.CurrentPage;
     }
-
 }
 
 @{
@@ -53,10 +52,10 @@
 <table class="table  w-100" style="font-size: 0.75rem;">
     <thead>
         <tr>
-            <th> 
+            <th>
                 <a asp-action="Index" asp-route-pg="@ViewBag.pg" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@GetSortDirection("Name")" asp-route-sortColumn="Name"
                    asp-route-search="@ViewBag.search" asp-route-category="@(ViewBag.category)" asp-route-searchOn="@ViewBag.searchOn" style="text-decoration:none; color:grey">
-                    @Html.DisplayNameFor(model => model.Inventories)
+                    @Html.DisplayNameFor(model => model.Inventories.First().Name)
                     @if (ViewBag.sortColumn == "Name")
                     {
                         @if (@GetArrow("Name"))
@@ -78,8 +77,6 @@
 
                     }
 
-
-
                 </a>
             </th>
             <th>
@@ -88,7 +85,6 @@
                     @Html.DisplayNameFor(model => model.Category)
                     @if (ViewBag.sortColumn == "Category")
                     {
-
 
                         @if (@GetArrow("Category"))
                         {
@@ -107,8 +103,10 @@
                                 <path d="M4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
                             </svg>
                         }
+
                     }
                 </a>
+
             </th>
             <th>
                 <a asp-action="Index" asp-route-pg="@ViewBag.pg" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@GetSortDirection("Price")" asp-route-sortColumn="Price"
@@ -125,12 +123,10 @@
                         }
                         else
                         {
-
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
                                 <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z" />
                             </svg>
                         }
-
                     }
                 </a>
             </th>
@@ -145,7 +141,6 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up-alt" viewBox="0 0 16 16">
                                 <path d="M3.5 13.5a.5.5 0 0 1-1 0V4.707L1.354 5.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 4.707zm4-9.5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5" />
                             </svg>
-
                         }
                         else
                         {
@@ -153,7 +148,6 @@
                                 <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z" />
                             </svg>
                         }
-
                     }
                 </a>
             </th>
@@ -204,15 +198,14 @@
 
 @if (pager.TotalPages > 0)
 {
-
     <div>
 
         <div>
-            <a asp-route-pg="@ViewBag.pg" asp-route-pageSize="10" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
+            <a asp-route-pageSize="10" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
                asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn btn-sm btn-outline-secondary">10</a>
-            <a asp-route-pg="@ViewBag.pg" asp-route-pageSize="20" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
+            <a asp-route-pageSize="20" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
                asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn btn-sm btn-outline-secondary">20</a>
-            <a asp-route-pg="@ViewBag.pg" asp-route-pageSize="30" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
+            <a asp-route-pageSize="30" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
                asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn btn-sm btn-outline-secondary">30</a>
 
         </div>
@@ -240,18 +233,18 @@
                 <a asp-route-pg=1 asp-route-search="@ViewBag.search"
                    asp-route-sortColumn="@ViewBag.sortColumn" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn @(1 == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">1</a>
 
-                <a>...</a>
+                <a>. . .</a>
             }
 
             @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPage, currentPage + 2); i++)
             {
                 <a asp-route-search="@ViewBag.search"
-                   asp-route-sortColumn="@ViewBag.sortColumn" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" asp-route-pg="@i" class="btn @(i == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@i</a>
+                   asp-route-sortColumn="@ViewBag.sortColumn" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" asp-route-pg="@i" class="btn  @(i == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@i</a>
             }
 
             @if (currentPage < totalPage - 5)
             {
-                <a>...</a>
+                <a>. . .</a>
                 <a asp-route-pg="@totalPage" asp-route-pageSize="@ViewBag.pageSize" asp-route-search="@ViewBag.search"
                    asp-route-sortColumn="@ViewBag.sortColumn" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn @( totalPage == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@totalPage</a>
             }

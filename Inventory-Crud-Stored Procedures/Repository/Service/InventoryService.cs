@@ -42,9 +42,7 @@ namespace Inventory_Crud.Repository.Service
             }
             if (pageSize <= 0)
             {
-
                 pageSize = 7;
-
             }
 
             var result = await inventoryDb.InventorySpModels.FromSqlRaw(
@@ -81,7 +79,7 @@ namespace Inventory_Crud.Repository.Service
         public  async Task CreateNew(Inventory inventory)
         {
             await inventoryDb.Products.AddAsync(inventory);
-            await inventoryDb.SaveChangesAsync();
+            //await inventoryDb.SaveChangesAsync();
         }
 
         public async Task Remove(int id)
@@ -91,9 +89,10 @@ namespace Inventory_Crud.Repository.Service
             if (data != null)
             {
                 inventoryDb.Products.Remove(data);
-                await inventoryDb.SaveChangesAsync();
+                //await inventoryDb.SaveChangesAsync();
             }
         }
+
         public async Task<Inventory> Details(int id)
         { 
             return await inventoryDb.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id);
@@ -102,7 +101,7 @@ namespace Inventory_Crud.Repository.Service
         public async Task Update(Inventory inv)
         {
             inventoryDb.Products.Update(inv);
-            await inventoryDb.SaveChangesAsync();
+            //await inventoryDb.SaveChangesAsync();
         }
     }
 }
