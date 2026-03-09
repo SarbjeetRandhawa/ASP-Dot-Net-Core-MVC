@@ -29,12 +29,17 @@
 
     int pageNo = 0;
 
-    if (ViewBag.pager != null)
+    if (ViewBag.pager != null)  
     {
         pager = ViewBag.pager;
         pageNo = pager.CurrentPage;
     }
+
+    
+    
 }
+
+
 
 @{
     if (ViewBag.category != null)
@@ -53,8 +58,7 @@
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-pg="@ViewBag.pg" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@GetSortDirection("Name")" asp-route-sortColumn="Name"
-                   asp-route-search="@ViewBag.search" asp-route-category="@(ViewBag.category)" asp-route-searchOn="@ViewBag.searchOn" style="text-decoration:none; color:grey">
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Name", sortOrder = @GetSortDirection("Name"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
                     @Html.DisplayNameFor(model => model.Inventories.First().Name)
                     @if (ViewBag.sortColumn == "Name")
                     {
@@ -80,8 +84,7 @@
                 </a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-pg="@ViewBag.pg" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@GetSortDirection("Category")" asp-route-sortColumn="Category"
-                   asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" style="text-decoration:none; color:grey">
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Category", sortOrder = @GetSortDirection("Category"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
                     @Html.DisplayNameFor(model => model.Category)
                     @if (ViewBag.sortColumn == "Category")
                     {
@@ -109,8 +112,7 @@
 
             </th>
             <th>
-                <a asp-action="Index" asp-route-pg="@ViewBag.pg" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@GetSortDirection("Price")" asp-route-sortColumn="Price"
-                   asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" style="text-decoration:none; color:grey">
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Price", sortOrder = @GetSortDirection("Price"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
                     @Html.DisplayNameFor(model => model.Inventories.First().Price)
                     @if (ViewBag.sortColumn == "Price")
                     {
@@ -131,8 +133,7 @@
                 </a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-pg="@ViewBag.pg" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
-                   asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" style="text-decoration:none; color:grey">
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category,pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Quantity", sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
                     @Html.DisplayNameFor(model => model.Inventories.First().Quantity)
                     @if (ViewBag.sortColumn == "Quantity")
                     {
@@ -201,12 +202,9 @@
     <div>
 
         <div>
-            <a asp-route-pageSize="10" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
-               asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn btn-sm btn-outline-secondary">10</a>
-            <a asp-route-pageSize="20" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
-               asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn btn-sm btn-outline-secondary">20</a>
-            <a asp-route-pageSize="30" asp-route-sortOrder="@GetSortDirection("Quantity")" asp-route-sortColumn="Quantity"
-               asp-route-search="@ViewBag.search" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn btn-sm btn-outline-secondary">30</a>
+            <a  href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 10, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">10</a>
+            <a  href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 20, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">20</a>
+            <a  href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 30, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">30</a>
 
         </div>
 
@@ -219,8 +217,7 @@
 
             @if (currentPage > 1)
             {
-                <a asp-action="index" asp-route-pageSize="@ViewBag.pageSize" asp-route-pg="@(currentPage - 1)" asp-route-search="@ViewBag.search"
-                   asp-route-sortColumn="@ViewBag.sortColumn" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="mr-3">
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = currentPage - 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="mr-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
                     </svg>
@@ -230,35 +227,31 @@
             @if (currentPage > 5)
             {
 
-                <a asp-route-pg=1 asp-route-search="@ViewBag.search"
-                   asp-route-sortColumn="@ViewBag.sortColumn" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn @(1 == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">1</a>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn @(1 == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">1</a>
 
                 <a>. . .</a>
             }
 
             @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPage, currentPage + 2); i++)
             {
-                <a asp-route-search="@ViewBag.search"
-                   asp-route-sortColumn="@ViewBag.sortColumn" asp-route-pageSize="@ViewBag.pageSize" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" asp-route-pg="@i" class="btn  @(i == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@i</a>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = i, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn  @(i == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@i</a>
             }
 
             @if (currentPage < totalPage - 5)
             {
                 <a>. . .</a>
-                <a asp-route-pg="@totalPage" asp-route-pageSize="@ViewBag.pageSize" asp-route-search="@ViewBag.search"
-                   asp-route-sortColumn="@ViewBag.sortColumn" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-category="@ViewBag.category" asp-route-searchOn="@ViewBag.searchOn" class="btn @( totalPage == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@totalPage</a>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = currentPage + 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn @( totalPage == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@totalPage</a>
             }
 
             @if (currentPage < totalPage)
             {
 
-                <a asp-action="index" asp-route-pageSize="@ViewBag.pageSize" asp-route-pg="@(currentPage + 1)" asp-route-search="@ViewBag.search"
-                   asp-route-sortColumn="@ViewBag.sortColumn" asp-route-sortOrder="@ViewBag.sortOrder" asp-route-searchOn="@ViewBag.searchOn" asp-route-category="@ViewBag.category" class="ml-3">
+                
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = currentPage + 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                     </svg>
                 </a>
-
             }
 
 

@@ -14,15 +14,13 @@ namespace Inventory_Crud.Controllers
 {
     public class HomeController : Controller
     {
-
         //private readonly InventoryDbContext inventoryDb;
         //public HomeController( InventoryDbContext inventoryDb)
         //{
         //    this.inventoryDb = inventoryDb;S
         //}
 
-        //private readonly IInventory inventoryService;
-        //private readonly ICategory Categoryservice;
+       
         private readonly IUnitOfWork unitOfWork;
         InventoryValidator validator = new InventoryValidator();
 
@@ -31,8 +29,12 @@ namespace Inventory_Crud.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IActionResult> Index(int? category, string searchOn, string search, string sortColumn, string sortOrder, int pg, int pageSize)
+
+
+        public async Task<IActionResult> Index( List<int> category, string searchOn, string search, string sortColumn, string sortOrder, int pg, int pageSize)
         {
+          
+
             var _inventories = await unitOfWork.Inventory.GetallData(category, searchOn, search, sortColumn, sortOrder, pg, pageSize);
             var categories = await unitOfWork.Category.GetAll();
             var vm = new DashBoardVM
@@ -46,7 +48,6 @@ namespace Inventory_Crud.Controllers
             ViewBag.sortOrder = sortOrder ?? "asc";
             ViewBag.category = category;
             ViewBag.searchOn = searchOn;
-
             ViewBag.pageSize = pageSize;
             ViewBag.pg = pg;
 
@@ -61,7 +62,6 @@ namespace Inventory_Crud.Controllers
             ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View(new CreateViewDto());
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateViewDto inv)
@@ -105,6 +105,8 @@ namespace Inventory_Crud.Controllers
 
         }
 
+
+
         public async Task<IActionResult> Details(int id)
         {
             var data = await unitOfWork.Inventory.Details(id);
@@ -116,6 +118,8 @@ namespace Inventory_Crud.Controllers
 
             return View(data);
         }
+
+
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -143,11 +147,8 @@ namespace Inventory_Crud.Controllers
 
             return View(entity);
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<IActionResult> Edit(int id, CreateViewDto inv)
         {
 
@@ -189,13 +190,15 @@ namespace Inventory_Crud.Controllers
             await unitOfWork.SaveAsync();
 
             return RedirectToAction("index", "Home");
-
-
         }
+
+
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             //var data = await inventoryDb.Products.FirstOrDefaultAsync(x => x.Id == id);
+
             var data = await unitOfWork.Inventory.Details(id);
 
             if (data == null)
@@ -211,23 +214,21 @@ namespace Inventory_Crud.Controllers
         {
             await unitOfWork.Inventory.Remove(id);
             await unitOfWork.SaveAsync();
-
             return RedirectToAction("Index", "Home");
         }
+
 
 
         public async Task<IActionResult> AddCategory()
         {
             return View(new AddCategoryDTO());
         }
-
         [HttpPost]
         public async Task<IActionResult> AddCategory(AddCategoryDTO category)
         {
             var entity = new Categories
             {
                 Name = category.Name,
-
             };
             if (!ModelState.IsValid)
             {
@@ -238,6 +239,9 @@ namespace Inventory_Crud.Controllers
 
             return RedirectToAction("index", "Home");
         }
+
+
+
 
         public async Task<IActionResult> DeleteCategory()
         {   
@@ -250,7 +254,7 @@ namespace Inventory_Crud.Controllers
                 return NotFound();
             }
             return View(new DeleteCategoryDTO());
-        }   
+        } 
         [HttpPost]
         public async Task<IActionResult> DeleteCategory(DeleteCategoryDTO dto)
         {   
@@ -273,6 +277,8 @@ namespace Inventory_Crud.Controllers
 
             return RedirectToAction("index", "Home");
         }
+
+
 
 
         public IActionResult Privacy()

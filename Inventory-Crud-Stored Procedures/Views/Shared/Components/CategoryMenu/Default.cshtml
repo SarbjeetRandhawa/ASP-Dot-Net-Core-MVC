@@ -1,9 +1,16 @@
 ﻿@model IEnumerable<Inventory_Crud.Models.DataBases.Categories>
 
-<select class="form-control" name="category">
+
+<link href="" rel="stylesheet" />
+
+<select class="js-example-basic-multiple" id="category" name="category" multiple="multiple">
     <option value="">All</option>
     @foreach (var category in Model)
     {
         <option value="@category.Id">@category.Name</option>
     }
-</select> 
+</select>
+
+
+
+

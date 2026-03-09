@@ -7,7 +7,7 @@ namespace Inventory_Crud.Repository.Interface
     public interface IInventory
     {
         Task<(List<Inventory>Items , Pager Pager)> GetallData(
-            int? category, 
+            List<int> category, 
             string searchOn ,
             string search ,
             string sortColumn , 

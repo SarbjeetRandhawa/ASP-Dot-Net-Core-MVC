@@ -1,18 +1,20 @@
-﻿using Inventory_Crud.Repository.Interface;
+﻿using Inventory_Crud.Models.Domain;
+using Inventory_Crud.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Crud.ViewComponents
 {
     public class CategoryMenuViewComponent : ViewComponent
     {
-        private readonly ICategory categoryService;
-        public CategoryMenuViewComponent(ICategory categoryService)
+        private readonly InventoryDbContext inventoryDb;
+        public CategoryMenuViewComponent(InventoryDbContext inventoryDb)
         {
-            this.categoryService = categoryService;
+            this.inventoryDb = inventoryDb;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categories = await categoryService.GetAll();
+            var categories = await inventoryDb.Categories.ToListAsync();
             return View(categories);
         }
     }

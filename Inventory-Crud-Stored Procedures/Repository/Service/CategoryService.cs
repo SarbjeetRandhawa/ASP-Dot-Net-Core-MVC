@@ -5,7 +5,6 @@ using Inventory_Crud.Repository.Interface;
 
 namespace Inventory_Crud.Repository.Service
 {
-
     public class CategoryService : ICategory
     {
         private readonly InventoryDbContext inventoryDb;
@@ -23,10 +22,9 @@ namespace Inventory_Crud.Repository.Service
         {
 
             inventoryDb.Categories.Add(category);
-
             //await inventoryDb.SaveChangesAsync();
 
-        }
+        }   
         public async Task<bool> Remove(int id)
         {
             var hasProducts = await inventoryDb.Products.AnyAsync(p => p.CategoryId == id);
