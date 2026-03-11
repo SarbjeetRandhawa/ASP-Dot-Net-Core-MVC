@@ -20,7 +20,7 @@ namespace Inventory_Crud.Controllers
         //    this.inventoryDb = inventoryDb;S
         //}
 
-       
+        
         private readonly IUnitOfWork unitOfWork;
         InventoryValidator validator = new InventoryValidator();
 

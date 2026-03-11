@@ -1,10 +1,11 @@
 ﻿using Inventory_Crud.Models.DataBases;
 using Inventory_Crud.Models.DTOs;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Crud.Models.Domain
 {
-    public class InventoryDbContext : DbContext
+    public class InventoryDbContext : IdentityDbContext<InventoryUser>
     {
 
         public InventoryDbContext(DbContextOptions<InventoryDbContext> options) : base(options) { }
@@ -25,4 +26,6 @@ namespace Inventory_Crud.Models.Domain
         public DbSet<Inventory_Crud.Models.DTOs.AddCategoryDTO> AddCategoryDTO { get; set; } = default!;
 
     }
+
+   
 }
