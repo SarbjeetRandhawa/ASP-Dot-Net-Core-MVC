@@ -18,6 +18,15 @@
 
     <!-- Custom styles for this template-->
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        .select2-container--default .select2-selection--multiple{
+            max-height: 40px;
+            overflow-y: auto;
+            scrollbar-width:none;
+        }
+       
+
+        </style>
 </head>
 
 <body id="page-top">
@@ -192,8 +201,10 @@
 
                         </div>
                         <div class=" d-flex col-6 " style="gap:10px">
+                            <div >
 
                             @await Component.InvokeAsync("CategoryMenu")
+                            </div>
                             <div class="">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
@@ -471,8 +482,6 @@
     <script src="~/js/demo/chart-area-demo.js"></script>
     <script src="~/js/demo/chart-pie-demo.js"></script>
 
-
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -480,7 +489,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
     <script>
            $(document).ready(function() {
-            $('.js-example-basic-multiple').select2();
+            $('.js-example-basic-multiple').select2({
+                placeholder:"Category"
+                
+            });
         });
  
     </script>

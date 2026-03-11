@@ -6,6 +6,7 @@
         font-size: 10px;
     }
 </style>
+
 @{
     string GetSortDirection(string column)
     {
@@ -29,28 +30,20 @@
 
     int pageNo = 0;
 
-    if (ViewBag.pager != null)  
+    if (ViewBag.pager != null)
     {
         pager = ViewBag.pager;
         pageNo = pager.CurrentPage;
     }
 
-    
-    
+
+
 }
 
 
 
-@{
-    if (ViewBag.category != null)
-    {
-        <h1>@Model.Inventories.First().Category.Name</h1>
-    }
-    else
-    {
-        <h1>Inventory</h1>
-    }
-}
+
+<h1>Inventory</h1>
 
 
 
@@ -133,7 +126,7 @@
                 </a>
             </th>
             <th>
-                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category,pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Quantity", sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Quantity", sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
                     @Html.DisplayNameFor(model => model.Inventories.First().Quantity)
                     @if (ViewBag.sortColumn == "Quantity")
                     {
@@ -201,11 +194,10 @@
 {
     <div>
 
-
         <div>
-            <a  href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 10, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">10</a>
-            <a  href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 20, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">20</a>
-            <a  href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 30, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">30</a>
+            <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 10, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">10</a>
+            <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 20, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">20</a>
+            <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 30, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">30</a>
 
         </div>
 
@@ -237,25 +229,19 @@
             {
                 <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = i, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn  @(i == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@i</a>
             }
-
             @if (currentPage < totalPage - 5)
             {
                 <a>. . .</a>
-                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = currentPage + 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn @( totalPage == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@totalPage</a>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = totalPage, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn @( totalPage == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@totalPage</a>
             }
-
             @if (currentPage < totalPage)
             {
-
-                
                 <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = currentPage + 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                     </svg>
                 </a>
             }
-
-
         </div>
     </div>
 

@@ -21,6 +21,7 @@ namespace Inventory_Crud.Repository.Service
         {
             this.inventoryDb = inventoryDb;
         }
+
         public async Task<(List<Inventory> Items , Pager Pager)> GetallData(List<int> category, string searchOn ,string search, string sortColumn, string sortOrder, int pg , int pageSize)
         {
             
@@ -28,10 +29,8 @@ namespace Inventory_Crud.Repository.Service
              
             if (string.IsNullOrEmpty(sortColumn))
             {
-
                 sortColumn = "Name";
                 sortOrder = "asc";
-
             }
             
             if(pg < 1)
