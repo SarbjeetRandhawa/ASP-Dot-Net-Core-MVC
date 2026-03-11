@@ -12,6 +12,8 @@ namespace Inventory_Crud.Models.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<InventorySpModel>().HasNoKey();
             modelBuilder.Entity<Inventory>().HasOne(i => i.Category)
                 .WithMany(c => c.Inventories)

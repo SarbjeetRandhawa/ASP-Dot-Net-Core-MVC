@@ -5,6 +5,7 @@ using Inventory_Crud.Models.DTOs;
 using Inventory_Crud.Repository.Interface;
 using Inventory_Crud.UnitOfWork;
 using Inventory_Crud.Validator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
@@ -12,9 +13,10 @@ using System.Diagnostics;
 
 namespace Inventory_Crud.Controllers
 {
+    
     public class HomeController : Controller
     {
-        //private readonly InventoryDbContext inventoryDb;
+        //private readonly InventoryDbContext inventoryD b;
         //public HomeController( InventoryDbContext inventoryDb)
         //{
         //    this.inventoryDb = inventoryDb;S
@@ -56,6 +58,7 @@ namespace Inventory_Crud.Controllers
             return View(vm);
         }
 
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var categories = await unitOfWork.Category.GetAll();
@@ -120,7 +123,7 @@ namespace Inventory_Crud.Controllers
         }
 
 
-
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             //var data = await inventoryDb.Products.FindAsync(id);
@@ -193,7 +196,7 @@ namespace Inventory_Crud.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -218,7 +221,7 @@ namespace Inventory_Crud.Controllers
         }
 
 
-
+        [Authorize]
         public async Task<IActionResult> AddCategory()
         {
             return View(new AddCategoryDTO());
@@ -242,7 +245,7 @@ namespace Inventory_Crud.Controllers
 
 
 
-
+        [Authorize]
         public async Task<IActionResult> DeleteCategory()
         {   
             var data = await unitOfWork.Category.GetAll();

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Inventory_Crud.UnitOfWork;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using Inventory_Crud.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +23,27 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<InventoryDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dbcs")));
 
+builder.Services.AddDefaultIdentity<InventoryUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<InventoryDbContext>();
+
 
 builder.Services.AddTransient<IUnitOfWork,UnitOfWork>();
 builder.Services.AddTransient<IInventory, InventoryService>();
 builder.Services.AddTransient<ICategory, CategoryService>();
+builder.Services.AddScoped<JwtTokenService>();
 
+builder.Services.AddAuthentication().AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 
 builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 {
@@ -58,5 +75,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-
+app.MapRazorPages();
 app.Run();
