@@ -1,0 +1,27 @@
+﻿@model Inventory_Crud.Models.DTOs.AddCategoryDTO
+
+@{
+    ViewData["Title"] = "AddCategory";
+}
+<h1>Add Category</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddCategory">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group d-flex " style="gap:5px">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            <a asp-action="DeleteCategory" class="btn btn-outline-primary">Delete Category</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

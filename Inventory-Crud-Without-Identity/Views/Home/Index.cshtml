@@ -1,0 +1,249 @@
+﻿@model DashBoardVM
+@using Inventory_Crud.Models.Pagination;
+
+<style>
+    .font {
+        font-size: 10px;
+    }
+</style>
+
+@{
+    string GetSortDirection(string column)
+    {
+        if (ViewBag.sortColumn == column)
+        {
+            return ViewBag.sortOrder == "desc" ? "asc" : "desc";
+        }
+        return "desc";
+    }
+    bool GetArrow(string column)
+    {
+        if (ViewBag.sortColumn == column)
+        {
+            return ViewBag.sortOrder == "asc" ? true : false;
+        }
+        return true;
+    }
+
+    Pager pager = new Pager();
+
+
+    int pageNo = 0;
+
+    if (ViewBag.pager != null)
+    {
+        pager = ViewBag.pager;
+        pageNo = pager.CurrentPage;
+    }
+
+
+
+}
+
+
+
+
+<h1>Inventory</h1>
+
+
+
+<table class="table  w-100" style="font-size: 0.75rem;">
+    <thead>
+        <tr>
+            <th>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Name", sortOrder = @GetSortDirection("Name"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
+                    @Html.DisplayNameFor(model => model.Inventories.First().Name)
+                    @if (ViewBag.sortColumn == "Name")
+                    {
+                        @if (@GetArrow("Name"))
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z" />
+                                <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zm-8.46-.5a.5.5 0 0 1-1 0V3.707L2.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L4.5 3.707z" />
+                            </svg>
+
+                        }
+                        else
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
+                                <path d="M12.96 7H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645z" />
+                                <path fill-rule="evenodd" d="M10.082 12.629 9.664 14H8.598l1.789-5.332h1.234L13.402 14h-1.12l-.419-1.371zm1.57-.785L11 9.688h-.047l-.652 2.156z" />
+                                <path d="M4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
+                            </svg>
+                        }
+
+                    }
+
+                </a>
+            </th>
+            <th>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Category", sortOrder = @GetSortDirection("Category"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
+                    @Html.DisplayNameFor(model => model.Category)
+                    @if (ViewBag.sortColumn == "Category")
+                    {
+
+                        @if (@GetArrow("Category"))
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z" />
+                                <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zm-8.46-.5a.5.5 0 0 1-1 0V3.707L2.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L4.5 3.707z" />
+                            </svg>
+
+                        }
+                        else
+                        {
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-down-alt" viewBox="0 0 16 16">
+                                <path d="M12.96 7H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645z" />
+                                <path fill-rule="evenodd" d="M10.082 12.629 9.664 14H8.598l1.789-5.332h1.234L13.402 14h-1.12l-.419-1.371zm1.57-.785L11 9.688h-.047l-.652 2.156z" />
+                                <path d="M4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z" />
+                            </svg>
+                        }
+
+                    }
+                </a>
+
+            </th>
+            <th>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Price", sortOrder = @GetSortDirection("Price"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
+                    @Html.DisplayNameFor(model => model.Inventories.First().Price)
+                    @if (ViewBag.sortColumn == "Price")
+                    {
+                        @if (@GetArrow("Price"))
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up-alt" viewBox="0 0 16 16">
+                                <path d="M3.5 13.5a.5.5 0 0 1-1 0V4.707L1.354 5.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 4.707zm4-9.5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5" />
+                            </svg>
+
+                        }
+                        else
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                                <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z" />
+                            </svg>
+                        }
+                    }
+                </a>
+            </th>
+            <th>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pg = ViewBag.pg, pageSize = ViewBag.pageSize, search = ViewBag.search, sortColumn = "Quantity", sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" style="text-decoration:none; color:grey">
+                    @Html.DisplayNameFor(model => model.Inventories.First().Quantity)
+                    @if (ViewBag.sortColumn == "Quantity")
+                    {
+                        @if (@GetArrow("Quantity"))
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up-alt" viewBox="0 0 16 16">
+                                <path d="M3.5 13.5a.5.5 0 0 1-1 0V4.707L1.354 5.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 4.707zm4-9.5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5" />
+                            </svg>
+                        }
+                        else
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                                <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z" />
+                            </svg>
+                        }
+                    }
+                </a>
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Inventories)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+
+                <td style="display:flex ; gap:10px">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001" />
+                        </svg>
+                    </a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                        </svg>
+                    </a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+@if (pager.TotalPages > 0)
+{
+    <div>
+
+        <div>
+            <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 10, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">10</a>
+            <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 20, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">20</a>
+            <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = 30, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = @GetSortDirection("Quantity"), searchOn = ViewBag.searchOn })" class="btn btn-sm btn-outline-secondary">30</a>
+
+        </div>
+
+        <div class="d-flex justify-content-center mt-4" style="gap:15px;">
+            @{
+                int currentPage = pager.CurrentPage;
+                int totalPage = pager.TotalPages;
+            }
+
+
+            @if (currentPage > 1)
+            {
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = currentPage - 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+                    </svg>
+                </a>
+
+            }
+            @if (currentPage > 5)
+            {
+
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn @(1 == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">1</a>
+
+                <a>. . .</a>
+            }
+
+            @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPage, currentPage + 2); i++)
+            {
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = i, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn  @(i == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@i</a>
+            }
+            @if (currentPage < totalPage - 5)
+            {
+                <a>. . .</a>
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = totalPage, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })" class="btn @( totalPage == pager.CurrentPage ? "btn-primary" : "btn-outline-primary") btn-sm rounded-circle ">@totalPage</a>
+            }
+            @if (currentPage < totalPage)
+            {
+                <a href="@Url.Action("index", "Home", new { category = (List<int>)ViewBag.category, pageSize = ViewBag.pageSize, pg = currentPage + 1, search = ViewBag.search, sortColumn = ViewBag.sortColumn, sortOrder = ViewBag.sortOrder, searchOn = ViewBag.searchOn })">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                    </svg>
+                </a>
+            }
+        </div>
+    </div>
+
+
+}
