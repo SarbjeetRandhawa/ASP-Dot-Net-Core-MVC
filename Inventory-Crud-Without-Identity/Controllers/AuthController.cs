@@ -85,7 +85,8 @@ namespace Inventory_Crud.Controllers
         {
             Response.Cookies.Delete("jwt");
             return RedirectToAction("Login");
-        }
+
+        } 
         public IActionResult Test()
         {
             return Content(User.Identity.IsAuthenticated.ToString());

@@ -174,7 +174,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top " style=" box-shadow: 0 0.15rem 1.75rem 0 rgba(1, 10, 200, .3) !important;">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top d-flex justify-content-end " style=" box-shadow: 0 0.15rem 1.75rem 0 rgba(1, 10, 200, .3) !important;">
 
                     
                     @{
@@ -225,7 +225,7 @@
                         }
                         else
                         {
-                            <div class="d-flex align-items-center m-auto  " style="gap:10px">
+                            <div class="justify-content-end" style="gap:10px">
                                 <a class="btn btn-outline-primary" href="@Url.Action("Login", "Auth")">Login</a>
                                 <a class="btn btn-outline-primary" href="@Url.Action("Register", "Auth")">Register</a>
                             </div>
