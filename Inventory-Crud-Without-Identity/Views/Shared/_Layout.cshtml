@@ -19,14 +19,12 @@
     <!-- Custom styles for this template-->
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
     <style>
-        .select2-container--default .select2-selection--multiple{
+        .select2-container--default .select2-selection--multiple {
             max-height: 40px;
             overflow-y: auto;
-            scrollbar-width:none;
+            scrollbar-width: none;
         }
-       
-
-        </style>
+    </style>
 </head>
 
 <body id="page-top">
@@ -178,44 +176,62 @@
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top " style=" box-shadow: 0 0.15rem 1.75rem 0 rgba(1, 10, 200, .3) !important;">
 
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+                    
+                    @{
+                            if (User.Identity.IsAuthenticated)
+                            {
+                            <form class="d-flex w-50 m-auto " href="@Url.Action("Index" , "Home")" method="get">
 
+
+                                <div class="d-flex col-6" style="gap:10px">
+                                    <select class="form-control bg-light border-0 small col-4" name="searchOn">
+                                        <option value="Name" selected="@(Context.Request.Query["searchOn"] == "Name" ? "selected" : null)">Name</option>
+                                        <option value="Price" selected="@(Context.Request.Query["searchOn"] == "Price" ? "selected" : null)">Price</option>
+                                        <option value="Quantity" selected="@(Context.Request.Query["searchOn"] == "Quantity" ? "selected" : null)">Quantity</option>
+
+                                    </select>
+                                    <input type="text" class="form-control bg-light border-0 small col-8" placeholder="Search for..."
+                                           aria-label="Search" aria-describedby="basic-addon2" name="search" value="@Context.Request.Query["search"]">
+
+
+
+                                </div>
+                                <div class=" d-flex col-6 " style="gap:10px">
+                                    <div class="w-50">
+
+                                        @await Component.InvokeAsync("CategoryMenu")
+                                    </div>
+                                    <div class="">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+                            }
+
+                    }
                     <!-- Topbar Search -->
-                    <form class="d-flex w-50 m-auto " href="@Url.Action("Index" , "Home")" method="get">
+                    
 
-
-                        <div class="d-flex col-6" style="gap:10px">
-                            <select class="form-control bg-light border-0 small col-4" name="searchOn">
-                                <option value="Name" selected="@(Context.Request.Query["searchOn"] == "Name" ? "selected" : null)">Name</option>
-                                <option value="Price" selected="@(Context.Request.Query["searchOn"] == "Price" ? "selected" : null)">Price</option>
-                                <option value="Quantity" selected="@(Context.Request.Query["searchOn"] == "Quantity" ? "selected" : null)">Quantity</option>
-
-                            </select>
-                            <input type="text" class="form-control bg-light border-0 small col-8" placeholder="Search for..."
-                                   aria-label="Search" aria-describedby="basic-addon2" name="search" value="@Context.Request.Query["search"]">
-
-
-
-                        </div>
-                        <div class=" d-flex col-6 " style="gap:10px">
-                            <div >
-
-                            @await Component.InvokeAsync("CategoryMenu")
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="d-flex align-items-center " style="gap:10px">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@User.Identity.Name</span>
+                                <a class="btn btn-outline-primary" href="@Url.Action("Logout", "Auth")">Logout</a>
                             </div>
-                            <div class="">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center m-auto  " style="gap:10px">
+                                <a class="btn btn-outline-primary" href="@Url.Action("Login", "Auth")">Login</a>
+                                <a class="btn btn-outline-primary" href="@Url.Action("Register", "Auth")">Register</a>
                             </div>
+                        }
+                    }
 
-                        </div>
-                    </form>
-
-
-                    <partial name="_LoginPartial" />
 
 
                     <!-- Topbar Navbar -->
@@ -461,8 +477,8 @@
         </div>
     </div>
 
-   
-    
+
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="~/vendor/jquery/jquery.min.js"></script>
@@ -470,21 +486,22 @@
 
     <!-- Core plugin JavaScript-->
     <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-    
+
     <!-- Custom scripts for all pages-->
     <script src="~/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
     <script src="~/vendor/chart.js/Chart.min.js"></script>
-    
+
 
     <!-- Page level custom scripts -->
     <script src="~/js/demo/chart-area-demo.js"></script>
     <script src="~/js/demo/chart-pie-demo.js"></script>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
@@ -492,10 +509,10 @@
            $(document).ready(function() {
             $('.js-example-basic-multiple').select2({
                 placeholder:"Category"
-                
+
             });
         });
- 
+
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

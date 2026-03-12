@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Inventory_Crud.Models.DataBases;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,18 +15,19 @@ namespace Inventory_Crud.Services
         {
             _configuration = configuration;
         }
-        public string Generatetoken(IdentityUser users)
+        public string Generatetoken(Users users)
         { 
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub , users.Id),
-                new Claim(JwtRegisteredClaimNames.Email , users.Email)
+                new Claim(ClaimTypes.Name , users.Email),
+                new Claim(ClaimTypes.Email , users.Email)
             };
             
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],

@@ -9,6 +9,11 @@ using Inventory_Crud.UnitOfWork;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 using Inventory_Crud.Services;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +35,10 @@ builder.Services.AddTransient<IInventory, InventoryService>();
 builder.Services.AddTransient<ICategory, CategoryService>();
 builder.Services.AddScoped<JwtTokenService>();
 
-builder.Services.AddAuthentication().AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
+    var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -42,7 +49,30 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+
+    options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.Request.Cookies["jwt"];
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                context.Token = token;
+            }
+            return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            context.Response.Redirect("/Auth/Login");
+            return Task.CompletedTask;
+        }
+    };
+
+    
 });
+
 
 builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 {
@@ -65,6 +95,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

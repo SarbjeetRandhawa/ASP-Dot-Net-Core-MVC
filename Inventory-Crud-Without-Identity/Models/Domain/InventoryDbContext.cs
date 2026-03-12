@@ -21,7 +21,7 @@ namespace Inventory_Crud.Models.Domain
                 .OnDelete(DeleteBehavior.Restrict);  
         }
 
-
+        public DbSet<Users> Users { get; set; }
         public DbSet<Inventory> Products { get; set; }
         public DbSet<Categories> Categories { get; set; }
         public DbSet<InventorySpModel> InventorySpModels { get; set; }
