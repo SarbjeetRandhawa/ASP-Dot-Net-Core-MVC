@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Headers;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
+
 namespace Inventory_Crud.Repository.Service
 {
 
@@ -22,18 +23,14 @@ namespace Inventory_Crud.Repository.Service
             this.inventoryDb = inventoryDb;
         }
 
-        public async Task<(List<Inventory> Items , Pager Pager)> GetallData(List<int> category, string searchOn ,string search, string sortColumn, string sortOrder, int pg , int pageSize)
+        public async Task<(List<Inventory> Items, Pager Pager)> GetallData(List<int> category, string searchOn, string search, string sortColumn, string sortOrder, int pg, int pageSize)
         {
-            
-                
-             
-            if (string.IsNullOrEmpty(sortColumn))
+            if(string.IsNullOrEmpty(sortColumn))
             {
                 sortColumn = "Name";
                 sortOrder = "asc";
             }
-            
-            if(pg < 1)
+            if (pg < 1)  
             {
                 pg = 1;
             }
@@ -50,21 +47,23 @@ namespace Inventory_Crud.Repository.Service
                 new SqlParameter("@Search", search ?? (object)DBNull.Value),
                 new SqlParameter("@SearchColumn", sortColumn ?? (object)DBNull.Value),
                 new SqlParameter("@SearchOrder", sortOrder ?? (object)DBNull.Value),
-                new SqlParameter("@PageNo", pg ),
+                new SqlParameter("@PageNo", pg),
                 new SqlParameter("@PageSize", pageSize),
                 new SqlParameter("@searchOn", searchOn ?? (object)DBNull.Value),
-                new SqlParameter("@category" ,categoryIds  ?? (object)DBNull.Value)
-            ).ToListAsync(); 
-            
+                new SqlParameter("@category", categoryIds ?? (object)DBNull.Value)
+            ).ToListAsync();
+
             int totalCount = result.FirstOrDefault()?.TotalCount ?? 0;
             var Pager = new Pager(pg, totalCount, pageSize);
-         
+
+
             var items = result.Select(x => new Inventory
-            {
-                Id = x.Id,  
+            { 
+                Id = x.Id,
                 Name = x.Name,
                 Price = x.Price,
-                Category = new Categories { 
+                Category = new Categories
+                {
                     Id = x.CategoryId,
                     Name = x.CategoryName
                 },
@@ -73,10 +72,10 @@ namespace Inventory_Crud.Repository.Service
                 CreatedDate = x.CreatedDate,
                 ExpiryDate = x.ExpiryDate
             }).ToList();
-            return (items , Pager);
+            return (items, Pager);
         }
 
-        public  async Task CreateNew(Inventory inventory)
+        public async Task CreateNew(Inventory inventory)
         {
             await inventoryDb.Products.AddAsync(inventory);
             //await inventoryDb.SaveChangesAsync();
@@ -84,7 +83,7 @@ namespace Inventory_Crud.Repository.Service
 
         public async Task Remove(int id)
         {
-            var data = await  inventoryDb.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.Id == id);
+            var data = await inventoryDb.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id);
 
             if (data != null)
             {
@@ -94,7 +93,7 @@ namespace Inventory_Crud.Repository.Service
         }
 
         public async Task<Inventory> Details(int id)
-        { 
+        {
             return await inventoryDb.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id);
         }
 

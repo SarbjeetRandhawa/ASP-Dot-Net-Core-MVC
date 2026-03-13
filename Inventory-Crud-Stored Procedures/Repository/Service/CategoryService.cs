@@ -20,10 +20,8 @@ namespace Inventory_Crud.Repository.Service
 
         public async Task CreateNew(Categories category)
         {
-
             inventoryDb.Categories.Add(category);
             //await inventoryDb.SaveChangesAsync();
-
         }   
         public async Task<bool> Remove(int id)
         {

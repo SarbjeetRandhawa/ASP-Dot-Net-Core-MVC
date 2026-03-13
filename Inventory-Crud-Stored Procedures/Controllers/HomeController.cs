@@ -13,9 +13,9 @@ using System.Diagnostics;
 
 namespace Inventory_Crud.Controllers
 {
-    
     public class HomeController : Controller
     {
+
         //private readonly InventoryDbContext inventoryD b;
         //public HomeController( InventoryDbContext inventoryDb)
         //{
@@ -30,8 +30,6 @@ namespace Inventory_Crud.Controllers
         {
             this.unitOfWork = unitOfWork;
         }
-
-
 
         public async Task<IActionResult> Index( List<int> category, string searchOn, string search, string sortColumn, string sortOrder, int pg, int pageSize)
         {

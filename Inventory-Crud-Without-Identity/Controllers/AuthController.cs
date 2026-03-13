@@ -46,13 +46,14 @@ namespace Inventory_Crud.Controllers
             var user = new Users
             {
                 Email = dto.Email,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash 
             };
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Login");
+
         }
 
 
@@ -72,7 +73,7 @@ namespace Inventory_Crud.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Email == dto.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             {
-                ModelState.AddModelError("Email", "Invalid email or password");
+                ModelState.AddModelError("Email", "Invalid email or password"); 
                 return View(dto);
             }
 
