@@ -9,6 +9,8 @@ namespace SmartTaskAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
+    //s
     public class AuthController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
