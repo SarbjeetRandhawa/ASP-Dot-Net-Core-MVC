@@ -4,7 +4,7 @@ import { useAuth } from "../Context/AuthContext";
 function ProtectedRoute({ children }) {
     const { user } = useAuth();
     if (!user.token || !user) {
-        return <Navigate to="/"/>;
+        return <Navigate to="/auth"/>;
     
     }
     return children;

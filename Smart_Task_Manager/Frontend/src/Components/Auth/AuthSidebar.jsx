@@ -1,7 +1,7 @@
 
 function AuthSidebar() {
   return (
-    <div className="auth-sidebar" class="w-1/3 h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#4338CA,#06B6D4)] p-8 justify-between flex flex-col">
+    <div className="auth-sidebar" class="w-full md:w-1/3 h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#4338CA,#06B6D4)] p-8 justify-between flex flex-col">
         <div class="flex">
           <div class="bg-[#FFFFFF26] p-1.5 w-10 h-10 rounded-[30%] text-[120%]">⚡</div>
           <div>
