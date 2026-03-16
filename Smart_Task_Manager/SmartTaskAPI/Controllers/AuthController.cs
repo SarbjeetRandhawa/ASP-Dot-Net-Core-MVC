@@ -26,6 +26,13 @@ namespace SmartTaskAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
+            var errors = new List<string>();
+            if (!ModelState.IsValid)
+            {
+                errors.AddRange(
+                    ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)
+                    );
+            }
             var user = new ApplicationUser
             {
                 UserName = dto.Email,
@@ -36,7 +43,11 @@ namespace SmartTaskAPI.Controllers
             var result = await _userManager.CreateAsync(user, dto.Password);
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors);
+                errors.AddRange(result.Errors.Select(e => e.Description));
+            }
+            if (errors.Any())
+            {
+                return BadRequest(errors);
             }
 
             await _userManager.AddToRoleAsync(user, dto.Role);

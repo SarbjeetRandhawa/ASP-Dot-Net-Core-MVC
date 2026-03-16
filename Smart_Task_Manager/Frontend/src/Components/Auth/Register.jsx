@@ -36,14 +36,15 @@ function Register({ switchForm }) {
       await registerUser(formData);
       switchForm();
     } catch (error) {
-      if(error.response?.data){
-        setErrors(error.response.data);
+      if(Array.isArray(error.response?.data)){
+        setErrors(error.response.data.errors);
       }
       if(!error.response ){
         alert("Registration failed: Server is not responding" );
         return;
       }
       console.log(error.response.data);
+
       
 
     }
@@ -109,7 +110,9 @@ function Register({ switchForm }) {
               className="border-2 py-1 px-2  rounded-md text-[.9rem] focus:border-blue-600  focus:outline-none"
               required
             />
-            {errors?.FirstName && <p className="text-red-500 text-[.7rem]">{errors.FirstName[0]}</p>}
+            {/* {errors.find(e => e.toLowerCase().include("FirstName")) && (<p className="text-red-500 text-sm"> 
+              {errors.find(e => e.toLowerCase().include("FirstName"))}
+            </p>)} */}
           </span>
           <span className="flex flex-col gap-1  ">
             <label
@@ -127,6 +130,8 @@ function Register({ switchForm }) {
               className="border-2 py-1 px-2  rounded-md text-[.9rem] focus:border-blue-600  focus:outline-none"
               required
             />
+            {errors?.LastName && <p className="text-red-500 text-[.7rem]">{errors.LastName[0]}</p>}
+
           </span>
         </span>
         <label
@@ -145,6 +150,8 @@ function Register({ switchForm }) {
           className="border-2 py-1 px-2 pl-9 rounded-md text-[.9rem] focus:border-blue-600  focus:outline-none"
           required
         />
+            {errors?.Email && <p className="text-red-500 text-[.7rem]">{errors.Email[0]}</p>}
+
         <span className="flex flex-col md:flex-row gap-3">
           <span className="flex flex-col gap-1">
             <label
@@ -181,6 +188,9 @@ function Register({ switchForm }) {
               onChange={handleChange}
               required
             />
+            {errors?.ConfirmPassword && <p className="text-red-500 text-[.7rem]">{errors.ConfirmPassword[0]}</p>}
+
+            
           </span>
         </span>
 

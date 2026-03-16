@@ -26,10 +26,9 @@ function AuthPage() {
               
               onClick={() => setIsLogin(false)}
               className={` h-9 rounded-md w-1/2 mx-1 ${isLogin ? "bg-[#f1f5f9] text-[#64748B]" : "bg-[#FFFF] font-semibold text-[#4F46E5]"}`}
-
               
             >
-              Create Account
+              Sign Up
             </button>
           </div>
           <div className="auth-form">{isLogin ? <Login switchForm={() => setIsLogin(false)} /> : <Register switchForm={() => setIsLogin(true)} />}</div>
