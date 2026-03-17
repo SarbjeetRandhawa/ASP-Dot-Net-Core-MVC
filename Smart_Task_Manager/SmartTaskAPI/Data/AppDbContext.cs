@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SmartTaskAPI.Models.DB;
 using SmartTaskAPI.Models.Identity;
 
 namespace SmartTaskAPI.Data
@@ -9,5 +10,9 @@ namespace SmartTaskAPI.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
+        public DbSet<ProjectMembers> ProjectMembers { get; set; }
+        public DbSet<Projects> Projects { get; set; }
     }
+
+
 }

@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
         email: localStorage.getItem("email") || null,
         role: localStorage.getItem("role") || null, 
     });
+    
 
     const login = (data) => {
         localStorage.setItem("token", data.token);
