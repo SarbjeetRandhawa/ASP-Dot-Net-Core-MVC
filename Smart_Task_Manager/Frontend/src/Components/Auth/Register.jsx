@@ -1,26 +1,22 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { registerUser } from "../../Services/AuthService";
 
-
 function Register({ switchForm }) {
-  
-
   const [formData, setFormData] = useState({
-    FirstName: "",
-    LastName: "",
-    Email: "",
-    Password: "",
-    ConfirmPassword: "",
     Role: "Admin",
   });
-  const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    formState: { errors },
+  } = useForm();
+
+  const password = watch("Password");
+
   const SelectRole = (role) => {
     setFormData({
       ...formData,
@@ -28,27 +24,39 @@ function Register({ switchForm }) {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // console.log(formData);
+  const onSubmit = async (data) => {
+    const finalData = {
+      ...data,
+      Role: formData.Role,
+    };
+
     try {
-      await registerUser(formData);
+      await registerUser(finalData);
       switchForm();
     } catch (error) {
-      if(Array.isArray(error.response?.data)){
-        setErrors(error.response.data.errors);
-      }
-      if(!error.response ){
-        alert("Registration failed: Server is not responding" );
+      if (!error.response) {
+        alert("Server not responding");
         return;
       }
-      console.log(error.response.data);
 
-      
+      const serverError = error.response.data;
 
+      if (serverError.toLowerCase().includes("email")) {
+        setError("Email", {
+          type: "server",
+          message: serverError,
+        });
+      }
+
+      if (serverError.toLowerCase().includes("password")) {
+        setError("Password", {
+          type: "server",
+          message: serverError,
+        });
+      }
     }
   };
+
   return (
     <div className="flex flex-col gap-3 mt-5">
       <span>
@@ -58,10 +66,16 @@ function Register({ switchForm }) {
         </p>
       </span>
 
-      <div class="grid grid-cols-3 gap-4 mb-2">
+      {/* ROLE SELECTOR */}
+
+      <div className="grid grid-cols-3 gap-4 mb-2">
         <div
           onClick={() => SelectRole("Admin")}
-          className={`cursor-pointer h-[70px] p-1   rounded-md text-center ${formData.Role === "Admin" ? "border-2 border-indigo-500 bg-indigo-50" : "border-2 border-gray-200 hover:bg-gray-100"}`}
+          className={`cursor-pointer h-[70px] p-1 rounded-md text-center ${
+            formData.Role === "Admin"
+              ? "border-2 border-indigo-500 bg-indigo-50"
+              : "border-2 border-gray-200 hover:bg-gray-100"
+          }`}
         >
           <div>👑</div>
           <h3 className="font-semibold text-[.8rem]">Admin</h3>
@@ -69,9 +83,14 @@ function Register({ switchForm }) {
             Full Access
           </p>
         </div>
+
         <div
           onClick={() => SelectRole("Manager")}
-          className={`cursor-pointer h-[70px] p-1   rounded-md text-center ${formData.Role === "Manager" ? "border-2 border-indigo-500 bg-indigo-50" : "border-2 border-gray-200 hover:bg-gray-100"}`}
+          className={`cursor-pointer h-[70px] p-1 rounded-md text-center ${
+            formData.Role === "Manager"
+              ? "border-2 border-indigo-500 bg-indigo-50"
+              : "border-2 border-gray-200 hover:bg-gray-100"
+          }`}
         >
           <div>🗃️</div>
           <h3 className="font-semibold text-[.8rem]">Manager</h3>
@@ -79,9 +98,14 @@ function Register({ switchForm }) {
             Manage Tasks
           </p>
         </div>
+
         <div
           onClick={() => SelectRole("Employee")}
-          className={`cursor-pointer h-[70px] p-1 rounded-md text-center ${formData.Role === "Employee" ? "border-2 border-indigo-500 bg-indigo-50" : "border-2 border-gray-200 hover:bg-gray-100"}`}
+          className={`cursor-pointer h-[70px] p-1 rounded-md text-center ${
+            formData.Role === "Employee"
+              ? "border-2 border-indigo-500 bg-indigo-50"
+              : "border-2 border-gray-200 hover:bg-gray-100"
+          }`}
         >
           <div>👤</div>
           <h3 className="font-semibold text-[.8rem]">Employee</h3>
@@ -91,106 +115,129 @@ function Register({ switchForm }) {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} method="post" className="flex-col flex gap-1">
-        <span className="flex-col md:flex-row flex gap-3">
-          <span className="flex flex-col gap-1
-          ">
-            <label
-              htmlFor="FirstName"
-              className="text-[.8rem] font-bold text-[#64748B]"
-            >
+      {/* FORM */}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex-col flex gap-1">
+        {/* FIRST NAME */}
+        <span className="flex flex-col md:flex-row">
+          {/* FIRST NAME */}
+
+          <span className="flex flex-col gap-1 w-full md:w-1/2 pr-0 md:pr-2">
+            <label className="text-[.8rem] font-bold text-[#64748B]">
               First Name
             </label>
+
             <input
-              type="text"
-              name="FirstName"
-              placeholder="First Name"
-              value={formData.FirstName}
-              onChange={handleChange}
-              className="border-2 py-1 px-2  rounded-md text-[.9rem] focus:border-blue-600  focus:outline-none"
-              required
+              {...register("FirstName", {
+                required: "First name is required",
+                pattern: {
+                  value: /^[A-Za-z]+$/,
+                  message: "Only letters allowed",
+                },
+              })}
+              className="border-2 py-1 px-1 rounded-md focus:border-blue-600 focus:outline-none"
             />
-            {/* {errors.find(e => e.toLowerCase().include("FirstName")) && (<p className="text-red-500 text-sm"> 
-              {errors.find(e => e.toLowerCase().include("FirstName"))}
-            </p>)} */}
+
+            {errors.FirstName && (
+              <p className="text-red-500 text-[.7rem]">
+                {errors.FirstName.message}
+              </p>
+            )}
           </span>
-          <span className="flex flex-col gap-1  ">
-            <label
-              htmlFor="LastName"
-              className="text-[.8rem] font-bold text-[#64748B]"
-            >
+
+          {/* LAST NAME */}
+
+          <span className="flex flex-col gap-1  w-full md:w-1/2 pl-0 md:pl-2">
+            <label className="text-[.8rem] font-bold text-[#64748B]">
               Last Name
             </label>
-            <input
-              type="text"
-              name="LastName"
-              placeholder="Last Name"
-              value={formData.LastName}
-              onChange={handleChange}
-              className="border-2 py-1 px-2  rounded-md text-[.9rem] focus:border-blue-600  focus:outline-none"
-              required
-            />
-            {errors?.LastName && <p className="text-red-500 text-[.7rem]">{errors.LastName[0]}</p>}
 
+            <input
+              {...register("LastName", {
+                required: "Last name is required",
+                pattern: {
+                  value: /^[A-Za-z]+$/,
+                  message: "Only letters allowed",
+                },
+              })}
+              className="border-2 py-1 px-2 rounded-md focus:border-blue-600 focus:outline-none"
+            />
+
+            {errors.LastName && (
+              <p className="text-red-500 text-[.7rem]">
+                {errors.LastName.message}
+              </p>
+            )}
           </span>
         </span>
-        <label
-          htmlFor="Email"
-          className="text-[.8rem] font-bold text-[#64748B] mt-2"
-        >
-          Email
-        </label>
-        <span className="relative top-2 left-2 h-0">📧</span>
-        <input
-          type="email"
-          name="Email"
-          placeholder="Email"
-          value={formData.Email}
-          onChange={handleChange}
-          className="border-2 py-1 px-2 pl-9 rounded-md text-[.9rem] focus:border-blue-600  focus:outline-none"
-          required
-        />
-            {errors?.Email && <p className="text-red-500 text-[.7rem]">{errors.Email[0]}</p>}
+        {/* EMAIL */}
 
-        <span className="flex flex-col md:flex-row gap-3">
-          <span className="flex flex-col gap-1">
-            <label
-              htmlFor="Password"
-              className="text-[.8rem] font-bold text-[#64748B] mt-2"
-            >
+        <label className="text-[.8rem] font-bold text-[#64748B]">Email</label>
+
+        <input
+          {...register("Email", {
+            required: "Email is required",
+            pattern: {
+              value: /^\S+@\S+\.\S+$/,
+              message: "Invalid email",
+            },
+          })}
+          className="border-2 py-1 px-1 rounded-md focus:border-blue-600 focus:outline-none"
+        />
+
+        {errors.Email && (
+          <p className="text-red-500 text-[.7rem]">{errors.Email.message}</p>
+        )}
+
+        <span className="flex flex-col md:flex-row ">
+          {/* PASSWORD */}
+
+          <span className="flex flex-col pr0 md:pr-2 w-full md:w-1/2">
+            <label className="text-[.8rem] font-bold text-[#64748B]">
               Password
             </label>
+
             <input
               type="password"
-              name="Password"
-              placeholder="Password"
-              value={formData.Password}
-              className="border-2 py-1 px-2  rounded-md text-[.9rem] focus:border-blue-600  focus:outline-none"
-              onChange={handleChange}
-              required
+              {...register("Password", {
+                required: "Password required",
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/,
+                  message:
+                    "Must include uppercase, lowercase, number, special char",
+                },
+              })}
+              className="border-2 py-1 px-2 rounded-md focus:border-blue-600 focus:outline-none"
             />
-            {errors?.Password && <p className="text-red-500 text-[.7rem]">{errors.Password[0]}</p>}
 
+            {errors.Password && (
+              <p className="text-red-500 text-[.7rem]">
+                {errors.Password.message}
+              </p>
+            )}
           </span>
-          <span className="flex flex-col gap-1">
-            <label
-              htmlFor="ConfirmPassword"
-              className="text-[.8rem] font-bold text-[#64748B] mt-2"
-            >
+
+          {/* CONFIRM PASSWORD */}
+
+          <span className="flex flex-col pl-0 md:pl-2 w-full md:w-1/2">
+            <label className="text-[.8rem] font-bold text-[#64748B]">
               Confirm Password
             </label>
+
             <input
               type="password"
-              name="ConfirmPassword"
-              placeholder="Confirm Password"
-              value={formData.ConfirmPassword}
-              className="border-2 py-1 px-2  rounded-md text-[.9rem] focus:border-blue-600  focus:outline-none"
-              onChange={handleChange}
-              required
+              {...register("ConfirmPassword", {
+                validate: (value) =>
+                  value === password || "Passwords do not match",
+              })}
+              className="border-2 py-1 px-2 rounded-md focus:border-blue-600 focus:outline-none"
             />
-            {errors?.ConfirmPassword && <p className="text-red-500 text-[.7rem]">{errors.ConfirmPassword[0]}</p>}
 
-            
+            {errors.ConfirmPassword && (
+              <p className="text-red-500 text-[.7rem]">
+                {errors.ConfirmPassword.message}
+              </p>
+            )}
           </span>
         </span>
 

@@ -26,13 +26,13 @@ namespace SmartTaskAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            var errors = new List<string>();
-            if (!ModelState.IsValid)
+            var existingUser = await _userManager.FindByEmailAsync(dto.Email);
+
+            if (existingUser != null)
             {
-                errors.AddRange(
-                    ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)
-                    );
+                return BadRequest("Email already exists");
             }
+
             var user = new ApplicationUser
             {
                 UserName = dto.Email,
@@ -40,14 +40,12 @@ namespace SmartTaskAPI.Controllers
                 FirstName = dto.FirstName,
                 LastName = dto.LastName
             };
+
             var result = await _userManager.CreateAsync(user, dto.Password);
+
             if (!result.Succeeded)
             {
-                errors.AddRange(result.Errors.Select(e => e.Description));
-            }
-            if (errors.Any())
-            {
-                return BadRequest(errors);
+                return BadRequest(result.Errors.Select(e => e.Description));
             }
 
             await _userManager.AddToRoleAsync(user, dto.Role);
