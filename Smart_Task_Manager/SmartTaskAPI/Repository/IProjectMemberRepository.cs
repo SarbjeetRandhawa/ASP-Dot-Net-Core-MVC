@@ -6,8 +6,10 @@ namespace SmartTaskAPI.Repository
     public interface IProjectMemberRepository
     {
         Task AddMemberAsync(int projectId, AddMemberDto dto, string currentUserId);
+        Task RemoveMemberAsync(int projectId, string targetUserId ,string currentUserId);
 
-       Task<List<ProjectMembers>> GetAllMembersAsync(int projectId);
+
+        Task<List<ProjectMemberResponseDto>> GetAllMembersAsync(int projectId);
 
     }
 }

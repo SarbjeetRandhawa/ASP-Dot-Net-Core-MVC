@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using SmartTaskAPI.Data;
 using SmartTaskAPI.Models.DB;
 using SmartTaskAPI.Models.DTO;
@@ -53,28 +55,32 @@ namespace SmartTaskAPI.Repository
             
         }
 
-        public async Task DeleteAsync(int id, string role)
+        public async Task DeleteAsync(int id, string CurrentUserId)
         {
             var Project = await _Context.Projects.FindAsync(id);
             if (Project == null) throw new Exception("Project Not Found");
-            if(role != "Admin" || role != "Manager") throw new Exception("Only Admin or Manager Can Delete Project");
+            
+            var members  = await _Context.ProjectMembers.FirstOrDefaultAsync(x => x.Id == id && x.UserId == CurrentUserId);
+
+            if (members == null) throw new Exception("Your are not part of this Project");
+
+            if (members.Role != "Admin") throw new Exception("Only admin Allowed to delete Project");
 
             _Context.Projects.Remove(Project);
         }
 
-        public async Task UpdateAsync(int id, CreateProjectDto dto, string role)
+        public async Task UpdateAsync(int id, CreateProjectDto dto, string CurrentUserId)
         {
             var Project = await _Context.Projects.FindAsync(id);
 
             if (Project == null) throw new Exception("Project Not Found");
 
-            if(role != "Admin" || role != "Manager")
-            {
-                throw new Exception("Only Admin or Manager Can Update Project");
-            }
+            var members = await _Context.ProjectMembers.FirstOrDefaultAsync(x => x.Id == id && x.UserId == CurrentUserId);
+
+            if (members.Role == "Employee") throw new Exception("Not Allowed");
+
 
             Project.Name = dto.Name;
-
             Project.Description = dto.Description;
             Project.StartDate = dto.StartDate;
             Project.EndDate = dto.EndDate;
