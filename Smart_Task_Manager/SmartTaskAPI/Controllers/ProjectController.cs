@@ -7,7 +7,7 @@ using System.Security.Claims;
 namespace SmartTaskAPI.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]")]
+    [Route("api/[Controller]")] 
     public class ProjectController : Controller
     {
         private readonly IProjectService _projectService;
@@ -86,7 +86,7 @@ namespace SmartTaskAPI.Controllers
         }
 
 
-        [HttpGet("/ProjectRoles")]
+        [HttpGet("ProjectRoles")]
         public async Task<IActionResult> GetAll()
         {
             var ProjectRoles = await _projectRoleService.GetAllAsync();

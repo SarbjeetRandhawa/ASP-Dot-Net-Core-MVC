@@ -35,6 +35,7 @@ function Register() {
 
     try {
       await registerUser(finalData);
+      navigate("/login")
     } catch (error) {
       if (!error.response) {
         alert("Server not responding");

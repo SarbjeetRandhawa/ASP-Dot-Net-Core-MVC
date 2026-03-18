@@ -16,8 +16,8 @@ namespace SmartTaskAPI.Services.Implementation
         }
         public async Task CreateAsync(CreateProjectDto dto, string CreatoruserId, string role)
         {
-            if (role != "Admin" || role != "Manager") throw new Exception("Only Admin or Manager Can Create Project");
-            var project = new Projects
+            if (role != "Admin" && role != "Manager") throw new Exception("Only Admin or Manager Can Create Project");
+            var project = new Project
             {
                 Name = dto.Name,
                 Description = dto.Description,
@@ -31,35 +31,35 @@ namespace SmartTaskAPI.Services.Implementation
             await _uow.ProjectRepository.CreateProjectAsync(project);
             await _uow.SaveAsync();
 
+            var projectMembersList = new List<ProjectMember>();
+            int CreatorProjectRoleId = role == "Admin" ? 1 : 2;
 
-
-            var CreatorProjectMember = new ProjectMembers
+            projectMembersList.Add(new ProjectMember
             {
-                ProjectId = project.Id,
+                ProjectId =project.Id,
                 UserId = CreatoruserId,
-                ProjectId = ,
-            };
-
-            await _uow.ProjectRepository.CreateProjectMemberAsync(CreatorProjectMember);
-            await _uow.SaveAsync();
-
-
+                ProjectRoleID = CreatorProjectRoleId,
+              
+            });
+            
             foreach (var member in dto.Members)
             {
-                if (role == "Manager" && member.Role == "Admin")
+                if (role == "Manager" && _uow.UserRepository.GetUserRoleAsync(member.UserId).ToString() == "Admin")
                 {
                     throw new Exception("Manager Cannot add admin");
                 }
-                var projectMembers  = new ProjectMembers
+
+                projectMembersList.Add(new ProjectMember
                 {
                     ProjectId = project.Id,
-                    UserId = member.UserId,
-                    
-                };
-                await _uow.ProjectRepository.CreateProjectMemberAsync(projectMembers);
-                await _uow.SaveAsync();
+                    UserId = CreatoruserId,
+                    ProjectRoleID = member.Role
+                });
+                
 
             }
+            await _uow.ProjectRepository.CreateProjectMemberAsync(projectMembersList);
+            await _uow.SaveAsync();
 
         }
 

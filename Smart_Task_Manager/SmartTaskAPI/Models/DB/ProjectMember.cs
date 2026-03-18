@@ -2,11 +2,11 @@
 
 namespace SmartTaskAPI.Models.DB
 {
-    public class ProjectMembers
+    public class ProjectMember
     {
         public int Id { get; set; }
         public int ProjectId { get; set; }
-        public Projects project { get; set; }
+        public Project project { get; set; }
         public string UserId { get; set; }
         public int? ProjectRoleID { get; set; }
         public ProjectRole Role { get; set; }

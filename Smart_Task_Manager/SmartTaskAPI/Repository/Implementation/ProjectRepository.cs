@@ -17,15 +17,15 @@ namespace SmartTaskAPI.Repository.Implementation
             _Context = context;
         }
 
-        public async Task CreateProjectAsync(Projects project)
+        public async Task CreateProjectAsync(Project project)
         {
                 
             await _Context.Projects.AddAsync(project);
             
         }
-        public async Task CreateProjectMemberAsync(ProjectMembers projectMember)
+        public async Task CreateProjectMemberAsync(List<ProjectMember> projectMember)
         {
-            await _Context.ProjectMembers.AddAsync(projectMember);
+            await _Context.ProjectMembers.AddRangeAsync(projectMember);
         }
 
 

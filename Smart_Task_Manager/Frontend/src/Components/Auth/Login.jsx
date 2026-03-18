@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
 import { loginUser } from "../../Services/AuthService";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../Context/AuthContext";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../features/auth/authSlice";
 import AuthSidebar from "./AuthSidebar";
 
 function Login() {
-  const { login } = useAuth();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const {
@@ -16,12 +17,17 @@ function Login() {
   } = useForm();
 
   const onSubmit = async (data) => {
+     
     try {
       const res = await loginUser(data);
 
-      login(res.data);
+        dispatch(loginSuccess({
+          user: res.data.user,
+          token: res.data.token
+        }));
 
       navigate("/dashboard");
+      
     } catch (error) {
       if (!error.response) {
         alert("Server not responding");
@@ -144,7 +150,10 @@ function Login() {
 
             <p className="text-center text-[.8rem] font-semibold text-[#64748B]">
               Dont have an account?{" "}
-              <a onClick={()=> navigate("/register")} className="text-blue-500 hover:underline cursor-pointer">
+              <a
+                onClick={() => navigate("/register")}
+                className="text-blue-500 hover:underline cursor-pointer"
+              >
                 Create one free
               </a>
             </p>

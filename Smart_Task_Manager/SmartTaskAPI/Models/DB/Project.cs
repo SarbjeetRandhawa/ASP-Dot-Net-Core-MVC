@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartTaskAPI.Models.DB
 {
-    public class Projects
+    public class Project
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -17,6 +17,6 @@ namespace SmartTaskAPI.Models.DB
         public string Icon { get; set; }
         public string colorTheme { get; set; }
 
-        public ICollection<ProjectMembers> Members { get; set; }
+        public ICollection<ProjectMember> Members { get; set; }
     }
 }

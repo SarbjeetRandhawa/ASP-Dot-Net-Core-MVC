@@ -5,8 +5,8 @@ namespace SmartTaskAPI.Repository.Interface
 {
     public interface IProjectRepository
     {
-        Task CreateProjectAsync(Projects project);
-        Task CreateProjectMemberAsync(ProjectMembers projectMember);
+        Task CreateProjectAsync(Project project);
+        Task CreateProjectMemberAsync(List<ProjectMember> projectMembers);
 
         Task UpdateAsync(int id , CreateProjectDto dto , string CurrentUserId , string role);
         Task DeleteAsync(int id , string CurrentUserId, string role);

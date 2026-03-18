@@ -32,7 +32,7 @@ namespace SmartTaskAPI.Repository.Implementation
                 throw new Exception("Member already added");
             }
 
-            var member = new ProjectMembers
+            var member = new ProjectMember
             {
                 UserId = dto.UserId,
                 ProjectId = projectId,
