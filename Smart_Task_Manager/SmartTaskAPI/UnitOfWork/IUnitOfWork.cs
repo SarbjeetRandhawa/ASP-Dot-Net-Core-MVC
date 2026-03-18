@@ -1,4 +1,4 @@
-﻿using SmartTaskAPI.Repository;
+﻿using SmartTaskAPI.Repository.Interface;
 
 namespace SmartTaskAPI.UnitOfWork
 {
@@ -6,6 +6,7 @@ namespace SmartTaskAPI.UnitOfWork
     {
         IProjectRepository ProjectRepository { get; }
         IProjectMemberRepository ProjectMemberRepository { get; }
+        IProjectRoleRepository ProjectRoleRepository { get; }
         IUserRepository UserRepository { get; }
         
         Task SaveAsync();

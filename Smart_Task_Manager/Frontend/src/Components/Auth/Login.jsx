@@ -57,13 +57,13 @@ function Login() {
             class="justify-around gap-1 flex mb-2 bg-[#F1F5F9] h-10 items-center rounded-md "
           >
             <button
-              onClick={() => navigate("/auth/login")}
+              onClick={() => navigate("/login")}
               className={`h-9  rounded-md w-1/2 mx-1  bg-[#FFFF] font-semibold text-[#4F46E5]`}
             >
               Login
             </button>
             <button
-              onClick={() => navigate("/auth/register")}
+              onClick={() => navigate("/register")}
               className={` h-9 rounded-md w-1/2 mx-1 bg-[#f1f5f9] text-[#64748B]`}
             >
               Sign Up
@@ -144,7 +144,7 @@ function Login() {
 
             <p className="text-center text-[.8rem] font-semibold text-[#64748B]">
               Dont have an account?{" "}
-              <a onClick={()=> navigate("/auth/register")} className="text-blue-500 hover:underline cursor-pointer">
+              <a onClick={()=> navigate("/register")} className="text-blue-500 hover:underline cursor-pointer">
                 Create one free
               </a>
             </p>

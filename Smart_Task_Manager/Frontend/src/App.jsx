@@ -15,9 +15,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="*" element={<h1>404 Not Found</h1>} />
-        <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Navigate to="/auth/login" /> } />
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/auth/register" element={<Register/>} />
+        <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" /> } />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register/>} />
 
         <Route path="/dashboard" element={ <ProtectedRoute><button onClick={logout}>logout</button></ProtectedRoute> } />
         

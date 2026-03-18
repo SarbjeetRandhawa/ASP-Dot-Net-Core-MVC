@@ -1,5 +1,6 @@
 ﻿using SmartTaskAPI.Data;
-using SmartTaskAPI.Repository;
+using SmartTaskAPI.Repository.Implementation;
+using SmartTaskAPI.Repository.Interface;
 
 namespace SmartTaskAPI.UnitOfWork
 {
@@ -8,16 +9,19 @@ namespace SmartTaskAPI.UnitOfWork
         public readonly AppDbContext _context;
        public IProjectRepository ProjectRepository { get; }
         public IProjectMemberRepository ProjectMemberRepository { get; }
+        public IProjectRoleRepository ProjectRoleRepository { get; }
         public IUserRepository UserRepository { get; }
-        public UnitOfWork(AppDbContext context,IProjectRepository projectRepository , IUserRepository userRepository, IProjectMemberRepository projectMemberRepository)
+        public UnitOfWork(AppDbContext context, IUserRepository userRepository)
         {
             this._context=context;
-            this.ProjectRepository=projectRepository;
-            this.ProjectMemberRepository=projectMemberRepository;
             this.UserRepository=userRepository;
+
+            this.ProjectRepository = new ProjectRepository(context);
+            this.ProjectMemberRepository = new ProjectMemberRepository(context);
+            this.ProjectRoleRepository = new ProjectRoleRepository(context);
         }
 
-        public async Task SaveAsync()
+        public async Task SaveAsync() 
         {
             await _context.SaveChangesAsync();
         }

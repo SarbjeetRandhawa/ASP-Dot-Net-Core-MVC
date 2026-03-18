@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartTaskAPI.Data;
 using SmartTaskAPI.Models.Identity;
-using SmartTaskAPI.Repository;
+using SmartTaskAPI.Repository.Implementation;
+using SmartTaskAPI.Repository.Interface;
 using SmartTaskAPI.Service;
 using SmartTaskAPI.UnitOfWork;
 
@@ -18,6 +19,7 @@ builder.Services.AddScoped<IProjectRepository,ProjectRepository>();
 builder.Services.AddScoped<IProjectMemberRepository,ProjectMemberRepository>();
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped<IProjectRoleRepository,ProjectRoleRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dbcs")));
 

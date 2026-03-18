@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartTaskAPI.Models.DTO;
+using SmartTaskAPI.Services.Interfaces;
 using SmartTaskAPI.UnitOfWork;
 using System.Security.Claims;
 
@@ -9,11 +10,15 @@ namespace SmartTaskAPI.Controllers
     [Route("api/[Controller]")]
     public class ProjectController : Controller
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IProjectService _projectService;
+        private readonly IProjectMemberService _projectMemberService;
+        private readonly IProjectRoleService _projectRoleService;
 
-        public ProjectController(IUnitOfWork uow)
+        public ProjectController(IProjectService projectService , IProjectMemberService projectMemberService, IProjectRoleService projectRoleService)
         {
-            this._uow = uow;
+           _projectService = projectService;
+            _projectRoleService = projectRoleService;
+            _projectMemberService = projectMemberService;
         }
 
         private string GetUserId()
@@ -22,22 +27,23 @@ namespace SmartTaskAPI.Controllers
         }
         private string GetUserRole()
         {
-            return User.FindFirst(ClaimTypes.Role)?.Value;
+            return User.FindFirst(ClaimTypes.Role)?.Value; 
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateProjectDto dto)
         {
 
-            await _uow.ProjectRepository.CreateAsync(dto, GetUserId(), GetUserRole());
-            await _uow.SaveAsync();
+            
+            await _projectService.CreateAsync(dto, GetUserId(), GetUserRole());
+           
             return Ok("Project Created");
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, CreateProjectDto dto)
         {
-            await _uow.ProjectRepository.UpdateAsync(id, dto, GetUserId());
-            await _uow.SaveAsync();
+           
+            await _projectService.UpdateAsync(id,dto, GetUserId());
 
             return Ok("Project Updated");
         }
@@ -45,8 +51,7 @@ namespace SmartTaskAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _uow.ProjectRepository.DeleteAsync(id, GetUserRole());
-            await _uow.SaveAsync();
+            await _projectService.DeleteProjectAsync(id, GetUserRole());
 
             return Ok("Project Deleted");
         }
@@ -54,23 +59,11 @@ namespace SmartTaskAPI.Controllers
 
 
 
-        [HttpGet("users")]
-        public async Task<IActionResult> GetUsers()
+        [HttpPost("{projectId , ProjectRoleId}/members")]
+        public async Task<IActionResult> AddMember(int projectId, AddMemberDto dto , int ProjectRoleId)
         {
-            var users = await _uow.UserRepository.GetAllAsync();
-            await _uow.SaveAsync();
-
-            return Ok(users);
-        }
-
-
-
-
-        [HttpPost("{projectId}/members")]
-        public async Task<IActionResult> AddMember(int projectId, AddMemberDto dto)
-        {
-            await _uow.ProjectMemberRepository.AddMemberAsync(projectId, dto, GetUserId());
-            await _uow.SaveAsync();
+            
+            await _projectMemberService.AddMemberAsync(projectId,dto, GetUserId() , ProjectRoleId);
 
             return Ok("Member Added");
         }
@@ -78,8 +71,8 @@ namespace SmartTaskAPI.Controllers
         [HttpGet("{projectId}/members")]
         public async Task<IActionResult> GetMember(int projectId)
         {
-            var members = await _uow.ProjectMemberRepository.GetAllMembersAsync(projectId);
-            await _uow.SaveAsync();
+            var members = await _projectMemberService.GetAllMembersAsync(projectId);
+            
 
             return Ok(members);
         }
@@ -87,9 +80,24 @@ namespace SmartTaskAPI.Controllers
         [HttpDelete("{projectId}/members/{userId}")]
         public async Task<IActionResult> RemoveMember(int projectId, string userId)
         {
-            await _uow.ProjectMemberRepository.RemoveMemberAsync(projectId, userId, GetUserId());
-            _uow.SaveAsync();
+            await _projectMemberService.RemoveMemberAsync(projectId, userId, GetUserId());
+         
             return Ok("member Removed");
+        }
+
+
+        [HttpGet("/ProjectRoles")]
+        public async Task<IActionResult> GetAll()
+        {
+            var ProjectRoles = await _projectRoleService.GetAllAsync();
+            return Ok(ProjectRoles);
+        }
+
+        [HttpGet("/ProjectRoles/{id}")]
+        public async Task<IActionResult> GetProjectRoleById(int id)
+        {
+            var ProjectRole = await _projectRoleService.GetByIdAsync(id);
+            return Ok(ProjectRole);
         }
     }
 }

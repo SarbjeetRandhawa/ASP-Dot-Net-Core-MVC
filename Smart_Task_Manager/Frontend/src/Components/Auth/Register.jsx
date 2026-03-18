@@ -72,13 +72,13 @@ function Register() {
             class="justify-around gap-1 flex mb-2 bg-[#F1F5F9] h-10 items-center rounded-md "
           >
             <button
-              onClick={() => navigate("/auth/login")}
+              onClick={() => navigate("/login")}
               className={` h-9 rounded-md w-1/2 mx-1bg-[#f1f5f9] text-[#64748B] `}
             >
               Login
             </button>
             <button
-              onClick={() => navigate("/auth/register")}
+              onClick={() => navigate("/register")}
               className={`h-9  rounded-md w-1/2 mx-1 bg-[#FFFF] font-semibold text-[#4F46E5]`}
             >
               Sign Up
