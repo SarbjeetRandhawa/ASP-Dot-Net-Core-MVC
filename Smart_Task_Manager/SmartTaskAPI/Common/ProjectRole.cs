@@ -1,7 +1,7 @@
 ﻿namespace SmartTaskAPI.Common
 {
     
-        public enum ProjectRoleEnum
+        public enum ProjectRole
         {
             Admin = 1,
             Manager = 2,

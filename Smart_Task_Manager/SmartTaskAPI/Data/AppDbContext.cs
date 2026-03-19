@@ -18,36 +18,36 @@ namespace SmartTaskAPI.Data
             base.OnModelCreating(builder);
             builder.Entity<ProjectMember>().HasOne(p => p.User).WithMany().HasForeignKey(pm => pm.UserId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ProjectRole>().HasData(
-                new ProjectRole
+            builder.Entity<Models.DB.ProjectRole>().HasData(
+                new Models.DB.ProjectRole
                 {
-                    Id = (int)ProjectRoleEnum.Admin , Name = "Admin"
+                    Id = (int)Common.ProjectRole.Admin , Name = "Admin"
                 },
-                new ProjectRole
+                new Models.DB.ProjectRole
                 {
-                    Id = (int)ProjectRoleEnum.Manager,
+                    Id = (int)Common.ProjectRole.Manager,
                     Name = "Manager"
                 },
-                new ProjectRole
+                new Models.DB.ProjectRole
                 {
-                    Id = (int)ProjectRoleEnum.Backend,
+                    Id = (int)Common.ProjectRole.Backend,
                     Name = "Backend"
                 },
-                new ProjectRole
+                new Models.DB.ProjectRole
                 {
-                    Id = (int)ProjectRoleEnum.Frontend,
+                    Id = (int)Common.ProjectRole.Frontend,
                     Name = "Frontend"
                 },
-                new ProjectRole
+                new Models.DB.ProjectRole
                 {
-                    Id = (int)ProjectRoleEnum.Dev,
+                    Id = (int)Common.ProjectRole.Dev,
                     Name = "Dev"
                 }
             );
         }
         public DbSet<ProjectMember> ProjectMembers { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<ProjectRole> projectRoles { get; set; }
+        public DbSet<Models.DB.ProjectRole> projectRoles { get; set; }
     }
 
 
