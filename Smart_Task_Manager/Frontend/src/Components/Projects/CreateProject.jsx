@@ -1,12 +1,9 @@
-// import { useDispatch } from "react-redux";
-// import { logout } from "../../features/auth/authSlice";
 import Sidebar from "../Sidebar";
 import "../../App.css";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import TeamMembers from "./TeamMembers";
 
 function CreateProject() {
-  // const dispatch = useDispatch();
   const [members, setMembers] = useState([]);
   const [projectFormData, setProjectFormData] = useState({
     Name: "",
@@ -17,7 +14,7 @@ function CreateProject() {
     Icon: "📱",
     Colour: "#4F46E5",
   });
-  
+
   const length = projectFormData.Description?.length || 0;
 
   const HandleChange = (e) => {
@@ -38,6 +35,54 @@ function CreateProject() {
     setProjectFormData({
       ...projectFormData,
       Colour: colour,
+    });
+  };
+
+  const CalculateDuration = (startDate, endDate) => {
+    if (!startDate || !endDate) return null;
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (end < start) return { error: "End date must be after start date" };
+
+    const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+    let months =
+      (end.getFullYear() - start.getFullYear()) * 12 +
+      (end.getMonth() - start.getMonth());
+
+    let adjustedDate = new Date(start);
+    adjustedDate.setMonth(start.getMonth() + months);
+
+    if (adjustedDate > end) {
+      months--;
+      adjustedDate = new Date(start);
+      adjustedDate.setMonth(start.getMonth() + months);
+    }
+
+    const days = Math.ceil((end - adjustedDate) / (1000 * 60 * 60 * 24));
+
+    return {
+      totalDays,
+      months,
+      days,
+    };
+  };
+
+  const duration = useMemo(() => {
+    return CalculateDuration(
+      projectFormData.StartDate,
+      projectFormData.EndDate,
+    );
+  }, [projectFormData.StartDate, projectFormData.EndDate]);
+
+  const formFullDate = (date) => {
+    if (!date) return "";
+
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -153,8 +198,7 @@ function CreateProject() {
                     <input
                       type="date"
                       name="StartDate"
-                    onChange={HandleChange}
-
+                      onChange={HandleChange}
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
                   </span>
@@ -168,8 +212,7 @@ function CreateProject() {
                     <input
                       type="date"
                       name="EndDate"
-                    onChange={HandleChange}
-
+                      onChange={HandleChange}
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
                   </span>
@@ -178,13 +221,20 @@ function CreateProject() {
                 <div className="px-4 pb-4">
                   <div className="h-auto p-4 bg-[#F1F5F9] rounded-md">
                     <div className=" h-5 text-[10px] flex justify-between text-[#94A3B8]">
-                      <p>Apr 1, 2025</p>
+                      <p>{formFullDate(projectFormData.StartDate)}</p>
                       <p className="text-[#4F46E5] font-semibold">
-                        5 months - 153 days
+                        {duration.months ? `${duration.months} Months` : ``}
+                        &nbsp;
+                        {duration.days ? `${duration.days} Days` : ``}
                       </p>
-                      <p>Apr 31, 2025</p>
+                      <p>{formFullDate(projectFormData.EndDate)}</p>
                     </div>
-                    <div className="bg-[linear-gradient(to_right,#4F46E5,#a83aed)] h-[10px] rounded-md"></div>
+                    <div
+                      className=" h-[10px] rounded-md"
+                      style={{
+                        background: `linear-gradient(to LEFT,${projectFormData.Colour} , ${projectFormData.Colour}66)`,
+                      }}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -409,14 +459,18 @@ function CreateProject() {
                     type="text"
                     name="Status"
                     onChange={HandleChange}
-
                     placeholder=""
                     className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div className="overflow-hidden p-4 relative h-auto bg-[linear-gradient(to_bottom,#1E1B4B,#4338CA)] rounded-md">
+              <div
+                className="overflow-hidden p-4 relative h-auto  rounded-md"
+                style={{
+                  background: `linear-gradient(to bottom, #1E1B4B, ${projectFormData.Colour})`,
+                }}
+              >
                 <div className="z-0 absolute w-[10rem] h-[10rem] bg-[#ffffff2e] -right-10 -top-10 rounded-full"></div>
                 <div className="text-white ">
                   <h1 className="text-[#FFFFFF80] text-[12px] font-semibold">
@@ -428,16 +482,24 @@ function CreateProject() {
                         {projectFormData.Icon}
                       </div>
                       <div>
-                        <h1 className="font-semibold">{projectFormData.Name || "Project Name"}</h1>
+                        <h1 className="font-semibold">
+                          {projectFormData.Name || "Mobile App v3.0"}
+                        </h1>
                         <p className="text-[13px] font-semibold text-[#FFFFFF80]">
-                          {projectFormData.Status || "Active"} &nbsp; {projectFormData.StartDate || "Apr 1"} - {projectFormData.EndDate || "Apr 30"}
+                          {projectFormData.Status || "Active"}{" "}
+                          &nbsp;&nbsp;&nbsp;
+                          {formFullDate(projectFormData.StartDate) ||
+                            "Apr 1"}{" "}
+                          &nbsp;- &nbsp;{" "}
+                          {formFullDate(projectFormData.EndDate) || "Apr 30"}
                         </p>
                       </div>
                     </div>
                     <p className="text-[#FFFFFFA6] break-words line-clamp-3 whitespace-pre-wrap ">
-                      {projectFormData.Description || "Third major version of the IOS/Android Application"}
+                      {projectFormData.Description ||
+                        "Third major version of the IOS/Android Application"}
                     </p>
-                    <div></div>
+                    <div className="progressbar w-full bg-[#FFFFFF2A] h-2 rounded-lg"></div>
                     <div className="flex justify-between">
                       <div>nametags</div>
                       <p className="text-[#FFFFFFA6]">0 tasks - 0% done</p>
@@ -459,7 +521,6 @@ function CreateProject() {
           </div>
         </form>
       </div>
-      {/* <button onClick={()=>dispatch(logout())}>logout</button> */}
     </div>
   );
 }
