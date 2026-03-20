@@ -89,7 +89,7 @@ function CreateProject() {
   return (
     <div className="flex ">
       <Sidebar />
-      <div className="w-full md:pl-[16.66%]">
+      <div className="w-full md:pl-[16.66%] bg-white">
         <form method="post">
           <div className="Navbar border my flex gap-2 h-12 w-full">
             <div className="p-1 mx-4">
@@ -221,13 +221,18 @@ function CreateProject() {
                 <div className="px-4 pb-4">
                   <div className="h-auto p-4 bg-[#F1F5F9] rounded-md">
                     <div className=" h-5 text-[10px] flex justify-between text-[#94A3B8]">
-                      <p>{formFullDate(projectFormData.StartDate)}</p>
-                      <p className="text-[#4F46E5] font-semibold">
-                        {duration.months ? `${duration.months} Months` : ``}
-                        &nbsp;
-                        {duration.days ? `${duration.days} Days` : ``}
+                      <p>
+                        {formFullDate(projectFormData.StartDate) || "Apr 1"}
                       </p>
-                      <p>{formFullDate(projectFormData.EndDate)}</p>
+                      <p
+                        className="font-semibold"
+                        style={{ color: `${projectFormData.Colour}` }}
+                      >
+                        {duration?.months ? `${duration.months} Months` : ``}
+                        &nbsp;
+                        {duration?.days ? `${duration.days} Days` : ``}
+                      </p>
+                      <p>{formFullDate(projectFormData.EndDate) || "Apr 30"}</p>
                     </div>
                     <div
                       className=" h-[10px] rounded-md"
@@ -501,8 +506,23 @@ function CreateProject() {
                     </p>
                     <div className="progressbar w-full bg-[#FFFFFF2A] h-2 rounded-lg"></div>
                     <div className="flex justify-between">
-                      <div>nametags</div>
-                      <p className="text-[#FFFFFFA6]">0 tasks - 0% done</p>
+                      <div>
+                        {members.map((m, offset) => {
+                          const left = offset * 20;
+                          const randomHSL = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                          return (
+                            <div
+                              key={m.userID}
+                              style={{ left: `${left}px`, backgroundColor: randomHSL  }}
+                              className="absolute ml-5 border-4 border-[#b3b9f2f4] w-9 h-9 rounded-full text-[12px] text-center p-[6px] bg-[blue] font-bold"
+                            >
+                              {m.firstName?.charAt(0)}
+                              {m.lastName?.charAt(0)}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <p className="mb-4 text-[#FFFFFFA6]">0 tasks - 0% done</p>
                     </div>
                   </div>
                 </div>

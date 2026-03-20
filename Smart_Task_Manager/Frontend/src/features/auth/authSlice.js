@@ -12,7 +12,7 @@ const getUserFromStorage = () =>{
 };
 
 const initialState = {
-    user: getUserFromStorage,
+    user: getUserFromStorage(),
     token: localStorage.getItem("token") || null
 };
 

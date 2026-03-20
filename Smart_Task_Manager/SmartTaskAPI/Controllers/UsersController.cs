@@ -24,6 +24,12 @@ namespace SmartTaskAPI.Controllers
             return Ok(users);
         }
 
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserRoleAsync(string userId)
+        {
+            var user = await _userService.GetUserRoleAsync(userId);
+            return Ok(user);
+        }
         
     }
 }
