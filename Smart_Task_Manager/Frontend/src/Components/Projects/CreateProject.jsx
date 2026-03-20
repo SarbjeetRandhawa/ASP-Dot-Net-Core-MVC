@@ -7,13 +7,27 @@ import TeamMembers from "./TeamMembers";
 
 function CreateProject() {
   // const dispatch = useDispatch();
+  const [members, setMembers] = useState([]);
   const [projectFormData, setProjectFormData] = useState({
+    Name: "",
+    Description: "",
+    Status: "",
+    StartDate: "",
+    EndDate: "",
     Icon: "📱",
     Colour: "#4F46E5",
   });
-  const [text, setText] = useState("");
-  const length = text.length;
+  
+  const length = projectFormData.Description?.length || 0;
 
+  const HandleChange = (e) => {
+    const { name, value } = e.target;
+
+    setProjectFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
   const SelectIcon = (Icon) => {
     setProjectFormData({
       ...projectFormData,
@@ -30,7 +44,7 @@ function CreateProject() {
   return (
     <div className="flex ">
       <Sidebar />
-      <div className="w-full pl-[16.66%]">
+      <div className="w-full md:pl-[16.66%]">
         <form method="post">
           <div className="Navbar border my flex gap-2 h-12 w-full">
             <div className="p-1 mx-4">
@@ -38,16 +52,24 @@ function CreateProject() {
                 <span className="text-[#94A3B8]">Projects &gt;</span> Create New
                 Project
               </p>
-              <h1 className="font-bold text-[#0F172A]">Create New Project</h1>
+              <h1 className="font-bold mt-[-3px] text-[#0F172A]">
+                Create New Project
+              </h1>
             </div>
-            <div className="flex gap-2 items-center">
+            <div type="button" className="flex gap-2 items-center">
               <button className="border h-2/3  text-[11px] font-bold rounded-md w-[90px]">
                 Cancel
               </button>
-              <button className="border h-2/3  text-[11px] font-bold rounded-md w-[120px]">
+              <button
+                type="button"
+                className="border h-2/3  text-[11px] font-bold rounded-md w-[120px]"
+              >
                 💾 Save Draft
               </button>
-              <button type="buttons" className="border h-2/3  text-[11px] font-bold rounded-md w-[145px] bg-[#4F46E5] text-white">
+              <button
+                type="button"
+                className="border h-2/3  text-[11px] font-bold rounded-md w-[145px] bg-[#4F46E5] text-white"
+              >
                 🚀 Create Project
               </button>
             </div>
@@ -79,8 +101,9 @@ function CreateProject() {
                   </label>
                   <input
                     type="text"
-                    name="ProjectName"
+                    name="Name"
                     placeholder="Mobile App v3.0"
+                    onChange={HandleChange}
                     className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                   />
                   <p className="text-[11px] mt-[-5px]  text-[#94A3B8] ">
@@ -96,8 +119,10 @@ function CreateProject() {
                   <textarea
                     type="text"
                     rows="4"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
+                    name="Description"
+                    onClick={HandleChange}
+                    value={projectFormData.Description || ""}
+                    onChange={HandleChange}
                     placeholder="Describe the project goals, scope and any important context for your team..."
                     className="border-2  text-[12px] p-2 font-semibold rounded-md resize-none  focus:border-blue-600 focus:outline-none"
                   />
@@ -127,7 +152,9 @@ function CreateProject() {
                     </label>
                     <input
                       type="date"
-                      name="startDate"
+                      name="StartDate"
+                    onChange={HandleChange}
+
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
                   </span>
@@ -140,7 +167,9 @@ function CreateProject() {
                     </label>
                     <input
                       type="date"
-                      name="endDate"
+                      name="EndDate"
+                    onChange={HandleChange}
+
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
                   </span>
@@ -161,7 +190,7 @@ function CreateProject() {
               </div>
 
               <div>
-                <TeamMembers/>
+                <TeamMembers members={members} setMembers={setMembers} />
               </div>
             </div>
 
@@ -379,14 +408,46 @@ function CreateProject() {
                   <input
                     type="text"
                     name="Status"
+                    onChange={HandleChange}
+
                     placeholder=""
                     className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                   />
                 </div>
               </div>
 
+              <div className="overflow-hidden p-4 relative h-auto bg-[linear-gradient(to_bottom,#1E1B4B,#4338CA)] rounded-md">
+                <div className="z-0 absolute w-[10rem] h-[10rem] bg-[#ffffff2e] -right-10 -top-10 rounded-full"></div>
+                <div className="text-white ">
+                  <h1 className="text-[#FFFFFF80] text-[12px] font-semibold">
+                    PREVIEW
+                  </h1>
+                  <div className="flex flex-col gap-3 mt-3">
+                    <div className="flex gap-3">
+                      <div className="block p-1 bg-[#FFFFFF26] rounded-lg text-[25px]">
+                        {projectFormData.Icon}
+                      </div>
+                      <div>
+                        <h1 className="font-semibold">{projectFormData.Name || "Project Name"}</h1>
+                        <p className="text-[13px] font-semibold text-[#FFFFFF80]">
+                          {projectFormData.Status || "Active"} &nbsp; {projectFormData.StartDate || "Apr 1"} - {projectFormData.EndDate || "Apr 30"}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-[#FFFFFFA6] break-words line-clamp-3 whitespace-pre-wrap ">
+                      {projectFormData.Description || "Third major version of the IOS/Android Application"}
+                    </p>
+                    <div></div>
+                    <div className="flex justify-between">
+                      <div>nametags</div>
+                      <p className="text-[#FFFFFFA6]">0 tasks - 0% done</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="proTip h-auto p-4  outline outline-[#C7D2FE] rounded-md bg-[#EEF2FF]">
-                <h1 className="font-semibold text-[#3730A3]">💡Pro Tips</h1>
+                <h1 className="font-semibold text-[#3730A3]">💡 Pro Tips</h1>
                 <ul className="ml-6 flex flex-col gap-2 mt-3 text-[#4338CA] ">
                   <li>Keep project names short and specific</li>
                   <li>Set a realistic end date with buffer time</li>

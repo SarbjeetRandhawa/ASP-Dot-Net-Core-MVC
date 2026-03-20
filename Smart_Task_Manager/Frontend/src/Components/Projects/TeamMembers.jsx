@@ -1,7 +1,6 @@
 import React from "react";
-import { ElDropdown } from "@tailwindplus/elements/react";
 
-function TeamMembers() {
+function TeamMembers({ members, setmembers }) {
   return (
     <>
       <div className="Team-members mb-4 bg-white h-auto rounded-lg border-2">
@@ -31,98 +30,40 @@ function TeamMembers() {
         </div>
 
         <div className="members px-4 pb-4 flex flex-col gap-2">
-          <div className=" h-14  rounded-md flex bg-[#f8f8f8]">
-            <div className=" w-1/2 flex items-center">
-              <div className="px-4">
-                <h1 className=" p-2 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
-                  AK
-                </h1>
-              </div>
-              <div>
-                <h1 className="font-bold text-[13px]">Alex Kumar</h1>
-                <p className="text-[11px] mt-[-3px] font-semibold text-[#64748B] ">
-                  alex@taskflow.com
-                </p>
-              </div>
-            </div>
-            <div className="w-1/2 flex items-center">
-              <el-ElDropdown class="inline-block">
-                <button class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white inset-ring-1 inset-ring-white/5 hover:bg-white/20">
-                  Options
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    data-slot="icon"
-                    aria-hidden="true"
-                    class="-mr-1 size-5 text-gray-400"
-                  >
-                    <path
-                      d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                      clip-rule="evenodd"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </button>
+          {members.length == 0 && <p className="text-center text-[12px] text-[#64748b8d] font-semibold ">No members added Yet</p>}
 
-                <el-menu
-                  anchor="bottom end"
-                  popover
-                  class="w-56 origin-top-right divide-y divide-white/10 rounded-md bg-gray-800 outline-1 -outline-offset-1 outline-white/10 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+          {members.map((m) => {
+            <div key={m.userId} className=" h-14  rounded-md flex bg-[#f8f8f8]">
+              <div className=" w-1/2 flex items-center">
+                <div className="px-4">
+                  <h1 className=" p-2 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
+                    {m.FirstName?.charAt(0)}
+                    {m.LastName?.charAt(0)}
+                  </h1>
+                </div>
+                <div>
+                  <h1 className="font-bold text-[13px]">{m.FirstName} {m.LastName}</h1>
+                  <p className="text-[11px] mt-[-3px] font-semibold text-[#64748B] ">
+                    {m.Email}
+                  </p>
+                </div>
+              </div>
+              <div className="w-1/2 flex items-center gap-4 p-4 justify-end">
+                <select
+                  name="projectRole"
+                  className="rounded-md p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
                 >
-                  <div class="py-1">
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden"
-                    >
-                      Edit
-                    </a>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden"
-                    >
-                      Duplicate
-                    </a>
-                  </div>
-                  <div class="py-1">
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden"
-                    >
-                      Archive
-                    </a>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden"
-                    >
-                      Move
-                    </a>
-                  </div>
-                  <div class="py-1">
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden"
-                    >
-                      Share
-                    </a>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden"
-                    >
-                      Add to favorites
-                    </a>
-                  </div>
-                  <div class="py-1">
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden"
-                    >
-                      Delete
-                    </a>
-                  </div>
-                </el-menu>
-              </el-ElDropdown>
-            </div>
-          </div>
+                  <option value="Dev">Dev</option>
+                  <option value="Backend">Backend</option>
+                </select>
+                <h2 className="rounded-2xl text-[10px] p-2 bg-[#F0FDF4] text-[#10B981] font-semibold">
+                  {m.role}
+                </h2>
+                <div className="cursor-pointer">❌</div>
+              </div>
+            </div>;
+          })}
+
         </div>
       </div>
     </>
