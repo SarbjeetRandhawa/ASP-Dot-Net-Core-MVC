@@ -14,9 +14,10 @@ namespace SmartTaskAPI.Services.Implementation
         {
             _uow = uow;
         }
-        public async Task CreateAsync(CreateProjectDto dto, string CreatoruserId, string role)
+        public async Task CreateAsync(CreateProjectDto dto, string CreatoruserId)
         {
-            if (role != "Admin" && role != "Manager") throw new Exception("Only Admin or Manager Can Create Project");
+            var role = _uow.UserRepository.GetUserRoleAsync(CreatoruserId).ToString();
+            //if (role != "Admin" && role != "Manager") throw new Exception("Only Admin or Manager Can Create Project");
             var project = new Project
             {
                 Name = dto.Name,
@@ -44,10 +45,10 @@ namespace SmartTaskAPI.Services.Implementation
             
             foreach (var member in dto.Members)
             {
-                if (role == "Manager" && _uow.UserRepository.GetUserRoleAsync(member.UserId).ToString() == "Admin")
-                {
-                    throw new Exception("Manager Cannot add admin");
-                }
+                //if (role == "Manager" && _uow.UserRepository.GetUserRoleAsync(member.UserId).ToString() == "Admin")
+                //{
+                //    throw new Exception("Manager Cannot add admin");
+                //}
 
                 projectMembersList.Add(new ProjectMember
                 {

@@ -7,9 +7,7 @@ import { useSelector } from "react-redux";
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.auth);
-
-  console.log(state);
+  const { user } = useSelector((state) => state.auth);
 
   return (
     <>
@@ -39,7 +37,7 @@ function Sidebar() {
       )}
 
       <div
-        className={`z-20 w-64 md:w1/5 lg:w-1/6 md:flex md:flex-col  md:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
+        className={`z-20 w-64 md:w1/5 lg:w-1/6 flex flex-col justify-between md:flex md:flex-col md:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
       fixed top-14 md:top-0 left-0  transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:block`}
       >
         <div>
@@ -55,8 +53,8 @@ function Sidebar() {
             </div>
           </div>
           <div>
-            <div className="text-white p-4">
-              <h1 className="text-[#FFFFFF59] text-[12px]">MAIN</h1>
+            <div className="text-white p-1 px-4 sm:p-4">
+              <h1 className=" text-[#FFFFFF59] text-[12px]">MAIN</h1>
               <div className="ml-2  flex flex-col gap-1 mt-2">
                 <NavLink
                   to="/dashboard"
@@ -96,7 +94,7 @@ function Sidebar() {
                 </NavLink>
               </div>
             </div>
-            <div className="text-white p-4">
+            <div className="text-white p-1 px-4 sm:p-4">
               <h1 className="text-[#FFFFFF59] text-[12px]">TEAM</h1>
               <div className="ml-2  flex flex-col mt-2">
                 <NavLink
@@ -119,7 +117,7 @@ function Sidebar() {
                 </NavLink>
               </div>
             </div>
-            <div className="text-white p-4">
+            <div className="text-white p-1 px-4 sm:p-4">
               <h1 className="text-[#FFFFFF59] text-[12px]">ADMIN</h1>
               <div className="ml-2  flex flex-col mt-2">
                 <NavLink
@@ -144,18 +142,23 @@ function Sidebar() {
             </div>
           </div>
         </div>
-        <div className="flex items-center border-t-[1px] border-t-[#ffffff25] p-3 gap-3 text-white">
+        <div className="flex mb-[56px] sm:mb-0 items-center border-t-[1px] border-t-[#ffffff25] p-2 sm:p-3 gap-3 text-white">
           <div className="p-2 h-10 w-10 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">
-            AK
+            {user.firstName.charAt(0)}
+            {user.lastName.charAt(0)}
           </div>
           <div>
-            <h1>Alex Kumar</h1>
-            <p className="text-[#FFFFFF73] text-[14px] mt-[-5px]">Admin</p>
+            <h1 className="text-sm font-semibold w-[100px]">
+              {user.firstName} {user.lastName}
+            </h1>
+            <p className="text-[#FFFFFF73] text-[14px] mt-[-5px]">
+              {user.role}
+            </p>
           </div>
           <button
             onClick={() => dispatch(logout())}
             type="button"
-            className="border px-3 h-7 text-[10px] font-bold rounded-lg ml-7"
+            className="border px-3 h-7 text-[10px] font-bold rounded-lg ml-5"
           >
             LogOut
           </button>

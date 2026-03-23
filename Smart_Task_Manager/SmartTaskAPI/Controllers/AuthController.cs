@@ -64,7 +64,15 @@ namespace SmartTaskAPI.Controllers
             }
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtService.GenerateToken(user, roles);
-            return Ok(new { Token = token, email = user.Email, roles = roles.FirstOrDefault() });
+            return Ok(new { token = token, user = new
+            {
+                id = user.Id,
+                email = user.Email,
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                role = roles.FirstOrDefault()
+            }
+            });
 
         }
     }

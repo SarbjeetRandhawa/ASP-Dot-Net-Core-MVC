@@ -1,34 +1,36 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../../features/users/userSlice";
-import { useState, useEffect , useRef} from "react";
+import { useState, useEffect, useRef } from "react";
+import { fetchProjectRoles } from "../../features/project/projectRoleSlice";
 
 function TeamMembers({ members, setMembers }) {
   const dispatch = useDispatch();
   const { users = [] } = useSelector((state) => state.users);
+  const { roles = [] } = useSelector((state) => state.projectRoles);
+
   console.log(users);
 
   const [search, setsearch] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     dispatch(fetchUsers());
+    dispatch(fetchProjectRoles());
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     const handleClickOutside = (event) => {
-      if(dropdownRef.current && !dropdownRef.current.contains(event.target)){
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
-      
-
-      }
-      document.addEventListener("mousedown",handleClickOutside);
-      return () => {
-      document.removeEventListener("mousedown",handleClickOutside);
-    }
-  })
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
 
   const FilteredUsers = users.filter(
     (user) =>
@@ -41,12 +43,21 @@ function TeamMembers({ members, setMembers }) {
     if (members.find((u) => u.userId === user.userId)) return;
     setMembers([...members, user]);
     setsearch("");
-    setShowDropdown(false)
+    setShowDropdown(false);
     console.log(members);
   };
-  const removeMember = (userId) =>{
-    setMembers((prev) => prev.filter((m)=>m.userId !== userId));
+  const removeMember = (userId) => {
+    setMembers((prev) => prev.filter((m) => m.userId !== userId));
   };
+
+  const handleChange = (userId, roleId) => {
+    setMembers((prev) =>
+      prev.map((m) =>
+        m.userId === userId ? { ...m, ProjectRoleId: roleId } : m,
+      ),
+    );
+  };
+  console.log(members);
 
   return (
     <>
@@ -60,18 +71,20 @@ function TeamMembers({ members, setMembers }) {
           </div>
         </div>
 
-        <div className="p-4 flex flex-col md:flex-row gap-2 w-full relative" ref={dropdownRef}>
-          
-          
+        <div
+          className="p-4 flex flex-col md:flex-row gap-2 w-full relative"
+          ref={dropdownRef}
+        >
           <span className="absolute left-7 top-6 ">🔍</span>
-          
+
           <input
             type="text"
             ref={dropdownRef}
             value={search}
-            onFocus={()=>setShowDropdown(true)}
-            onChange={(e) => {setsearch(e.target.value), setShowDropdown(true)}}
-            
+            onFocus={() => setShowDropdown(true)}
+            onChange={(e) => {
+              (setsearch(e.target.value), setShowDropdown(true));
+            }}
             placeholder="Search team members by name or email..."
             className="border-2 w-full md:w-5/6 px-10 text-[12px] p-2 font-semibold rounded-md focus:border-blue-600 focus:outline-none"
           />
@@ -80,25 +93,25 @@ function TeamMembers({ members, setMembers }) {
             + Add Members
           </button>
 
-        {showDropdown && search && (
-          <div className="absolute bg-white w-11/12 md:w-4/5 top-16 border rounded-md max-h-60 overflow-y-auto z-10">
-            {FilteredUsers.map((user) => (
-              <div
-                className="cursor-pointer border p-2 px-4 flex justify-between"
-                key={user.userId}
-                onClick={() => {
-                  addMember(user);
-                }}
-              >
-                <h1 className="font-bold">{user.firstName} {user.lastName}</h1>
-                <p className="text-[#8b8a8a]">{user.email}</p>
-                 
-              </div>
-            ))}
-          </div>
-        )}
+          {showDropdown && search && (
+            <div className="absolute bg-white w-11/12 md:w-4/5 top-16 border rounded-md max-h-60 overflow-y-auto z-10">
+              {FilteredUsers.map((user) => (
+                <div
+                  className="cursor-pointer border p-2 px-4 flex justify-between"
+                  key={user.userId}
+                  onClick={() => {
+                    addMember(user);
+                  }}
+                >
+                  <h1 className="font-bold">
+                    {user.firstName} {user.lastName}
+                  </h1>
+                  <p className="text-[#8b8a8a]">{user.email}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-
 
         <div className="members px-4 pb-4 flex flex-col gap-2">
           {members.length == 0 && (
@@ -108,7 +121,10 @@ function TeamMembers({ members, setMembers }) {
           )}
 
           {members.map((m) => (
-            <div key={m.userId} className="min-h-[56px] rounded-md flex flex-col md:flex-row bg-[#f8f8f8]">
+            <div
+              key={m.userId}
+              className="min-h-[56px] rounded-md flex flex-col md:flex-row bg-[#f8f8f8]"
+            >
               <div className="w-full md:w-1/2 flex items-center">
                 <div className="px-4">
                   <h1 className=" p-2 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
@@ -125,18 +141,30 @@ function TeamMembers({ members, setMembers }) {
                   </p>
                 </div>
               </div>
-              <div className="w-full md:w-1/2 flex flex-wrap items-center gap-2 md:gap-4 p-2 md:p-4 justify-between md:justify-end">  
+              <div className="w-full md:w-1/2 flex flex-wrap items-center gap-2 md:gap-4 p-2 md:p-4 justify-between md:justify-end">
                 <select
                   name="projectRole"
+                  value={m.ProjectRoleId || ""}
+                  onChange={(e) => {
+                    handleChange(m.userId, Number(e.target.value));
+                  }}
                   className="rounded-md p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
                 >
-                  <option value="Dev">Dev</option>
-                  <option value="Backend">Backend</option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
                 </select>
                 <h2 className="rounded-2xl text-[10px] p-2 bg-[#F0FDF4] text-[#10B981] font-semibold">
                   {m.role}
                 </h2>
-                <div className="cursor-pointer" onClick={()=> removeMember(m.userId)} >❌</div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => removeMember(m.userId)}
+                >
+                  ❌
+                </div>
               </div>
             </div>
           ))}

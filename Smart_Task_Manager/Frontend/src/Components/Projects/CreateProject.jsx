@@ -2,9 +2,19 @@ import Sidebar from "../Sidebar";
 import "../../App.css";
 import { useState, useMemo } from "react";
 import TeamMembers from "./TeamMembers";
+import { useForm } from "react-hook-form";
+import { createProject } from "../../Services/CreateProject";
 
 function CreateProject() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
+
   const [members, setMembers] = useState([]);
+
   const [projectFormData, setProjectFormData] = useState({
     Name: "",
     Description: "",
@@ -86,11 +96,49 @@ function CreateProject() {
     });
   };
 
+  const ValidateMembers = () => {
+    if (members.length === 0) {
+      alert("Add at least one team member");
+      return false;
+    }
+    const invalid = members.some((m) => !m.ProjectRoleId);
+    if (invalid) {
+      alert("All members must have a role");
+      return false;
+    }
+    return true;
+  };
+
+  const onSubmit = async (data) => {
+    if (!ValidateMembers()) return;
+
+    try {
+      const payload = {
+        Name: data.Name,
+        Description: data.Description,
+        StartDate: data.StartDate,
+        EndDate: data.EndDate,
+        colorTheme: projectFormData.Colour,
+        Icon: projectFormData.Icon,
+        Status: data.Status,
+        Members: members.map((m) => ({
+          UserId: m.userId,
+          Role: m.ProjectRoleId,
+        })),
+      };
+      console.log(JSON.stringify(payload));
+
+      await createProject(payload);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div className="flex ">
       <Sidebar />
       <div className="w-full lg:pl-[16.66%] bg-white md:pt-0 md:pl-[33%] pt-14">
-        <form method="post">
+        <form method="post" onSubmit={handleSubmit(onSubmit)}>
           <div className="Navbar border  flex gap-1 sm:gap-2 h-12 w-full">
             <div className=" p-3 mx-0 sm:mx-4  ">
               <p className="text-[7px] sm:text-[11px] font-semibold text-[#64748B]">
@@ -139,12 +187,16 @@ function CreateProject() {
                     Project Name <span>*</span>
                   </label>
                   <input
+                    {...register("Name", {
+                      required: "project Name is required",
+                    })}
                     type="text"
                     name="Name"
                     placeholder="Mobile App v3.0"
                     onChange={HandleChange}
                     className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                   />
+                  {errors.Name && <p className="text-red-500 text-sm">{errors.Name.message}</p>}
                   <p className="text-[11px] mt-[-5px]  text-[#94A3B8] ">
                     Choose a clear, description name for your project
                   </p>
@@ -157,6 +209,13 @@ function CreateProject() {
                   </label>
                   <textarea
                     type="text"
+                    {...register("Description", {
+                      required: "Description is required",
+                      minLength: {
+                        value: 10,
+                        message: "Minimum 10 Characters",
+                      },
+                    })}
                     rows="4"
                     name="Description"
                     onClick={HandleChange}
@@ -165,6 +224,8 @@ function CreateProject() {
                     placeholder="Describe the project goals, scope and any important context for your team..."
                     className="border-2  text-[12px] p-2 font-semibold rounded-md resize-none  focus:border-blue-600 focus:outline-none"
                   />
+                  {errors.Description && <p className="text-red-500 text-sm">{errors.Description.message}</p>}
+
                   <p className="text-end  text-[12px] text-[#94A3B8] ">
                     {length}/1000 Characters
                   </p>
@@ -191,10 +252,15 @@ function CreateProject() {
                     </label>
                     <input
                       type="date"
+                      {...register("StartDate", {
+                        required: "Start Date is required",
+                      })}
                       name="StartDate"
                       onChange={HandleChange}
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
+                  {errors.StartDate && <p className="text-red-500 text-sm">{errors.StartDate.message}</p>}
+
                   </span>
                   <span className="flex flex-col w-1/2">
                     <label
@@ -205,10 +271,15 @@ function CreateProject() {
                     </label>
                     <input
                       type="date"
+                      {...register("EndDate", {
+                        required: "End Date is required",
+                      })}
                       name="EndDate"
                       onChange={HandleChange}
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
+                  {errors.EndDate && <p className="text-red-500 text-sm">{errors.EndDate.message}</p>}
+
                   </span>
                 </div>
 
@@ -456,11 +527,16 @@ function CreateProject() {
                   </label>
                   <input
                     type="text"
+                    {...register("Status", {
+                        required: "Status is required",
+                      })}
                     name="Status"
                     onChange={HandleChange}
                     placeholder=""
                     className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                   />
+                  {errors.Status && <p className="text-red-500 text-sm">{errors.Status.message}</p>}
+
                 </div>
               </div>
 
@@ -507,7 +583,10 @@ function CreateProject() {
                           return (
                             <div
                               key={m.userID}
-                              style={{ left: `${left}px`, backgroundColor: randomHSL  }}
+                              style={{
+                                left: `${left}px`,
+                                backgroundColor: randomHSL,
+                              }}
                               className="absolute ml-5 w-8 h-8 sm:w-9 sm:h-9 border-4 border-[#b3b9f2f4]  rounded-full text-[12px] text-center p-[6px] bg-[blue] font-bold"
                             >
                               {m.firstName?.charAt(0)}

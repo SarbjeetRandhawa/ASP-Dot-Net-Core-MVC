@@ -23,7 +23,7 @@ namespace SmartTaskAPI.Controllers
 
         private string GetUserId()
         {
-            return User.FindFirst("id")?.Value;
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
         private string GetUserRole()
         {
@@ -34,8 +34,8 @@ namespace SmartTaskAPI.Controllers
         public async Task<IActionResult> Create(CreateProjectDto dto)
         {
 
-            
-            await _projectService.CreateAsync(dto, GetUserId(), GetUserRole());
+            Console.WriteLine("API NOT HIT");
+            await _projectService.CreateAsync(dto, GetUserId());
            
             return Ok("Project Created");
         }
