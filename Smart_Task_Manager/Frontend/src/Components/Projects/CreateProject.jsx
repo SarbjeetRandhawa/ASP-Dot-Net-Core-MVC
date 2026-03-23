@@ -4,8 +4,10 @@ import { useState, useMemo } from "react";
 import TeamMembers from "./TeamMembers";
 import { useForm } from "react-hook-form";
 import { createProject } from "../../Services/CreateProject";
+import { useNavigate } from "react-router-dom";
 
 function CreateProject() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -126,9 +128,10 @@ function CreateProject() {
           Role: m.ProjectRoleId,
         })),
       };
-      console.log(JSON.stringify(payload));
+      
 
       await createProject(payload);
+      navigate("/dashboard")
     } catch (e) {
       console.log(e);
     }

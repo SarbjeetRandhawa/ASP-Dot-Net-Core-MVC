@@ -4,10 +4,11 @@ const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     
 });
+// evkn
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        const token = JSON.parse(localStorage.getItem("token"));
+        const token = localStorage.getItem("token");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }

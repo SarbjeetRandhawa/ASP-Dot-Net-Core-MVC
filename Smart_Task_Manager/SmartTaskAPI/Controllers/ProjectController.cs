@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartTaskAPI.Models.DTO;
 using SmartTaskAPI.Services.Interfaces;
 using SmartTaskAPI.UnitOfWork;
@@ -31,13 +32,18 @@ namespace SmartTaskAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(CreateProjectDto dto)
         {
-
-            Console.WriteLine("API NOT HIT");
-            await _projectService.CreateAsync(dto, GetUserId());
            
+            var userId = GetUserId();
+
+            //Console.WriteLine(userId);
+            await _projectService.CreateAsync(dto, userId);
+
             return Ok("Project Created");
+
+
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, CreateProjectDto dto)

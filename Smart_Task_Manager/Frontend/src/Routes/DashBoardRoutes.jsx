@@ -5,11 +5,20 @@ import ProtectedRoute from "../Components/ProtectedRoute";
 
 export const DashBoardRoutes = [
   <Route
+    key="createProject"
+    path="/createProject"
+    element={
+      <ProtectedRoute>
+        <CreateProject />
+      </ProtectedRoute>
+    }
+  />,
+  <Route
     key="dashboard"
     path="/dashboard"
     element={
       <ProtectedRoute>
-        <CreateProject />
+        <h1>hello</h1>
       </ProtectedRoute>
     }
   />,

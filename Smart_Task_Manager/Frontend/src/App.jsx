@@ -19,7 +19,7 @@ function App() {
 
       <Routes>
         <Route path="*" element={<h1>404 Not Found</h1>} />
-        <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" /> } />
+        <Route path="/" element={token ? <Navigate to="/createProject" /> : <Navigate to="/login" /> } />
         {AuthRoutes}
         {DashBoardRoutes}
         
