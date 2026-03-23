@@ -89,39 +89,33 @@ function CreateProject() {
   return (
     <div className="flex ">
       <Sidebar />
-      <div className="w-full md:pl-[16.66%] bg-white">
+      <div className="w-full lg:pl-[16.66%] bg-white md:pt-0 md:pl-[33%] pt-14">
         <form method="post">
-          <div className="Navbar border my flex gap-2 h-12 w-full">
-            <div className="p-1 mx-4">
-              <p className="text-[11px] font-semibold text-[#64748B]">
+          <div className="Navbar border  flex gap-1 sm:gap-2 h-12 w-full">
+            <div className=" p-3 mx-0 sm:mx-4  ">
+              <p className="text-[7px] sm:text-[11px] font-semibold text-[#64748B]">
                 <span className="text-[#94A3B8]">Projects &gt;</span> Create New
                 Project
               </p>
-              <h1 className="font-bold mt-[-3px] text-[#0F172A]">
+              <h1 className="font-bold mt-[-3px] text-[#0F172A] text-[12px]">
                 Create New Project
               </h1>
             </div>
-            <div type="button" className="flex gap-2 items-center">
-              <button className="border h-2/3  text-[11px] font-bold rounded-md w-[90px]">
+            <div className="flex  sm:flex-nowrap gap-1 sm:gap-2 items-center  w-1/2">
+              <button className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap">
                 Cancel
               </button>
-              <button
-                type="button"
-                className="border h-2/3  text-[11px] font-bold rounded-md w-[120px]"
-              >
+              <button className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap">
                 💾 Save Draft
               </button>
-              <button
-                type="button"
-                className="border h-2/3  text-[11px] font-bold rounded-md w-[145px] bg-[#4F46E5] text-white"
-              >
+              <button className="border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold rounded-md px-2 sm:px-3 bg-[#4F46E5] whitespace-nowrap">
                 🚀 Create Project
               </button>
             </div>
           </div>
 
-          <div className="h-full flex-row flex p-4 w-full gap-4 bg-[#f8f8f8]">
-            <div className=" w-2/3 h-auto gap-4 flex flex-col">
+          <div className="h-full flex flex-col lg:flex-row p-2 sm:p-4 w-full gap-4 bg-[#f8f8f8]">
+            <div className="w-full lg:w-2/3 h-auto gap-4 flex flex-col">
               <div className="Project-info bg-white h-auto rounded-lg border-2">
                 <div className="flex border-b-2 p-4">
                   <div className="w-2/3">
@@ -187,7 +181,7 @@ function CreateProject() {
                   </div>
                 </div>
 
-                <div className="p-4 flex  gap-2 ">
+                <div className="p-4 flex flex-col sm:flex-row gap-2">
                   <span className="flex flex-col w-1/2">
                     <label
                       htmlFor="ProjectName"
@@ -249,7 +243,7 @@ function CreateProject() {
               </div>
             </div>
 
-            <div className=" w-1/3 flex flex-col gap-4 h-auto ">
+            <div className="w-full lg:w-1/3 flex flex-col gap-4 h-auto">
               <div className="projectSetting bg-white h-auto rounded-lg border-2">
                 <div className="flex border-b-2 p-4">
                   <div className="w-2/3">
@@ -514,7 +508,7 @@ function CreateProject() {
                             <div
                               key={m.userID}
                               style={{ left: `${left}px`, backgroundColor: randomHSL  }}
-                              className="absolute ml-5 border-4 border-[#b3b9f2f4] w-9 h-9 rounded-full text-[12px] text-center p-[6px] bg-[blue] font-bold"
+                              className="absolute ml-5 w-8 h-8 sm:w-9 sm:h-9 border-4 border-[#b3b9f2f4]  rounded-full text-[12px] text-center p-[6px] bg-[blue] font-bold"
                             >
                               {m.firstName?.charAt(0)}
                               {m.lastName?.charAt(0)}

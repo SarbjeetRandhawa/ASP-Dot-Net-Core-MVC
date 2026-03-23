@@ -2,28 +2,45 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
+import { useSelector } from "react-redux";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
+  const state = useSelector((state) => state.auth);
 
+  console.log(state);
 
   return (
     <>
-      <div className="md:hidden flex items-center justify-between bg-gray-50 text-black p4">
-        <h1>SmartTask</h1>
-        <button onClick={() => setIsOpen(!isOpen)}>⇶</button>
+      <div className="md:hidden fixed top-0  left-0 w-full gap-2 flex items-center bg-gray-50 text-black p-5 z-30">
+        <button onClick={() => setIsOpen(!isOpen)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-list"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+            />
+          </svg>
+        </button>
+        <h1 className="font-bold text-sm">SmartTask</h1>
       </div>
       {isOpen && (
         <div
-          className="fixed z-10 inset-0 bg-black bg-opacity-50 md:hidden"
+          className="fixed z-10 inset-0  bg-black bg-opacity-50 md:hidden"
           onClick={() => setIsOpen(false)}
         ></div>
       )}
 
       <div
-        className={`z-20 w-1/6 md:flex md:flex-col  md:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
-      fixed top-0 left-0  transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:block`}
+        className={`z-20 w-64 md:w1/5 lg:w-1/6 md:flex md:flex-col  md:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
+      fixed top-14 md:top-0 left-0  transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:block`}
       >
         <div>
           <div className="border-b border-[#ffffff31] flex h-20 p-4 gap-2">
@@ -128,12 +145,20 @@ function Sidebar() {
           </div>
         </div>
         <div className="flex items-center border-t-[1px] border-t-[#ffffff25] p-3 gap-3 text-white">
-          <div className="p-2 h-10 w-10 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">AK</div>
+          <div className="p-2 h-10 w-10 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">
+            AK
+          </div>
           <div>
             <h1>Alex Kumar</h1>
             <p className="text-[#FFFFFF73] text-[14px] mt-[-5px]">Admin</p>
           </div>
-          <button onClick={()=>dispatch(logout())} type="button" className="border px-3 h-7 text-[10px] font-bold rounded-lg ml-7">LogOut</button>
+          <button
+            onClick={() => dispatch(logout())}
+            type="button"
+            className="border px-3 h-7 text-[10px] font-bold rounded-lg ml-7"
+          >
+            LogOut
+          </button>
         </div>
       </div>
     </>

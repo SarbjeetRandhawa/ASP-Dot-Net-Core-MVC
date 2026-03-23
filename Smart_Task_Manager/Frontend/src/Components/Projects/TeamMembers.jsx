@@ -26,7 +26,7 @@ function TeamMembers({ members, setMembers }) {
       }
       document.addEventListener("mousedown",handleClickOutside);
       return () => {
-      document.addEventListener("mousedown",handleClickOutside);
+      document.removeEventListener("mousedown",handleClickOutside);
     }
   })
 
@@ -60,7 +60,8 @@ function TeamMembers({ members, setMembers }) {
           </div>
         </div>
 
-        <div className="p-4 flex gap-2 w-full relative" ref={dropdownRef}>
+        <div className="p-4 flex flex-col md:flex-row gap-2 w-full relative" ref={dropdownRef}>
+          
           
           <span className="absolute left-7 top-6 ">🔍</span>
           
@@ -72,17 +73,15 @@ function TeamMembers({ members, setMembers }) {
             onChange={(e) => {setsearch(e.target.value), setShowDropdown(true)}}
             
             placeholder="Search team members by name or email..."
-            className="border-2 w-4/6 md:w-5/6 px-10 text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
+            className="border-2 w-full md:w-5/6 px-10 text-[12px] p-2 font-semibold rounded-md focus:border-blue-600 focus:outline-none"
           />
-          <button
-            className="border-2 w-2/6 md:w-1/6 text-[10px] px-3 rounded-md font-semibold"
-            type="button"
-          >
+
+          <button className="border-2 w-full md:w-1/6 text-[10px] px-3 rounded-md font-semibold">
             + Add Members
           </button>
 
         {showDropdown && search && (
-          <div className="absolute bg-white  w-4/5 top-16 border rounded-md max-h-60 overflow-y-auto z-10">
+          <div className="absolute bg-white w-11/12 md:w-4/5 top-16 border rounded-md max-h-60 overflow-y-auto z-10">
             {FilteredUsers.map((user) => (
               <div
                 className="cursor-pointer border p-2 px-4 flex justify-between"
@@ -109,8 +108,8 @@ function TeamMembers({ members, setMembers }) {
           )}
 
           {members.map((m) => (
-            <div key={m.userId} className=" h-14  rounded-md flex bg-[#f8f8f8]">
-              <div className=" w-1/2 flex items-center">
+            <div key={m.userId} className="min-h-[56px] rounded-md flex flex-col md:flex-row bg-[#f8f8f8]">
+              <div className="w-full md:w-1/2 flex items-center">
                 <div className="px-4">
                   <h1 className=" p-2 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
                     {m.firstName?.charAt(0)}
@@ -126,7 +125,7 @@ function TeamMembers({ members, setMembers }) {
                   </p>
                 </div>
               </div>
-              <div className="w-1/2 flex items-center gap-4 p-4 justify-end">
+              <div className="w-full md:w-1/2 flex flex-wrap items-center gap-2 md:gap-4 p-2 md:p-4 justify-between md:justify-end">  
                 <select
                   name="projectRole"
                   className="rounded-md p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
