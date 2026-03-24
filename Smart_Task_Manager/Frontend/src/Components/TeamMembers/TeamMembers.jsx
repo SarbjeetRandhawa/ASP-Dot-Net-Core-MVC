@@ -15,6 +15,8 @@ function TeamMembers() {
   };
   
 
+
+
   const dispatch = useDispatch();
   const { users = [] } = useSelector((state) => state.users);
 
@@ -22,6 +24,7 @@ function TeamMembers() {
     dispatch(fetchUsers());
   }, []);
 
+<<<<<<< HEAD
   const adminCount = users.filter((u)=> u.role === "Admin").length;
   const managerCount = users.filter((u)=> u.role === "Manager").length;
   const employeeCount = users.filter((u)=> u.role === "Employee").length;
@@ -48,6 +51,26 @@ function TeamMembers() {
   };
 
   // console.log(users);
+=======
+const filteredUsers = users
+  .filter((u) => {
+    if (RoleFilter === "All") return true;
+    if (RoleFilter === "Admins") return u.role === "Admin";
+    if (RoleFilter === "Managers") return u.role === "Manager";
+    if (RoleFilter === "Employee") return u.role === "Employee";
+  })
+  .filter((u) => {
+    if (!appliedSearch) return true;
+
+    const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
+    return (
+      fullName.includes(appliedSearch.toLowerCase()) ||
+      u.email.toLowerCase().includes(appliedSearch.toLowerCase())
+    );
+  });
+
+  console.log(users);
+>>>>>>> 81374bd584e77657dc75114d7b7f3a61257268e3
   return (
     <div className="flex ">
       <Sidebar />
