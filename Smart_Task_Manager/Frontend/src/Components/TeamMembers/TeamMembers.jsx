@@ -14,12 +14,31 @@ function TeamMembers() {
     Employee: "👤",
   };
 
+
+
   const dispatch = useDispatch();
   const { users = [] } = useSelector((state) => state.users);
 
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);
+
+const filteredUsers = users
+  .filter((u) => {
+    if (RoleFilter === "All") return true;
+    if (RoleFilter === "Admins") return u.role === "Admin";
+    if (RoleFilter === "Managers") return u.role === "Manager";
+    if (RoleFilter === "Employee") return u.role === "Employee";
+  })
+  .filter((u) => {
+    if (!appliedSearch) return true;
+
+    const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
+    return (
+      fullName.includes(appliedSearch.toLowerCase()) ||
+      u.email.toLowerCase().includes(appliedSearch.toLowerCase())
+    );
+  });
 
   console.log(users);
   return (
