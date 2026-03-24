@@ -2,36 +2,33 @@ import React from "react";
 import Sidebar from "../Sidebar";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { fetchUsers } from "../../features/users/userSlice";
+import { fetchUsers, deleteuser } from "../../features/users/userSlice";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
 function TeamMembers() {
   const [RoleFilter, setRoleFilter] = useState("All");
+  const [search, setsearch] = useState("");
+  const [appliedSearch, setappliedSearch] = useState("");
   const roleIcon = {
     Admin: "👑",
     Manager: "🗃️",
     Employee: "👤",
   };
-  
-
-
 
   const dispatch = useDispatch();
   const { users = [] } = useSelector((state) => state.users);
+  const CurrentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);
 
-<<<<<<< HEAD
-  const adminCount = users.filter((u)=> u.role === "Admin").length;
-  const managerCount = users.filter((u)=> u.role === "Manager").length;
-  const employeeCount = users.filter((u)=> u.role === "Employee").length;
+  const adminCount = users.filter((u) => u.role === "Admin").length;
+  const managerCount = users.filter((u) => u.role === "Manager").length;
+  const employeeCount = users.filter((u) => u.role === "Employee").length;
 
-
-  const HandleDelete = () => {
-    
+  const HandleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -41,36 +38,48 @@ function TeamMembers() {
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      if (result.isConfirmed)
+      console.log(result);
+      if (result.isConfirmed) {
+        dispatch(deleteuser(id));
+
         Swal.fire({
           title: "Deleted!",
-          text: "Your file has been deleted.",
+          text: "User has been deleted.",
           icon: "success",
         });
+      }
     });
   };
 
+  console.log(CurrentUser);
+  const filteredUsers = users
+    .filter((u) => {
+      if (RoleFilter === "All") return true;
+      if (RoleFilter === "Admins") return u.role === "Admin";
+      if (RoleFilter === "Managers") return u.role === "Manager";
+      if (RoleFilter === "Employee") return u.role === "Employee";
+    })
+    .filter((u) => {
+      if (!appliedSearch) return true;
+
+      const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
+      return (
+        fullName.includes(appliedSearch.toLowerCase()) ||
+        u.email.toLowerCase().includes(appliedSearch.toLowerCase())
+      );
+    });
+
+  const filterAdminCount = filteredUsers.filter(
+    (u) => u.role === "Admin",
+  ).length;
+  const filterManagerCount = filteredUsers.filter(
+    (u) => u.role === "Manager",
+  ).length;
+  const filterEmployeeCount = filteredUsers.filter(
+    (u) => u.role === "Employee",
+  ).length;
+
   // console.log(users);
-=======
-const filteredUsers = users
-  .filter((u) => {
-    if (RoleFilter === "All") return true;
-    if (RoleFilter === "Admins") return u.role === "Admin";
-    if (RoleFilter === "Managers") return u.role === "Manager";
-    if (RoleFilter === "Employee") return u.role === "Employee";
-  })
-  .filter((u) => {
-    if (!appliedSearch) return true;
-
-    const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
-    return (
-      fullName.includes(appliedSearch.toLowerCase()) ||
-      u.email.toLowerCase().includes(appliedSearch.toLowerCase())
-    );
-  });
-
-  console.log(users);
->>>>>>> 81374bd584e77657dc75114d7b7f3a61257268e3
   return (
     <div className="flex ">
       <Sidebar />
@@ -82,11 +91,14 @@ const filteredUsers = users
             <div className="absolute w-0 left-1 top-1">🔍</div>
             <input
               type="text"
+              value={search}
+              onChange={(e) => setsearch(e.target.value)}
               className="h-7 border pl-8 text-[11px] font-bold rounded-md focus:outline-2 outline-[#4F46E5]"
               placeholder="Search User..."
             />
             <button
               type="button"
+              onClick={() => setappliedSearch(search)}
               className="border px-3 h-7 rounded-md text-[11px] font-bold bg-[#4F46E5] text-white"
             >
               Search
@@ -111,7 +123,9 @@ const filteredUsers = users
           <div className="border-2 w-1/4 border-[#C7D2FE] bg-[#EEF2FF] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">👑</div>
             <div className="leading-tight">
-              <h1 className="font-bold text-[15px] md:text-[20px]">{adminCount}</h1>
+              <h1 className="font-bold text-[15px] md:text-[20px]">
+                {adminCount}
+              </h1>
               <p className="text-[#64748B] text-[10px] md:text-[13px]">
                 Admins
               </p>
@@ -120,7 +134,9 @@ const filteredUsers = users
           <div className="border-2 w-1/4 border-[#C7D2FE] bg-[#EEF2FF] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">🗃️</div>
             <div className="leading-tight">
-              <h1 className="font-bold text-[15px] md:text-[20px]">{managerCount}</h1>
+              <h1 className="font-bold text-[15px] md:text-[20px]">
+                {managerCount}
+              </h1>
               <p className="text-[#64748B] text-[10px] md:text-[13px]">
                 Managers
               </p>
@@ -129,7 +145,9 @@ const filteredUsers = users
           <div className="border-2 w-1/4 border-[#A7F3D0] bg-[#ECFDF5] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">👤</div>
             <div className="leading-tight">
-              <h1 className="font-bold text-[15px] md:text-[20px]">{employeeCount}</h1>
+              <h1 className="font-bold text-[15px] md:text-[20px]">
+                {employeeCount}
+              </h1>
               <p className="text-[#64748B] text-[10px] md:text-[13px]">
                 Employee
               </p>
@@ -144,25 +162,25 @@ const filteredUsers = users
             className={`border cursor-pointer px-3 rounded-full text-[11px] font-bold py-1 ${RoleFilter === "All" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("All")}
           >
-            <h1>All ( {users.length} )</h1>
+            <h1>All ( {appliedSearch === "" ? users.length :  filteredUsers.length} )</h1>
           </div>
           <div
             className={`border  px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Admins" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("Admins")}
           >
-            <h1>Admins ( {adminCount} )</h1>
+            <h1>Admins ( {appliedSearch === "" ? adminCount : filterAdminCount} )</h1>
           </div>
           <div
             className={`border px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Managers" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("Managers")}
           >
-            <h1>Managers ( {managerCount} )</h1>
+            <h1>Managers ( {appliedSearch === "" ? managerCount : filterManagerCount} )</h1>
           </div>
           <div
             className={`border px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Employee" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"} `}
             onClick={() => setRoleFilter("Employee")}
           >
-            <h1>Employees ( {employeeCount} )</h1>
+            <h1>Employees ( {appliedSearch === "" ? employeeCount : filterEmployeeCount} )</h1>
           </div>
         </div>
 
@@ -180,11 +198,13 @@ const filteredUsers = users
                   <th className="">PROJECTS</th>
                   <th className="">JOINED</th>
                   <th className="">LAST ACTIVE</th>
-                  <th className="">ACTIONS</th>
+                  {CurrentUser.role === "Admin" && (
+                    <th className="">ACTIONS</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
-                {users.map((u) => (
+                {filteredUsers.map((u) => (
                   <tr key={u.userId}>
                     <td className="flex gap-2 px-4 py-2 items-center">
                       <div className="border rounded-full pt-[6px] w-8 h-8 text-[12px] text-center font-semibold text-white bg-blue-500">
@@ -205,8 +225,7 @@ const filteredUsers = users
                       <h1
                         className={`rounded-full  py-1 px-3 ${u.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : u.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
                       >
-                        {roleIcon[u.role]}
-                        {u.role}
+                        {roleIcon[u.role]} {u.role}
                       </h1>
                     </td>
                     <td className="pr-2 text-[12px] text-[#94A3B8]">
@@ -238,24 +257,25 @@ const filteredUsers = users
                         Active now
                       </p>
                     </td>
-
-                    <td className="pr-2">
-                      <div
-                        className="text-[#f00] px-4 cursor-pointer"
-                        onClick={() => HandleDelete(u.userId)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-trash-fill"
-                          viewBox="0 0 16 16"
+                    {CurrentUser.role === "Admin" && (
+                      <td className="pr-2">
+                        <div
+                          className="text-[#f00] px-4 cursor-pointer"
+                          onClick={() => HandleDelete(u.userId)}
                         >
-                          <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                        </svg>
-                      </div>
-                    </td>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-trash-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                          </svg>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

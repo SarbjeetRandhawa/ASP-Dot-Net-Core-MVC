@@ -1,17 +1,26 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllUsers } from "../../Services/userService";
+import userService from "../../Services/userService";
 
 
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async (_,thunkAPI) => {
     try{
-        return await getAllUsers();
+        return await userService.getAllUsers();
     }catch(e){
         thunkAPI.rejectWithValue(e.response?.data || "error");
     }
   }
 );
+
+export const deleteuser = createAsyncThunk("users/deleteUser" , async (userId ,thunkAPI) => {
+  try{
+    await userService.deleteUser(userId);
+    return userId;
+  }catch(err){
+    thunkAPI.rejectWithValue(err.response.data);
+  }
+});
 
 const userSlice = createSlice({
   name: "users",
@@ -32,6 +41,9 @@ const userSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
+      })
+      .addCase(deleteuser.fulfilled, (state, action) => {
+        state.users = state.users.filter((users)=> users.userId !== action.payload);
       });
   },
 });

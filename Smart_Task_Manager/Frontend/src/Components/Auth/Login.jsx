@@ -26,7 +26,7 @@ function Login() {
           token: res.data.token
         }));
 
-      navigate("/createProject");
+      navigate("/projects");
       
     } catch (error) {
       if (!error.response) {
