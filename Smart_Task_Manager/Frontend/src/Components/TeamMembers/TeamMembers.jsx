@@ -51,64 +51,37 @@ function TeamMembers() {
     });
   };
 
-const searchedUsers = users.filter((u) => {
-  if (!appliedSearch) return true;
+  const searchedUsers = users.filter((u) => {
+    if (!appliedSearch) return true;
 
-  const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
+    const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
 
-  return (
-    fullName.includes(appliedSearch.toLowerCase()) ||
-    u.email.toLowerCase().includes(appliedSearch.toLowerCase())
-  );
-});
+    return (
+      fullName.includes(appliedSearch.toLowerCase()) ||
+      u.email.toLowerCase().includes(appliedSearch.toLowerCase())
+    );
+  });
 
-const filteredUsers = searchedUsers.filter((u) => {
-  if (RoleFilter === "All") return true;
-  if (RoleFilter === "Admins") return u.role === "Admin";
-  if (RoleFilter === "Managers") return u.role === "Manager";
-  if (RoleFilter === "Employee") return u.role === "Employee";
-});
+  const filteredUsers = searchedUsers.filter((u) => {
+    if (RoleFilter === "All") return true;
+    if (RoleFilter === "Admins") return u.role === "Admin";
+    if (RoleFilter === "Managers") return u.role === "Manager";
+    if (RoleFilter === "Employee") return u.role === "Employee";
+  });
 
-const filterAdminCount = searchedUsers.filter(
-  (u) => u.role === "Admin"
-).length;
-
-const filterManagerCount = searchedUsers.filter(
-  (u) => u.role === "Manager"
-).length;
-
-const filterEmployeeCount = searchedUsers.filter(
-  (u) => u.role === "Employee"
-).length;
-
-
-  console.log(CurrentUser);
-  const filteredUsers = users
-    .filter((u) => {
-      if (RoleFilter === "All") return true;
-      if (RoleFilter === "Admins") return u.role === "Admin";
-      if (RoleFilter === "Managers") return u.role === "Manager";
-      if (RoleFilter === "Employee") return u.role === "Employee";
-    })
-    .filter((u) => {
-      if (!appliedSearch) return true;
-
-      const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
-      return (
-        fullName.includes(appliedSearch.toLowerCase()) ||
-        u.email.toLowerCase().includes(appliedSearch.toLowerCase())
-      );
-    });
-
-  const filterAdminCount = filteredUsers.filter(
+  const filterAdminCount = searchedUsers.filter(
     (u) => u.role === "Admin",
   ).length;
-  const filterManagerCount = filteredUsers.filter(
+
+  const filterManagerCount = searchedUsers.filter(
     (u) => u.role === "Manager",
   ).length;
-  const filterEmployeeCount = filteredUsers.filter(
+
+  const filterEmployeeCount = searchedUsers.filter(
     (u) => u.role === "Employee",
   ).length;
+
+  console.log(CurrentUser);
 
   // console.log(users);
   return (
@@ -193,25 +166,36 @@ const filterEmployeeCount = searchedUsers.filter(
             className={`border cursor-pointer px-3 rounded-full text-[11px] font-bold py-1 ${RoleFilter === "All" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("All")}
           >
-            <h1>All ( {appliedSearch === "" ? users.length :  filteredUsers.length} )</h1>
+            <h1>
+              All ( {appliedSearch === "" ? users.length : searchedUsers.length}{" "}
+              )
+            </h1>
           </div>
           <div
             className={`border  px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Admins" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("Admins")}
           >
-            <h1>Admins ( {appliedSearch === "" ? adminCount : filterAdminCount} )</h1>
+            <h1>
+              Admins ( {appliedSearch === "" ? adminCount : filterAdminCount} )
+            </h1>
           </div>
           <div
             className={`border px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Managers" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("Managers")}
           >
-            <h1>Managers ( {appliedSearch === "" ? managerCount : filterManagerCount} )</h1>
+            <h1>
+              Managers ({" "}
+              {appliedSearch === "" ? managerCount : filterManagerCount} )
+            </h1>
           </div>
           <div
             className={`border px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Employee" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"} `}
             onClick={() => setRoleFilter("Employee")}
           >
-            <h1>Employees ( {appliedSearch === "" ? employeeCount : filterEmployeeCount} )</h1>
+            <h1>
+              Employees ({" "}
+              {appliedSearch === "" ? employeeCount : filterEmployeeCount} )
+            </h1>
           </div>
         </div>
 
