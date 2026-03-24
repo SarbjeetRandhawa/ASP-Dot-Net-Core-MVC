@@ -51,6 +51,37 @@ function TeamMembers() {
     });
   };
 
+const searchedUsers = users.filter((u) => {
+  if (!appliedSearch) return true;
+
+  const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
+
+  return (
+    fullName.includes(appliedSearch.toLowerCase()) ||
+    u.email.toLowerCase().includes(appliedSearch.toLowerCase())
+  );
+});
+
+const filteredUsers = searchedUsers.filter((u) => {
+  if (RoleFilter === "All") return true;
+  if (RoleFilter === "Admins") return u.role === "Admin";
+  if (RoleFilter === "Managers") return u.role === "Manager";
+  if (RoleFilter === "Employee") return u.role === "Employee";
+});
+
+const filterAdminCount = searchedUsers.filter(
+  (u) => u.role === "Admin"
+).length;
+
+const filterManagerCount = searchedUsers.filter(
+  (u) => u.role === "Manager"
+).length;
+
+const filterEmployeeCount = searchedUsers.filter(
+  (u) => u.role === "Employee"
+).length;
+
+
   console.log(CurrentUser);
   const filteredUsers = users
     .filter((u) => {
