@@ -21,7 +21,7 @@ function CreateProject() {
   const [projectFormData, setProjectFormData] = useState({
     Name: "",
     Description: "",
-    Status: "",
+    Status: "Active",
     StartDate: "",
     EndDate: "",
     Icon: "📱",
@@ -124,7 +124,7 @@ function CreateProject() {
         EndDate: data.EndDate,
         colorTheme: projectFormData.Colour,
         Icon: projectFormData.Icon,
-        Status: data.Status,
+        Status: projectFormData.Status,
         Members: members.map((m) => ({
           UserId: m.userId,
           Role: m.ProjectRoleId,
@@ -133,9 +133,12 @@ function CreateProject() {
 
       await createProject(payload);
       await Swal.fire({
+        position: "top-end",
         title: "Created!",
         text: "Project is Created",
         icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
       });
       navigate("/dashboard");
     } catch (e) {
@@ -560,27 +563,6 @@ function CreateProject() {
                       onClick={() => SelectColourTheme("#64748B")}
                     ></div>
                   </div>
-                  <label
-                    htmlFor="Status"
-                    className="text-[12px] mt-3 font-semibold text-[#64748B]"
-                  >
-                    Status
-                  </label>
-                  <input
-                    type="text"
-                    {...register("Status", {
-                      required: "Status is required",
-                    })}
-                    name="Status"
-                    onChange={HandleChange}
-                    placeholder=""
-                    className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
-                  />
-                  {errors.Status && (
-                    <p className="text-red-500 text-sm">
-                      {errors.Status.message}
-                    </p>
-                  )}
                 </div>
               </div>
 

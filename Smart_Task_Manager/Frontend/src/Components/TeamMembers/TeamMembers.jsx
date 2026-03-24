@@ -4,15 +4,16 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { fetchUsers } from "../../features/users/userSlice";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 
 function TeamMembers() {
   const [RoleFilter, setRoleFilter] = useState("All");
-  const [TableRole, setTableRole] = useState("Admin");
   const roleIcon = {
     Admin: "👑",
     Manager: "🗃️",
     Employee: "👤",
   };
+  
 
   const dispatch = useDispatch();
   const { users = [] } = useSelector((state) => state.users);
@@ -21,7 +22,32 @@ function TeamMembers() {
     dispatch(fetchUsers());
   }, []);
 
-  console.log(users);
+  const adminCount = users.filter((u)=> u.role === "Admin").length;
+  const managerCount = users.filter((u)=> u.role === "Manager").length;
+  const employeeCount = users.filter((u)=> u.role === "Employee").length;
+
+
+  const HandleDelete = () => {
+    
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed)
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+    });
+  };
+
+  // console.log(users);
   return (
     <div className="flex ">
       <Sidebar />
@@ -40,7 +66,7 @@ function TeamMembers() {
               type="button"
               className="border px-3 h-7 rounded-md text-[11px] font-bold bg-[#4F46E5] text-white"
             >
-              + Invite Member
+              Search
             </button>
           </div>
         </div>
@@ -62,7 +88,7 @@ function TeamMembers() {
           <div className="border-2 w-1/4 border-[#C7D2FE] bg-[#EEF2FF] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">👑</div>
             <div className="leading-tight">
-              <h1 className="font-bold text-[15px] md:text-[20px]">2</h1>
+              <h1 className="font-bold text-[15px] md:text-[20px]">{adminCount}</h1>
               <p className="text-[#64748B] text-[10px] md:text-[13px]">
                 Admins
               </p>
@@ -71,7 +97,7 @@ function TeamMembers() {
           <div className="border-2 w-1/4 border-[#C7D2FE] bg-[#EEF2FF] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">🗃️</div>
             <div className="leading-tight">
-              <h1 className="font-bold text-[15px] md:text-[20px]">3</h1>
+              <h1 className="font-bold text-[15px] md:text-[20px]">{managerCount}</h1>
               <p className="text-[#64748B] text-[10px] md:text-[13px]">
                 Managers
               </p>
@@ -80,7 +106,7 @@ function TeamMembers() {
           <div className="border-2 w-1/4 border-[#A7F3D0] bg-[#ECFDF5] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">👤</div>
             <div className="leading-tight">
-              <h1 className="font-bold text-[15px] md:text-[20px]">7</h1>
+              <h1 className="font-bold text-[15px] md:text-[20px]">{employeeCount}</h1>
               <p className="text-[#64748B] text-[10px] md:text-[13px]">
                 Employee
               </p>
@@ -101,19 +127,19 @@ function TeamMembers() {
             className={`border  px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Admins" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("Admins")}
           >
-            <h1>Admins ( 2 )</h1>
+            <h1>Admins ( {adminCount} )</h1>
           </div>
           <div
             className={`border px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Managers" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("Managers")}
           >
-            <h1>Managers ( 3 )</h1>
+            <h1>Managers ( {managerCount} )</h1>
           </div>
           <div
             className={`border px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Employee" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"} `}
             onClick={() => setRoleFilter("Employee")}
           >
-            <h1>Employees ( 7 )</h1>
+            <h1>Employees ( {employeeCount} )</h1>
           </div>
         </div>
 
@@ -138,12 +164,14 @@ function TeamMembers() {
                 {users.map((u) => (
                   <tr key={u.userId}>
                     <td className="flex gap-2 px-4 py-2 items-center">
-                      <div className="border rounded-full p-[5px] w-7 h-7 text-[12px] font-semibold text-white bg-blue-500">
-                        {u.firstName.charAt(0)}
-                        {u.lastName.charAt(0)}
+                      <div className="border rounded-full pt-[6px] w-8 h-8 text-[12px] text-center font-semibold text-white bg-blue-500">
+                        {u.firstName.charAt(0).toUpperCase()}
+                        {u.lastName.charAt(0).toUpperCase()}
                       </div>
                       <div className="leading-tight">
-                        <h1 className="font-bold text-[13px]">{u.firstName} {u.lastName}</h1>
+                        <h1 className="font-bold text-[13px]">
+                          {u.firstName} {u.lastName}
+                        </h1>
                         {/* <p className="text-[10px] text-[#94A3B8]">You</p> */}
                       </div>
                     </td>
@@ -154,7 +182,8 @@ function TeamMembers() {
                       <h1
                         className={`rounded-full  py-1 px-3 ${u.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : u.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
                       >
-                        {roleIcon[u.role]}{u.role}
+                        {roleIcon[u.role]}
+                        {u.role}
                       </h1>
                     </td>
                     <td className="pr-2 text-[12px] text-[#94A3B8]">
@@ -188,7 +217,21 @@ function TeamMembers() {
                     </td>
 
                     <td className="pr-2">
-                      <div></div>
+                      <div
+                        className="text-[#f00] px-4 cursor-pointer"
+                        onClick={() => HandleDelete(u.userId)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-trash-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                        </svg>
+                      </div>
                     </td>
                   </tr>
                 ))}
