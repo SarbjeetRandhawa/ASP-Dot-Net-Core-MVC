@@ -6,7 +6,7 @@ import ProtectedRoute from "../Components/ProtectedRoute";
 export const DashBoardRoutes = [
   <Route
     key="createProject"
-    path="/createProject"
+    path="/projects/createProject"
     element={
       <ProtectedRoute>
         <CreateProject />
@@ -18,7 +18,7 @@ export const DashBoardRoutes = [
     path="/dashboard"
     element={
       <ProtectedRoute>
-        <h1>hello</h1>
+        <h1>Dashboard</h1>
       </ProtectedRoute>
     }
   />,
@@ -27,7 +27,8 @@ export const DashBoardRoutes = [
     path="/projects"
     element={
       <ProtectedRoute>
-        <CreateProject />
+        {/* <CreateProject /> */}
+        <div>Projects page</div>
       </ProtectedRoute>
     }
   />,

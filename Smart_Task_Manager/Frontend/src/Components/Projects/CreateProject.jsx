@@ -5,6 +5,7 @@ import TeamMembers from "./TeamMembers";
 import { useForm } from "react-hook-form";
 import { createProject } from "../../Services/CreateProject";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function CreateProject() {
   const navigate = useNavigate();
@@ -12,9 +13,9 @@ function CreateProject() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
+    // watch,
   } = useForm();
-
+  // const startDate = watch("StartDate");
   const [members, setMembers] = useState([]);
 
   const [projectFormData, setProjectFormData] = useState({
@@ -103,6 +104,7 @@ function CreateProject() {
       alert("Add at least one team member");
       return false;
     }
+
     const invalid = members.some((m) => !m.ProjectRoleId);
     if (invalid) {
       alert("All members must have a role");
@@ -128,10 +130,14 @@ function CreateProject() {
           Role: m.ProjectRoleId,
         })),
       };
-      
 
       await createProject(payload);
-      navigate("/dashboard")
+      await Swal.fire({
+        title: "Created!",
+        text: "Project is Created",
+        icon: "success",
+      });
+      navigate("/dashboard");
     } catch (e) {
       console.log(e);
     }
@@ -153,7 +159,12 @@ function CreateProject() {
               </h1>
             </div>
             <div className="flex  sm:flex-nowrap gap-1 sm:gap-2 items-center  w-1/2">
-              <button className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap">
+              <button
+                onClick={() => {
+                  navigate("/projects");
+                }}
+                className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap"
+              >
                 Cancel
               </button>
               <button className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap">
@@ -199,7 +210,11 @@ function CreateProject() {
                     onChange={HandleChange}
                     className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                   />
-                  {errors.Name && <p className="text-red-500 text-sm">{errors.Name.message}</p>}
+                  {errors.Name && (
+                    <p className="text-red-500 text-sm">
+                      {errors.Name.message}
+                    </p>
+                  )}
                   <p className="text-[11px] mt-[-5px]  text-[#94A3B8] ">
                     Choose a clear, description name for your project
                   </p>
@@ -220,6 +235,7 @@ function CreateProject() {
                       },
                     })}
                     rows="4"
+                    maxLength="1000"
                     name="Description"
                     onClick={HandleChange}
                     value={projectFormData.Description || ""}
@@ -227,7 +243,11 @@ function CreateProject() {
                     placeholder="Describe the project goals, scope and any important context for your team..."
                     className="border-2  text-[12px] p-2 font-semibold rounded-md resize-none  focus:border-blue-600 focus:outline-none"
                   />
-                  {errors.Description && <p className="text-red-500 text-sm">{errors.Description.message}</p>}
+                  {errors.Description && (
+                    <p className="text-red-500 text-sm">
+                      {errors.Description.message}
+                    </p>
+                  )}
 
                   <p className="text-end  text-[12px] text-[#94A3B8] ">
                     {length}/1000 Characters
@@ -262,8 +282,11 @@ function CreateProject() {
                       onChange={HandleChange}
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
-                  {errors.StartDate && <p className="text-red-500 text-sm">{errors.StartDate.message}</p>}
-
+                    {errors.StartDate && (
+                      <p className="text-red-500 text-sm">
+                        {errors.StartDate.message}
+                      </p>
+                    )}
                   </span>
                   <span className="flex flex-col w-1/2">
                     <label
@@ -276,13 +299,24 @@ function CreateProject() {
                       type="date"
                       {...register("EndDate", {
                         required: "End Date is required",
+                        validate: (value) => {
+                          if (!projectFormData.StartDate) return true;
+                          return (
+                            new Date(value) >
+                              new Date(projectFormData.StartDate) ||
+                            "End date must be greater than start date"
+                          );
+                        },
                       })}
                       name="EndDate"
                       onChange={HandleChange}
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
-                  {errors.EndDate && <p className="text-red-500 text-sm">{errors.EndDate.message}</p>}
-
+                    {errors.EndDate && (
+                      <p className="text-red-500 text-sm">
+                        {errors.EndDate.message}
+                      </p>
+                    )}
                   </span>
                 </div>
 
@@ -531,15 +565,18 @@ function CreateProject() {
                   <input
                     type="text"
                     {...register("Status", {
-                        required: "Status is required",
-                      })}
+                      required: "Status is required",
+                    })}
                     name="Status"
                     onChange={HandleChange}
                     placeholder=""
                     className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                   />
-                  {errors.Status && <p className="text-red-500 text-sm">{errors.Status.message}</p>}
-
+                  {errors.Status && (
+                    <p className="text-red-500 text-sm">
+                      {errors.Status.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -577,7 +614,10 @@ function CreateProject() {
                       {projectFormData.Description ||
                         "Third major version of the IOS/Android Application"}
                     </p>
-                    <div className="progressbar w-full bg-[#FFFFFF2A] h-2 rounded-lg"></div>
+                    <div className="progressbar w-full bg-[#FFFFFF2A] h-2 rounded-lg">
+                     
+                      <div className="w-2/12 h-2 rounded-lg bg-white"></div>
+                    </div>
                     <div className="flex justify-between">
                       <div>
                         {members.map((m, offset) => {

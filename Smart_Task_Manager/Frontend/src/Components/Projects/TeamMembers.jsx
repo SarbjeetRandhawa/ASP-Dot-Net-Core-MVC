@@ -8,7 +8,9 @@ function TeamMembers({ members, setMembers }) {
   const dispatch = useDispatch();
   const { users = [] } = useSelector((state) => state.users);
   const { roles = [] } = useSelector((state) => state.projectRoles);
+  const currentUser = useSelector((state) => state.auth.user);
 
+  console.log(currentUser);
   console.log(users);
 
   const [search, setsearch] = useState("");
@@ -18,7 +20,7 @@ function TeamMembers({ members, setMembers }) {
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchProjectRoles());
-  }, []);
+  },[]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -32,11 +34,28 @@ function TeamMembers({ members, setMembers }) {
     };
   });
 
-  const FilteredUsers = users.filter(
-    (user) =>
-      user.firstName?.toLowerCase().includes(search.toLowerCase()) ||
-      user.email?.toLowerCase().includes(search.toLowerCase()),
-  );
+  const roleAccess = {
+    Admin: ["Admin", "Manager", "Employee"],
+    Manager: ["Manager", "Employee"],
+  };
+
+  const FilteredUsers = users.filter((user) => {
+    const isNotMe = user.userId !== currentUser?.id;
+
+    const notAlreadySelected = !members.some((m) => m.userId === user.id);
+
+    const allowedRoles = roleAccess[currentUser?.role] || [];
+    const roleAllowed = allowedRoles.includes(user.role);
+
+    // 🔥 APPLY SEARCH ONLY IF USER TYPES
+    const matchesSearch = search
+      ? `${user.firstName} ${user.lastName}`
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      : true;
+
+    return isNotMe && notAlreadySelected && roleAllowed && matchesSearch;
+  });
 
   const addMember = (user) => {
     console.log("triggered");
@@ -89,11 +108,17 @@ function TeamMembers({ members, setMembers }) {
             className="border-2 w-full md:w-5/6 px-10 text-[12px] p-2 font-semibold rounded-md focus:border-blue-600 focus:outline-none"
           />
 
-          <button className="border-2 w-full md:w-1/6 text-[10px] px-3 rounded-md font-semibold">
+          <button
+            type="button"
+            className="border-2 w-full md:w-1/6 text-[10px] px-3 rounded-md font-semibold"
+            onClick={() => {
+              (setsearch(""), setShowDropdown(true));
+            }}
+          >
             + Add Members
           </button>
 
-          {showDropdown && search && (
+          {showDropdown && (
             <div className="absolute bg-white w-11/12 md:w-4/5 top-16 border rounded-md max-h-60 overflow-y-auto z-10">
               {FilteredUsers.map((user) => (
                 <div
@@ -145,11 +170,13 @@ function TeamMembers({ members, setMembers }) {
                 <select
                   name="projectRole"
                   value={m.ProjectRoleId || ""}
+                  
                   onChange={(e) => {
                     handleChange(m.userId, Number(e.target.value));
                   }}
                   className="rounded-md p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
                 >
+                  <option value="" disabled hidden>Select Role</option>
                   {roles.map((role) => (
                     <option key={role.id} value={role.id}>
                       {role.name}
