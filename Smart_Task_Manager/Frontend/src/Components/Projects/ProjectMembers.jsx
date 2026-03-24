@@ -4,7 +4,7 @@ import { fetchUsers } from "../../features/users/userSlice";
 import { useState, useEffect, useRef } from "react";
 import { fetchProjectRoles } from "../../features/project/projectRoleSlice";
 
-function TeamMembers({ members, setMembers }) {
+function ProjectMembers({ members, setMembers }) {
   const dispatch = useDispatch();
   const { users = [] } = useSelector((state) => state.users);
   const { roles = [] } = useSelector((state) => state.projectRoles);
@@ -201,4 +201,4 @@ function TeamMembers({ members, setMembers }) {
   );
 }
 
-export default TeamMembers;
+export default ProjectMembers;

@@ -5,7 +5,8 @@
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
   
-  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   
 }
 body{

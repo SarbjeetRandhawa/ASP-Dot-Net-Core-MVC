@@ -1,18 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import CreateProject from "../Components/Projects/CreateProject";
 import ProtectedRoute from "../Components/ProtectedRoute";
+import TeamMembers from "../Components/TeamMembers/TeamMembers";
 // import ProtectedRoute from './Components/ProtectedRoute'
 
 export const DashBoardRoutes = [
-  <Route
-    key="createProject"
-    path="/projects/createProject"
-    element={
-      <ProtectedRoute>
-        <CreateProject />
-      </ProtectedRoute>
-    }
-  />,
   <Route
     key="dashboard"
     path="/dashboard"
@@ -22,13 +14,31 @@ export const DashBoardRoutes = [
       </ProtectedRoute>
     }
   />,
-   <Route
-    key="projects"
+//    <Route
+//    key="projects"
+//    path="/projects"
+//    element={
+//      <ProtectedRoute>
+//        {/* <CreateProject /> */}
+//        <div>Projects page</div>
+//      </ProtectedRoute>
+//    }
+//  />,
+  <Route
+    key="createProject"
     path="/projects"
     element={
       <ProtectedRoute>
-        {/* <CreateProject /> */}
-        <div>Projects page</div>
+        <CreateProject />
+      </ProtectedRoute>
+    }
+  />,
+  <Route
+    key="team"
+    path="/team"
+    element={
+      <ProtectedRoute>
+        <TeamMembers/>
       </ProtectedRoute>
     }
   />,

@@ -1,7 +1,7 @@
 import Sidebar from "../Sidebar";
 import "../../App.css";
 import { useState, useMemo } from "react";
-import TeamMembers from "./TeamMembers";
+import ProjectMembers from "./ProjectMembers";
 import { useForm } from "react-hook-form";
 import { createProject } from "../../Services/CreateProject";
 import { useNavigate } from "react-router-dom";
@@ -160,14 +160,18 @@ function CreateProject() {
             </div>
             <div className="flex  sm:flex-nowrap gap-1 sm:gap-2 items-center  w-1/2">
               <button
+                type="button"
                 onClick={() => {
-                  navigate("/projects");
+                  navigate("/dashboard");
                 }}
                 className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap"
               >
                 Cancel
               </button>
-              <button className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap">
+              <button
+                type="button"
+                className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap"
+              >
                 💾 Save Draft
               </button>
               <button className="border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold rounded-md px-2 sm:px-3 bg-[#4F46E5] whitespace-nowrap">
@@ -347,7 +351,7 @@ function CreateProject() {
               </div>
 
               <div>
-                <TeamMembers members={members} setMembers={setMembers} />
+                <ProjectMembers members={members} setMembers={setMembers} />
               </div>
             </div>
 
@@ -615,7 +619,6 @@ function CreateProject() {
                         "Third major version of the IOS/Android Application"}
                     </p>
                     <div className="progressbar w-full bg-[#FFFFFF2A] h-2 rounded-lg">
-                     
                       <div className="w-2/12 h-2 rounded-lg bg-white"></div>
                     </div>
                     <div className="flex justify-between">

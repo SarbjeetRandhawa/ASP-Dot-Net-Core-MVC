@@ -38,7 +38,7 @@ function Sidebar() {
 
       <div
         className={`z-20 w-64 md:w1/5 lg:w-1/6 flex flex-col justify-between md:flex md:flex-col md:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
-      fixed top-14 md:top-0 left-0  transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:block`}
+      fixed overflow-y-scroll top-14 md:top-0 left-0  transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:block`}
       >
         <div>
           <div className="border-b border-[#ffffff31] flex h-20 p-4 gap-2">
@@ -142,23 +142,25 @@ function Sidebar() {
             </div>
           </div>
         </div>
-        <div className="flex mb-[56px] sm:mb-0 items-center border-t-[1px] border-t-[#ffffff25] p-2 sm:p-3 gap-3 text-white">
-          <div className="p-2 h-10 w-10 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">
+        <div className="flex mb-[56px] sm:mb-0 items-center border-t-[1px] border-t-[#ffffff25] p-2 sm:p-3 gap-3 text-white justify-between">
+          <div className="flex items-center gap-2 ">
+          <div className="pl-2 pt-2 h-9 w-9 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">
             {user.firstName.charAt(0)}
             {user.lastName.charAt(0)}
           </div>
           <div>
-            <h1 className="text-sm font-semibold w-[100px]">
+            <h1 className="text-[11px] font-semibold ">
               {user.firstName} {user.lastName}
             </h1>
-            <p className="text-[#FFFFFF73] text-[14px] mt-[-5px]">
+            <p className="text-[#FFFFFF73] text-[11px] mt-[-5px]">
               {user.role}
             </p>
+          </div>
           </div>
           <button
             onClick={() => dispatch(logout())}
             type="button"
-            className="border px-3 h-7 text-[10px] font-bold rounded-lg ml-5"
+            className="border px-3 h-7 text-[10px] font-bold rounded-lg "
           >
             LogOut
           </button>
