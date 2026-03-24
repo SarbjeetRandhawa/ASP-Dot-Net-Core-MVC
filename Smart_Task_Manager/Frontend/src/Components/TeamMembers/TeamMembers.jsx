@@ -1,6 +1,9 @@
 import React from "react";
 import Sidebar from "../Sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { fetchUsers } from "../../features/users/userSlice";
+import { useDispatch } from "react-redux";
 
 function TeamMembers() {
   const [RoleFilter, setRoleFilter] = useState("All");
@@ -11,6 +14,14 @@ function TeamMembers() {
     Employee: "👤",
   };
 
+  const dispatch = useDispatch();
+  const { users = [] } = useSelector((state) => state.users);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, []);
+
+  console.log(users);
   return (
     <div className="flex ">
       <Sidebar />
@@ -40,29 +51,39 @@ function TeamMembers() {
           <div className="border-2 w-1/4 border-[#C7D2FE] bg-[#EEF2FF] px-4  flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">👥</div>
             <div className="leading-tight">
-              <h1 className="font-bold text-[15px] md:text-[20px]">12</h1>
-              <p className="text-[#64748B] text-[10px] md:text-[13px]">Total Members</p>
+              <h1 className="font-bold text-[15px] md:text-[20px]">
+                {users.length}
+              </h1>
+              <p className="text-[#64748B] text-[10px] md:text-[13px]">
+                Total Members
+              </p>
             </div>
           </div>
           <div className="border-2 w-1/4 border-[#C7D2FE] bg-[#EEF2FF] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">👑</div>
             <div className="leading-tight">
               <h1 className="font-bold text-[15px] md:text-[20px]">2</h1>
-              <p className="text-[#64748B] text-[10px] md:text-[13px]">Admins</p>
+              <p className="text-[#64748B] text-[10px] md:text-[13px]">
+                Admins
+              </p>
             </div>
           </div>
           <div className="border-2 w-1/4 border-[#C7D2FE] bg-[#EEF2FF] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">🗃️</div>
             <div className="leading-tight">
               <h1 className="font-bold text-[15px] md:text-[20px]">3</h1>
-              <p className="text-[#64748B] text-[10px] md:text-[13px]">Managers</p>
+              <p className="text-[#64748B] text-[10px] md:text-[13px]">
+                Managers
+              </p>
             </div>
           </div>
           <div className="border-2 w-1/4 border-[#A7F3D0] bg-[#ECFDF5] px-4 py-2 flex items-center gap-2 rounded-lg">
             <div className="text-[20px] md:text-[25px]">👤</div>
             <div className="leading-tight">
               <h1 className="font-bold text-[15px] md:text-[20px]">7</h1>
-              <p className="text-[#64748B] text-[10px] md:text-[13px]">Employee</p>
+              <p className="text-[#64748B] text-[10px] md:text-[13px]">
+                Employee
+              </p>
             </div>
           </div>
         </div>
@@ -74,25 +95,25 @@ function TeamMembers() {
             className={`border cursor-pointer px-3 rounded-full text-[11px] font-bold py-1 ${RoleFilter === "All" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("All")}
           >
-            <h1>All (12)</h1>
+            <h1>All ( {users.length} )</h1>
           </div>
           <div
             className={`border  px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Admins" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("Admins")}
           >
-            <h1>Admins (2)</h1>
+            <h1>Admins ( 2 )</h1>
           </div>
           <div
             className={`border px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Managers" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"}`}
             onClick={() => setRoleFilter("Managers")}
           >
-            <h1>Managers (3)</h1>
+            <h1>Managers ( 3 )</h1>
           </div>
           <div
             className={`border px-3 rounded-full text-[11px] font-bold py-1 cursor-pointer ${RoleFilter === "Employee" ? "border-[#C7D2FE] bg-[#EEF2FF] text-[#4F46E5]" : "bg-white"} `}
             onClick={() => setRoleFilter("Employee")}
           >
-            <h1>Employees (7)</h1>
+            <h1>Employees ( 7 )</h1>
           </div>
         </div>
 
@@ -101,121 +122,77 @@ function TeamMembers() {
         <div className="p-4">
           <div className="border bg-white rounded-md overflow-x-scroll h-auto">
             <table className=" table w-full text-left  text-nowrap">
-              <tr className="border  h-8 bg-[#F1F5F9] w-full text-[10px] text-[#94A3B8]">
-                <th className="pl-4">MEMBER</th>
-                <th className="">EMAIL</th>
-                <th className="">ROLE</th>
-                <th className="">TASKS</th>
-                <th className="">PROJECTS</th>
-                <th className="">JOINED</th>
-                <th className="">LAST ACTIVE</th>
-                <th className="">ACTIONS</th>
-              </tr>
+              <thead>
+                <tr className="border  h-8 bg-[#F1F5F9] w-full text-[10px] text-[#94A3B8]">
+                  <th className="pl-4">MEMBER</th>
+                  <th className="">EMAIL</th>
+                  <th className="">ROLE</th>
+                  <th className="">TASKS</th>
+                  <th className="">PROJECTS</th>
+                  <th className="">JOINED</th>
+                  <th className="">LAST ACTIVE</th>
+                  <th className="">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u) => (
+                  <tr key={u.userId}>
+                    <td className="flex gap-2 px-4 py-2 items-center">
+                      <div className="border rounded-full p-[5px] w-7 h-7 text-[12px] font-semibold text-white bg-blue-500">
+                        {u.firstName.charAt(0)}
+                        {u.lastName.charAt(0)}
+                      </div>
+                      <div className="leading-tight">
+                        <h1 className="font-bold text-[13px]">{u.firstName} {u.lastName}</h1>
+                        {/* <p className="text-[10px] text-[#94A3B8]">You</p> */}
+                      </div>
+                    </td>
+                    <td className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
+                      {u.email}
+                    </td>
+                    <td className="pr-2 flex items-center text-[12px] font-semibold ">
+                      <h1
+                        className={`rounded-full  py-1 px-3 ${u.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : u.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
+                      >
+                        {roleIcon[u.role]}{u.role}
+                      </h1>
+                    </td>
+                    <td className="pr-2 text-[12px] text-[#94A3B8]">
+                      <span className="text-black font-semibold">12</span> / 8
+                      done
+                    </td>
+                    <td>
+                      <p className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
+                        5 projects
+                      </p>
+                    </td>
+                    <td>
+                      <p className="pr-2 text-[12px] text-[#94A3B8]">
+                        Jan 1, 2025
+                      </p>
+                    </td>
+                    <td>
+                      <p className="text-[12px] text-[#10B981] flex font-semibold">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-dot"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                        </svg>{" "}
+                        Active now
+                      </p>
+                    </td>
 
-              <tr>
-                <td className="flex gap-2 px-4 py-2 items-center">
-                  <div className="border rounded-full p-1 text-[12px] font-semibold text-white bg-blue-500">
-                    AK
-                  </div>
-                  <div className="leading-tight">
-                    <h1 className="font-bold text-[13px]">Alex Kumar</h1>
-                    <p className="text-[10px] text-[#94A3B8]">You</p>
-                  </div>
-                </td>
-                <td className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
-                  alex@taskflow.com
-                </td>
-                <td className="pr-2 flex items-center text-[12px] font-semibold ">
-                  <h1
-                    className={`rounded-full  py-1 px-3 ${TableRole === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : TableRole === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
-                  >
-                    {roleIcon["Admin"]}Admin
-                  </h1>
-                </td>
-                <td className="pr-2 text-[12px] text-[#94A3B8]">
-                  <span className="text-black font-semibold">12</span> / 8 done
-                </td>
-                <td>
-                  <p className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
-                    5 projects
-                  </p>
-                </td>
-                <td>
-                  <p className="pr-2 text-[12px] text-[#94A3B8]">Jan 1, 2025</p>
-                </td>
-                <td>
-                  <p className="text-[12px] text-[#10B981] flex font-semibold">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-dot"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                    </svg>{" "}
-                    Active now
-                  </p>
-                </td>
-
-                <td className="pr-2">
-                  <div></div>
-                </td>
-              </tr>
-
-              <tr>
-                <td className="flex gap-2 pl-4 py-2 items-center">
-                  <div className="border rounded-full p-1 text-[12px] font-semibold text-white bg-blue-500">
-                    AK
-                  </div>
-                  <div className="leading-tight">
-                    <h1 className="font-bold text-[13px]">Alex Kumar</h1>
-                    <p className="text-[10px] text-[#94A3B8]">You</p>
-                  </div>
-                </td>
-                <td className="text-[12px] font-semibold text-[#94A3B8]">
-                  alex@taskflow.com
-                </td>
-                <td className="flex items-center text-[12px] font-semibold ">
-                  <h1
-                    className={`rounded-full  py-1 px-3 ${TableRole === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : TableRole === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
-                  >
-                    {roleIcon["Admin"]}Admin
-                  </h1>
-                </td>
-                <td className="text-[12px] text-[#94A3B8]">
-                  <span className="text-black font-semibold">12</span> / 8 done
-                </td>
-                <td>
-                  <p className="text-[12px] font-semibold text-[#94A3B8]">
-                    5 projects
-                  </p>
-                </td>
-                <td>
-                  <p className="text-[12px] text-[#94A3B8]">Jan 1, 2025</p>
-                </td>
-                <td>
-                  <p className="text-[12px] text-[#10B981] flex font-semibold">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-dot"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                    </svg>{" "}
-                    Active now
-                  </p>
-                </td>
-
-                <td>
-                  <div></div>
-                </td>
-              </tr>
-
+                    <td className="pr-2">
+                      <div></div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
         </div>
