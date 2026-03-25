@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { fetchUsers, deleteuser } from "../../features/users/userSlice";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
+import { isAction } from "@reduxjs/toolkit";
 
 function TeamMembers() {
   const [RoleFilter, setRoleFilter] = useState("All");
@@ -39,7 +40,6 @@ function TeamMembers() {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-
         try {
           await dispatch(deleteuser(id)).unwrap();
           Swal.fire({
@@ -47,7 +47,7 @@ function TeamMembers() {
             text: "User has been deleted.",
             icon: "success",
           });
-        } catch (err) { 
+        } catch (err) {
           Swal.fire({
             title: "Failed",
             text: "Cannot Delete Yourself",
@@ -88,35 +88,27 @@ function TeamMembers() {
     (u) => u.role === "Employee",
   ).length;
 
-  console.log(users);
-
-const formatLastActive = (date) => {
-  if (!date || date.startsWith("0001")) return "Never";
-
-  const diff = (new Date() - new Date(date)) / 1000;
-
-  if (diff < 60) return "Active now";
-  if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)} hrs ago`;
-
-  return new Date(date).toLocaleString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
   const formatLastActive = (date) => {
-    const diff = (new Date()- new Date(date)) / 1000;
+    const d = new Date(date.endsWith("Z") ? date : date + "Z");
+    const diff = (new Date() - d) / 1000;
 
-    if(diff < 60) return "Active now";
-    if(diff < 3600) return `${Math.floor(diff / 60)}min ago`;
-    if(diff < 8600) return `${Math.floor(diff / 3600)} hrs ago`;
+    if (diff < 60) return { text: "Active now", isActive: true };
+    if (diff < 3600)
+      return { text: `${Math.floor(diff / 60)} min ago`, isActive: false };
+    if (diff < 86400)
+      return { text: `${Math.floor(diff / 3600)} hrs ago`, isActive: false };
 
-    return new Date(date).toLocaleDateString();
-  }
+    return {
+      text: d.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      isActive: false,
+    };
+  };
 
   // console.log(users);
   return (
@@ -254,82 +246,89 @@ const formatLastActive = (date) => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map((u) => (
-                  <tr key={u.userId}>
-                    <td className="flex gap-2 px-4 py-2 items-center">
-                      <div className="border rounded-full pt-[6px] w-8 h-8 text-[12px] text-center font-semibold text-white bg-blue-500">
-                        {u.firstName.charAt(0).toUpperCase()}
-                        {u.lastName.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="leading-tight">
-                        <h1 className="font-bold text-[13px]">
-                          {u.firstName} {u.lastName}
-                        </h1>
-                        {/* <p className="text-[10px] text-[#94A3B8]">You</p> */}
-                      </div>
-                    </td>
-                    <td className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
-                      {u.email}
-                    </td>
-                    <td className="pr-2 flex items-center text-[12px] font-semibold ">
-                      <h1
-                        className={`rounded-full  py-1 px-3 ${u.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : u.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
-                      >
-                        {roleIcon[u.role]} {u.role}
-                      </h1>
-                    </td>
-                    <td className="pr-2 text-[12px] text-[#94A3B8]">
-                      <span className="text-black font-semibold">12</span> / 8
-                      done
-                    </td>
-                    <td>
-                      <p className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
-                        {u.projectCount}{" "}
-                        {u.projectCount < 2 ? "project" : "projects"}
-                      </p>
-                    </td>
-                    <td>
-                      <p className="pr-2 text-[12px] text-[#94A3B8]">
-                        {new Date(u.joinedAt).toLocaleDateString()}
-                      </p>
-                    </td>
-                    <td>
-                      <p className="text-[12px] text-[#10B981] flex font-semibold">
-                        {/* <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-dot"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                        </svg>{" "}
-                        Active now */}
-                        {u.lastActiveAt ? formatLastActive(u.lastActiveAt) : "Never"}
-                      </p>
-                    </td>
-                    {CurrentUser.role === "Admin" && (
-                      <td className="pr-2">
-                        <div
-                          className="text-[#f00] px-4 cursor-pointer"
-                          onClick={() => HandleDelete(u.userId)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-trash-fill"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                          </svg>
+                {filteredUsers.map((u) => {
+                  const status = formatLastActive(u.lastActiveAt);
+                  return (
+                    <tr key={u.userId}>
+                      <td className="flex gap-2 px-4 py-2 items-center">
+                        <div className="border rounded-full pt-[6px] w-8 h-8 text-[12px] text-center font-semibold text-white bg-blue-500">
+                          {u.firstName.charAt(0).toUpperCase()}
+                          {u.lastName.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="leading-tight">
+                          <h1 className="font-semibold text-[13px]">
+                            {u.firstName} {u.lastName}
+                          </h1>
+                          {/* <p className="text-[10px] text-[#94A3B8]">You</p> */}
                         </div>
                       </td>
-                    )}
-                  </tr>
-                ))}
+                      <td className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
+                        {u.email}
+                      </td>
+                      <td className="pr-2 flex items-center text-[12px] font-semibold ">
+                        <h1
+                          className={`rounded-full  py-1 px-3 ${u.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : u.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
+                        >
+                          {roleIcon[u.role]} {u.role}
+                        </h1>
+                      </td>
+                      <td className="pr-2 text-[12px] text-[#94A3B8]">
+                        <span className="text-black font-semibold">12</span> / 8
+                        done
+                      </td>
+                      <td>
+                        <p className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
+                          {u.projectCount}{" "}
+                          {u.projectCount < 2 ? "project" : "projects"}
+                        </p>
+                      </td>
+                      <td>
+                        <p className="pr-2 text-[12px] text-[#94A3B8]">
+                          {new Date(u.joinedAt).toLocaleDateString()}
+                        </p>
+                      </td>
+                      <td>
+                        <p
+                          className={`text-[12px] ${status.isActive ? "text-[#10B981]" : "text-[#777676] ml-2"}  flex font-semibold`}
+                        >
+                          {status.isActive && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              class="bi bi-dot"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                            </svg>
+                          )}
+
+                          {status.text}
+                        </p>
+                      </td>
+                      {CurrentUser.role === "Admin" && (
+                        <td className="pr-2">
+                          <div
+                            className="text-[#f00] px-4 cursor-pointer"
+                            onClick={() => HandleDelete(u.userId)}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              class="bi bi-trash-fill"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                            </svg>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

@@ -11,5 +11,6 @@
         public int ProjectCount { get; set; }
         public DateTime JoinedAt { get; set; }
         public DateTime? LastActiveAt { get; set; }
+        
     }
 }

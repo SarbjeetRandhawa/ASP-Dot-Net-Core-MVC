@@ -10,8 +10,8 @@ function ProjectMembers({ members, setMembers }) {
   const { roles = [] } = useSelector((state) => state.projectRoles);
   const currentUser = useSelector((state) => state.auth.user);
 
-  console.log(currentUser);
-  console.log(users);
+  // console.log(currentUser);
+  // console.log(users);
 
   const [search, setsearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);

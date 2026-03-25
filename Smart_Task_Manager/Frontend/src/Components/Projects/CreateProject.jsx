@@ -165,7 +165,7 @@ function CreateProject() {
               <button
                 type="button"
                 onClick={() => {
-                  navigate("/dashboard");
+                  navigate("/projects");
                 }}
                 className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap"
               >

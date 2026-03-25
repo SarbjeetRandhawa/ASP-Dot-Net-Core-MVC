@@ -96,8 +96,10 @@ using (var scope = app.Services.CreateScope())
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
-app.UseAuthorization();
 app.UseMiddleware<lastActiveMiddleware>();
+app.UseAuthorization();
+
+
 app.MapControllers();
 
 app.Run();

@@ -18,11 +18,11 @@ function Sidebar() {
             width="16"
             height="16"
             fill="currentColor"
-            class="bi bi-list"
+            className="bi bi-list"
             viewBox="0 0 16 16"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
             />
           </svg>
@@ -144,18 +144,18 @@ function Sidebar() {
         </div>
         <div className="flex mb-[56px] sm:mb-0 items-center border-t-[1px] border-t-[#ffffff25] p-2 sm:p-3 gap-3 text-white justify-between">
           <div className="flex items-center gap-2 ">
-          <div className="pl-2 pt-2 h-9 w-9 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">
-            {user.firstName.charAt(0)}
-            {user.lastName.charAt(0)}
-          </div>
-          <div>
-            <h1 className="text-[11px] font-semibold ">
-              {user.firstName} {user.lastName}
-            </h1>
-            <p className="text-[#FFFFFF73] text-[11px] mt-[-5px]">
-              {user.role}
-            </p>
-          </div>
+            <div className="pl-2 pt-2 h-9 w-9 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">
+              {user.firstName.charAt(0)}
+              {user.lastName.charAt(0)}
+            </div>
+            <div>
+              <h1 className="text-[11px] font-semibold ">
+                {user.firstName} {user.lastName}
+              </h1>
+              <p className="text-[#FFFFFF73] text-[11px] mt-[-2px]">
+                {user.role}
+              </p>
+            </div>
           </div>
           <button
             onClick={() => dispatch(logout())}
