@@ -88,6 +88,10 @@ function TeamMembers() {
     (u) => u.role === "Employee",
   ).length;
 
+  console.log(users);
+
+
+
   const formatLastActive = (date) => {
     const d = new Date(date.endsWith("Z") ? date : date + "Z");
     const diff = (new Date() - d) / 1000;
