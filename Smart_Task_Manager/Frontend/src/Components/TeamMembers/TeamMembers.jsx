@@ -89,6 +89,23 @@ function TeamMembers() {
   ).length;
 
   console.log(users);
+const formatLastActive = (date) => {
+  if (!date || date.startsWith("0001")) return "Never";
+
+  const diff = (new Date() - new Date(date)) / 1000;
+
+  if (diff < 60) return "Active now";
+  if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} hrs ago`;
+
+  return new Date(date).toLocaleString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
   const formatLastActive = (date) => {
     const diff = (new Date()- new Date(date)) / 1000;
