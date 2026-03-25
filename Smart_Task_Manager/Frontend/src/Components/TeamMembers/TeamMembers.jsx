@@ -90,6 +90,30 @@ function TeamMembers() {
 
   console.log(users);
 
+const getLastActiveStatus = (date) => {
+  if (!date || date.startsWith("0001")) {
+    return { text: "Never", isActive: false };
+  }
+
+  const d = new Date(date.endsWith("Z") ? date : date + "Z");
+  const diff = (new Date() - d) / 1000;
+
+  if (diff < 60) return { text: "Active now", isActive: true };
+  if (diff < 3600) return { text: `${Math.floor(diff / 60)} min ago`, isActive: false };
+  if (diff < 86400) return { text: `${Math.floor(diff / 3600)} hrs ago`, isActive: false };
+
+  return {
+    text: d.toLocaleString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    isActive: false,
+  };
+};
+
 const formatLastActive = (date) => {
   if (!date || date.startsWith("0001")) return "Never";
 
