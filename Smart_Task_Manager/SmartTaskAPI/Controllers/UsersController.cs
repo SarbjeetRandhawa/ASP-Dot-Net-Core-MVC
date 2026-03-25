@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartTaskAPI.Models.Identity;
 using SmartTaskAPI.Services.Interfaces;
 using SmartTaskAPI.UnitOfWork;
+using System.Security.Claims;
 
 namespace SmartTaskAPI.Controllers
 {
@@ -13,11 +14,18 @@ namespace SmartTaskAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IProjectMemberService _projectMemberService;
 
-        public UsersController(IUserService userService , UserManager<ApplicationUser> userManager)
+        public UsersController(IUserService userService , UserManager<ApplicationUser> userManager , IProjectMemberService projectMemberService)
         {
             _userService = userService;
             _userManager = userManager;
+            _projectMemberService = projectMemberService;
+        }
+
+        private string GetUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
 
@@ -41,7 +49,16 @@ namespace SmartTaskAPI.Controllers
 
         public async Task<IActionResult> DeleteUserByIdAsync(string userId)
         {
+            if (userId == GetUserId())
+            {
+                return BadRequest(new {message = "Cannot Delete Yourself" });
+            }
+            
+          
+            await _userService.DeleteUserWithProjectRelationAsync(userId);
+            
             var user = await _userManager.FindByIdAsync(userId);
+
             var result = await _userManager.DeleteAsync(user);
 
             if (!result.Succeeded) { 

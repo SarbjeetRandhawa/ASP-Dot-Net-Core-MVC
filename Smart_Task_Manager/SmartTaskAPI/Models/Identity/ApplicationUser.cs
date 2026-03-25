@@ -6,5 +6,9 @@ namespace SmartTaskAPI.Models.Identity
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime? LastActiveAt { get; set; }
     }
 }

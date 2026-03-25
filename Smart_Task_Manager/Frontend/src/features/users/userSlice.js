@@ -18,7 +18,7 @@ export const deleteuser = createAsyncThunk("users/deleteUser" , async (userId ,t
     await userService.deleteUser(userId);
     return userId;
   }catch(err){
-    thunkAPI.rejectWithValue(err.response.data);
+     return thunkAPI.rejectWithValue(err.response?.data?.message);
   }
 });
 

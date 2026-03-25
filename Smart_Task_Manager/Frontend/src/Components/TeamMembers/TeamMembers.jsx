@@ -37,16 +37,23 @@ function TeamMembers() {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      console.log(result);
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        dispatch(deleteuser(id));
 
-        Swal.fire({
-          title: "Deleted!",
-          text: "User has been deleted.",
-          icon: "success",
-        });
+        try {
+          await dispatch(deleteuser(id)).unwrap();
+          Swal.fire({
+            title: "Deleted!",
+            text: "User has been deleted.",
+            icon: "success",
+          });
+        } catch (err) { 
+          Swal.fire({
+            title: "Failed",
+            text: "Cannot Delete Yourself",
+            icon: "error",
+          });
+        }
       }
     });
   };
@@ -81,7 +88,17 @@ function TeamMembers() {
     (u) => u.role === "Employee",
   ).length;
 
-  console.log(CurrentUser);
+  console.log(users);
+
+  const formatLastActive = (date) => {
+    const diff = (new Date()- new Date(date)) / 1000;
+
+    if(diff < 60) return "Active now";
+    if(diff < 3600) return `${Math.floor(diff / 60)}min ago`;
+    if(diff < 8600) return `${Math.floor(diff / 3600)} hrs ago`;
+
+    return new Date(date).toLocaleDateString();
+  }
 
   // console.log(users);
   return (
@@ -249,17 +266,18 @@ function TeamMembers() {
                     </td>
                     <td>
                       <p className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
-                        5 projects
+                        {u.projectCount}{" "}
+                        {u.projectCount < 2 ? "project" : "projects"}
                       </p>
                     </td>
                     <td>
                       <p className="pr-2 text-[12px] text-[#94A3B8]">
-                        Jan 1, 2025
+                        {new Date(u.joinedAt).toLocaleDateString()}
                       </p>
                     </td>
                     <td>
                       <p className="text-[12px] text-[#10B981] flex font-semibold">
-                        <svg
+                        {/* <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"
                           height="16"
@@ -269,7 +287,8 @@ function TeamMembers() {
                         >
                           <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
                         </svg>{" "}
-                        Active now
+                        Active now */}
+                        {u.lastActiveAt ? formatLastActive(u.lastActiveAt) : "Never"}
                       </p>
                     </td>
                     {CurrentUser.role === "Admin" && (

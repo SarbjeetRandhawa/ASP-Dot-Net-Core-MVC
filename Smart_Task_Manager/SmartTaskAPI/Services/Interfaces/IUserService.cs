@@ -6,5 +6,8 @@ namespace SmartTaskAPI.Services.Interfaces
     {
         Task<List<UserResponseDto>> GetAllAsync();
         Task<string> GetUserRoleAsync(string userId);
+        Task DeleteUserWithProjectRelationAsync(string userId);
+
     }
+    
 }

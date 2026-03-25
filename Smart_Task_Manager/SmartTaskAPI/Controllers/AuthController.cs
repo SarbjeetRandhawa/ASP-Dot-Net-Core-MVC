@@ -38,7 +38,10 @@ namespace SmartTaskAPI.Controllers
                 UserName = dto.Email,
                 Email = dto.Email,
                 FirstName = dto.FirstName,
-                LastName = dto.LastName
+                LastName = dto.LastName,
+                JoinedAt = DateTime.UtcNow,
+                LastActiveAt = DateTime.UtcNow
+
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);

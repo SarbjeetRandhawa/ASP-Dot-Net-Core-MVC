@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartTaskAPI.Data;
+using SmartTaskAPI.Middleware;
 using SmartTaskAPI.Models.Identity;
 using SmartTaskAPI.Repository.Implementation;
 using SmartTaskAPI.Repository.Interface;
@@ -96,7 +97,7 @@ app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<lastActiveMiddleware>();
 app.MapControllers();
 
 app.Run();

@@ -14,6 +14,12 @@ namespace SmartTaskAPI.Repository.Implementation
             this._context = context;
         }
 
+        public async Task DeleteUserWithProjectRelationAsync(string userId)
+        {
+            var projectMembers = _context.ProjectMembers.Where(pm=>pm.UserId == userId);
+             _context.RemoveRange(projectMembers);
+        }
+
         public async Task<List<UserResponseDto>> GetAllAsync()
         {
             var users = await _context.Users
@@ -29,7 +35,10 @@ namespace SmartTaskAPI.Repository.Implementation
                        ur => ur.RoleId,
                        r => r.Id,
                        (ur, r) => r.Name)
-                   .FirstOrDefault() ?? ""
+                   .FirstOrDefault() ?? "",
+               ProjectCount = _context.ProjectMembers.Count(pm => pm.UserId == u.Id),
+               JoinedAt = u.JoinedAt,
+               LastActiveAt = u.LastActiveAt
            })
            .ToListAsync();
 

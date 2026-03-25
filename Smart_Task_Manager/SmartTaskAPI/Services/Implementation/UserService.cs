@@ -11,6 +11,13 @@ namespace SmartTaskAPI.Services.Implementation
         {
             _uow = uow;
         }
+
+        public async Task DeleteUserWithProjectRelationAsync(string userId)
+        {
+            await _uow.UserRepository.DeleteUserWithProjectRelationAsync(userId);
+            await _uow.SaveAsync();
+        }
+
         public async Task<List<UserResponseDto>> GetAllAsync()
         {
             return await _uow.UserRepository.GetAllAsync();

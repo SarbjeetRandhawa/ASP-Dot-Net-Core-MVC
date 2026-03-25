@@ -7,5 +7,9 @@
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
+
+        public int ProjectCount { get; set; }
+        public DateTime JoinedAt { get; set; }
+        public DateTime? LastActiveAt { get; set; }
     }
 }
