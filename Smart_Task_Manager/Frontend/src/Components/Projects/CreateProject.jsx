@@ -13,9 +13,9 @@ function CreateProject() {
     register,
     handleSubmit,
     formState: { errors },
-    // watch,
-  } = useForm();
-  // const startDate = watch("StartDate");
+    watch
+  } = useForm({mode:"onChange"});
+  const startDate = watch("StartDate");
   const [members, setMembers] = useState([]);
 
   const [projectFormData, setProjectFormData] = useState({
@@ -307,10 +307,10 @@ function CreateProject() {
                       {...register("EndDate", {
                         required: "End Date is required",
                         validate: (value) => {
-                          if (!projectFormData.StartDate) return true;
+                          if (!startDate) return true;
                           return (
                             new Date(value) >
-                              new Date(projectFormData.StartDate) ||
+                              new Date(startDate) ||
                             "End date must be greater than start date"
                           );
                         },
@@ -606,11 +606,12 @@ function CreateProject() {
                     <div className="flex justify-between">
                       <div>
                         {members.map((m, offset) => {
+
                           const left = offset * 20;
                           const randomHSL = `hsl(${Math.random() * 360}, 100%, 70%)`;
-                          return (
+                          return(
                             <div
-                              key={m.userID}
+                              key={m.userId}
                               style={{
                                 left: `${left}px`,
                                 backgroundColor: randomHSL,

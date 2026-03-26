@@ -20,7 +20,7 @@ function ProjectMembers({ members, setMembers }) {
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchProjectRoles());
-  },[]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -42,7 +42,7 @@ function ProjectMembers({ members, setMembers }) {
   const FilteredUsers = users.filter((user) => {
     const isNotMe = user.userId !== currentUser?.id;
 
-    const notAlreadySelected = !members.some((m) => m.userId === user.id);
+    const notAlreadySelected = !members.some((m) => m.userId === user.userId);
 
     const allowedRoles = roleAccess[currentUser?.role] || [];
     const roleAllowed = allowedRoles.includes(user.role);
@@ -56,7 +56,7 @@ function ProjectMembers({ members, setMembers }) {
 
     return isNotMe && notAlreadySelected && roleAllowed && matchesSearch;
   });
-
+  ``;
   const addMember = (user) => {
     console.log("triggered");
     if (members.find((u) => u.userId === user.userId)) return;
@@ -119,7 +119,7 @@ function ProjectMembers({ members, setMembers }) {
           </button>
 
           {showDropdown && (
-            <div className="absolute bg-white w-11/12 md:w-4/5 top-16 border rounded-md max-h-60 overflow-y-auto z-10">
+            <div className="absolute  bg-white w-11/12 md:w-4/5 top-16 border rounded-md max-h-60 overflow-y-auto z-10">
               {FilteredUsers.map((user) => (
                 <div
                   className="cursor-pointer border p-2 px-4 flex justify-between"
@@ -128,10 +128,26 @@ function ProjectMembers({ members, setMembers }) {
                     addMember(user);
                   }}
                 >
-                  <h1 className="font-bold">
-                    {user.firstName} {user.lastName}
-                  </h1>
-                  <p className="text-[#8b8a8a]">{user.email}</p>
+                  <div className="flex gap-3 items-center">
+                    <h1 className=" p-[7px] w-7 h-7 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
+                      {user.firstName?.charAt(0)}
+                      {user.lastName?.charAt(0)}
+                    </h1>
+                    <div className="">
+                      <h1 className="font-bold text-[13px] ">
+                        {user.firstName} {user.lastName}
+                      </h1>
+                      <p className="text-[#8b8a8a] text-[10px] font-semibold">
+                        {user.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p
+                    className={`text-[10px] flex items-center font-semibold text-[#939393] rounded-full  py-1 px-3 ${user.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : user.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"} `}
+                  >
+                    {user.role}
+                  </p>
                 </div>
               ))}
             </div>
@@ -139,11 +155,48 @@ function ProjectMembers({ members, setMembers }) {
         </div>
 
         <div className="members px-4 pb-4 flex flex-col gap-2">
-          {members.length == 0 && (
-            <p className="text-center text-[12px] text-[#64748b8d] font-semibold ">
-              No members added Yet
-            </p>
-          )}
+          <div className="min-h-[56px] rounded-md flex flex-col md:flex-row bg-[#f8f8f8]">
+            <div className="w-full md:w-1/2 flex items-center">
+              <div className="px-4">
+                <h1 className=" p-2 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
+                  {currentUser.firstName?.charAt(0)}
+                  {currentUser.lastName?.charAt(0)}
+                </h1>
+              </div>
+              <div>
+                <h1 className="font-bold text-[13px]">
+                  {currentUser.firstName} {currentUser.lastName}
+                </h1>
+                <p className="text-[11px] mt-[-3px] font-semibold text-[#64748B] ">
+                  {currentUser.email}
+                </p>
+              </div>
+            </div>
+            <div className="w-full md:w-1/2 flex flex-wrap items-center gap-2 md:gap-4 p-2 md:p-4 justify-between md:justify-end">
+              {currentUser.role != "Admin" && (
+                <select
+                  name="projectRole"
+                  value={currentUser.ProjectRoleId || ""}
+                  // onChange={(e) => {
+                  //   handleChange(currentUser.userId, Number(e.target.value));
+                  // }}
+                  className="rounded-md p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
+                >
+                  <option value="" disabled hidden>
+                    Select Role
+                  </option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <h2 className="rounded-2xl text-[10px] p-2 bg-[#F0FDF4] text-[#10B981] font-semibold">
+                {currentUser.role}
+              </h2>
+            </div>
+          </div>
 
           {members.map((m) => (
             <div
@@ -170,13 +223,14 @@ function ProjectMembers({ members, setMembers }) {
                 <select
                   name="projectRole"
                   value={m.ProjectRoleId || ""}
-                  
                   onChange={(e) => {
                     handleChange(m.userId, Number(e.target.value));
                   }}
                   className="rounded-md p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
                 >
-                  <option value="" disabled hidden>Select Role</option>
+                  <option value="" disabled hidden>
+                    Select Role
+                  </option>
                   {roles.map((role) => (
                     <option key={role.id} value={role.id}>
                       {role.name}

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { fetchUsers, deleteuser } from "../../features/users/userSlice";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import { isAction } from "@reduxjs/toolkit";
+// import { isAction } from "@reduxjs/toolkit";
 
 function TeamMembers() {
   const [RoleFilter, setRoleFilter] = useState("All");
@@ -89,8 +89,6 @@ function TeamMembers() {
   ).length;
 
   console.log(users);
-
-
 
   const formatLastActive = (date) => {
     const d = new Date(date.endsWith("Z") ? date : date + "Z");
@@ -293,21 +291,8 @@ function TeamMembers() {
                       </td>
                       <td>
                         <p
-                          className={`text-[12px] ${status.isActive ? "text-[#10B981]" : "text-[#777676] ml-2"}  flex font-semibold`}
+                          className={`text-[12px] ${status.isActive ? "text-[#10B981]" : "text-[#b8b8b8] ml-1"}  flex font-semibold`}
                         >
-                          {status.isActive && (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              class="bi bi-dot"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                            </svg>
-                          )}
-
                           {status.text}
                         </p>
                       </td>
@@ -322,7 +307,7 @@ function TeamMembers() {
                               width="16"
                               height="16"
                               fill="currentColor"
-                              class="bi bi-trash-fill"
+                              className="bi bi-trash-fill"
                               viewBox="0 0 16 16"
                             >
                               <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
