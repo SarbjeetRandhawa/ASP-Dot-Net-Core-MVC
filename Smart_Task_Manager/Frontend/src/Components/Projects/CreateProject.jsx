@@ -2,9 +2,11 @@ import Sidebar from "../Sidebar";
 import "../../App.css";
 import { useState, useMemo } from "react";
 import ProjectMembers from "./ProjectMembers";
-import { useForm } from "react-hook-form";
+import { useForm  } from "react-hook-form";
 import { createProject } from "../../Services/CreateProject";
 import { useNavigate } from "react-router-dom";
+import { useWatch } from "react-hook-form";
+
 import Swal from "sweetalert2";
 
 function CreateProject() {
@@ -12,10 +14,12 @@ function CreateProject() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
-    watch
-  } = useForm({mode:"onChange"});
-  const startDate = watch("StartDate");
+    
+  } = useForm();
+  const startDate = useWatch({control , name: "StartDate",});
+
   const [members, setMembers] = useState([]);
 
   const [projectFormData, setProjectFormData] = useState({
