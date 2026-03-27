@@ -14,6 +14,9 @@ function CreateProject() {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    setError,
+    clearErrors,
     // watch,
   } = useForm();
   // const startDate = watch("StartDate");
@@ -307,17 +310,29 @@ function CreateProject() {
                       type="date"
                       {...register("EndDate", {
                         required: "End Date is required",
-                        validate: (value) => {
-                          if (!projectFormData.StartDate) return true;
-                          return (
-                            new Date(value) >
-                              new Date(projectFormData.StartDate) ||
-                            "End date must be greater than start date"
-                          );
+                        onChange: (e) => {
+                          const start = getValues("StartDate");
+                          const end = e.target.value;
+                          if (start && end && end < start) {
+                            setError("EndDate", {
+                              type: "manual",
+                              message:
+                                "End Date cannot be smaller than Start Date",
+                            }) ;
+                          }else if(end == start){
+                            setError("EndDate", {
+                              type: "manual",
+                              message:
+                                "End Date cannot be Equal to Start Date",
+                            }) ;
+                          } else {
+                            clearErrors("EndDate");
+                          };
+                          HandleChange(e);
                         },
                       })}
                       name="EndDate"
-                      onChange={HandleChange}
+                      // onChange={HandleChange}
                       className="border-2  text-[12px] p-2 font-semibold rounded-md  focus:border-blue-600 focus:outline-none"
                     />
                     {errors.EndDate && (

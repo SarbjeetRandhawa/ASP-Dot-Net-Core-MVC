@@ -11,7 +11,8 @@ function ProjectPage() {
   const dispatch = useDispatch();
   const { projects } = useSelector((state) => state.projects);
   const [StatusFilter, setStatusFilter] = useState("All");
-  const [Status, setStatus] = useState("Active")
+  const [Status, setStatus] = useState("Active");
+  const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(null);
   const [search, setsearch] = useState("");
   const [debounceSearch, setDebounceSearch] = useState("");
   const CurrentUser = useSelector((state) => state.auth.user);
@@ -26,6 +27,15 @@ function ProjectPage() {
   useEffect(() => {
     dispatch(fetchProjects());
   }, [dispatch]);
+
+  useEffect(() => {
+    const HandleClickOutside = () => {
+      setIsProjectMenuOpen(null);
+
+      document.addEventListener("mouse", HandleClickOutside);
+      return () => document.removeEventListener("click", HandleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -68,12 +78,28 @@ function ProjectPage() {
     });
   };
 
+  const HandleProjectInfoNavigate = (project) => {
+    const formatedName = project.name.toLowerCase().replace(/\s+/g, "-");
 
-  const HandleProjectInfoNavigate = (project) =>{
-    const formatedName = project.name.toLowerCase().replace(/\s+/g,"-");
-
-    navigate(`/projects/${formatedName}`);
+    navigate(`
+      /projects/${formatedName}`);
   };
+
+  const HandleMenuClick = (e, projectId) => {
+    e.stopPropagation();
+    setIsProjectMenuOpen((prev) => (prev === projectId ? null : projectId));
+  };
+  const HandleEdit = (id) =>{
+    console.log(id);
+    setIsProjectMenuOpen(null);
+    
+  }
+  const HandleDelete = (id) =>{
+    console.log(id);
+    setIsProjectMenuOpen(null);
+
+    
+  }
 
   return (
     <div className="flex ">
@@ -212,16 +238,20 @@ function ProjectPage() {
               return (
                 <div
                   key={p.id}
-                  onClick={()=>{HandleProjectInfoNavigate(p)}}
+                  onClick={() => {
+                    HandleProjectInfoNavigate(p);
+                  }}
                   className="border  bg-white hover:border-[#4F46E5] overflow-hidden cursor-pointer z-0 p-4 relative h-auto col rounded-md text-black"
-                 
                 >
                   <div className="z-0 absolute w-[10rem] h-[10rem] bg-[#ffffff2e] -right-10 -top-10 rounded-full"></div>
                   <div className="">
                     <div className="flex flex-col gap-3 mt-1">
                       <div className="flex gap-3 justify-between items-center">
                         <div className="flex gap-3">
-                          <div className={`p-1 h-9 rounded-lg text-[20px]`} style={{background: `${p.colorTheme}33`}}>
+                          <div
+                            className={`p-1 h-9 rounded-lg text-[20px]`}
+                            style={{ background: `${p.colorTheme}33` }}
+                          >
                             {p.icon}
                           </div>
                           <div>
@@ -240,14 +270,19 @@ function ProjectPage() {
                           </div>
                         </div>
                         <div className="flex items-center ">
-                          <p className={`text-[11px] font-bold ${Status == "Active" ? "text-[#10B981] bg-[#ECFDF5]" : Status == "Archived" ? " text-[#64748B] bg-[#F1F5F9]" : " text-[#f50000] bg-[#ffefef]"} px-2 py-1  rounded-lg`}>
+                          <p
+                            className={`text-[11px] font-bold ${Status == "Active" ? "text-[#10B981] bg-[#ECFDF5]" : Status == "Archived" ? " text-[#64748B] bg-[#F1F5F9]" : " text-[#f50000] bg-[#ffefef]"} px-2 py-1  rounded-lg`}
+                          >
                             {p.status}
                           </p>
                           {(CurrentUser.role === "Admin" ||
                             CurrentUser.role === "Manager") && (
-                            <div className="text-[#94A3B8]  hover:bg-[#dfdfdf33] rounded-3xl z-30  p-2"
-                            onClick={(e)=>{e.stopPropagation()}}>
-                              
+                            <div
+                              className="text-[#94A3B8]  hover:bg-[#dfdfdf33] rounded-3xl z-30  p-2"
+                              onClick={(e) => {
+                                HandleMenuClick(e, p.id);
+                              }}
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -260,6 +295,16 @@ function ProjectPage() {
                               </svg>
                             </div>
                           )}
+
+                          <div
+                            onClick={(e) => e.stopPropagation()}
+                            className={` border absolute right-2 top-12  bg-white shadow-md rounded h-auto w-28 z-50 transform transition- duration-300 ${isProjectMenuOpen == p.id ? "translate-x-0" : "translate-x-32"}`}
+                          >
+                            <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm font-semibold" onClick={()=>HandleEdit(p.id)}>Edit</div>
+                            <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm font-semibold text-red-600" onClick={()=>HandleDelete(p.id)}>Delete</div>
+
+                            
+                          </div>
                         </div>
                       </div>
                       <p className="text-[#64748B] line-clamp-2 h-9 break-words  whitespace-pre-wrap text-[11px]">
