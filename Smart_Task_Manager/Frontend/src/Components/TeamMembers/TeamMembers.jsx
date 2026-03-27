@@ -9,13 +9,21 @@ import Swal from "sweetalert2";
 
 function TeamMembers() {
   const [RoleFilter, setRoleFilter] = useState("All");
-  const [search, setsearch] = useState("");
+ const [debounceSearch, setDebounceSearch] = useState("");
   const [appliedSearch, setappliedSearch] = useState("");
   const roleIcon = {
     Admin: "👑",
     Manager: "🗃️",
     Employee: "👤",
   };
+  const colors = [
+    "bg-red-500",
+    "bg-green-500",
+    "bg-blue-500",
+    "bg-yellow-500",
+    "bg-purple-500",
+    "bg-pink-500",
+  ]
 
   const dispatch = useDispatch();
   const { users = [] } = useSelector((state) => state.users);
@@ -23,7 +31,14 @@ function TeamMembers() {
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, []);
+  }, [dispatch]);
+
+  useEffect(()=>{
+    const timer = setTimeout(()=>{
+      setDebounceSearch(appliedSearch);
+    },800);
+    return ()=> clearTimeout(timer);
+  },[appliedSearch]);
 
   const adminCount = users.filter((u) => u.role === "Admin").length;
   const managerCount = users.filter((u) => u.role === "Manager").length;
@@ -47,25 +62,27 @@ function TeamMembers() {
             text: "User has been deleted.",
             icon: "success",
           });
-        } catch (err) {
+        } catch (error) {
           Swal.fire({
             title: "Failed",
             text: "Cannot Delete Yourself",
             icon: "error",
           });
+          console.log(error);
+          
         }
       }
     });
   };
 
   const searchedUsers = users.filter((u) => {
-    if (!appliedSearch) return true;
+    if (!debounceSearch) return true;
 
     const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
 
     return (
-      fullName.includes(appliedSearch.toLowerCase()) ||
-      u.email.toLowerCase().includes(appliedSearch.toLowerCase())
+      fullName.includes(debounceSearch.toLowerCase()) ||
+      u.email.toLowerCase().includes(debounceSearch.toLowerCase())
     );
   });
 
@@ -124,18 +141,12 @@ function TeamMembers() {
             <div className="absolute w-0 left-1 top-1">🔍</div>
             <input
               type="text"
-              value={search}
-              onChange={(e) => setsearch(e.target.value)}
+              value={appliedSearch}
+              onChange={(e) => setappliedSearch(e.target.value)}
               className="h-7 border pl-8 text-[11px] font-bold rounded-md focus:outline-2 outline-[#4F46E5]"
               placeholder="Search User..."
             />
-            <button
-              type="button"
-              onClick={() => setappliedSearch(search)}
-              className="border px-3 h-7 rounded-md text-[11px] font-bold bg-[#4F46E5] text-white"
-            >
-              Search
-            </button>
+            
           </div>
         </div>
 
@@ -196,7 +207,7 @@ function TeamMembers() {
             onClick={() => setRoleFilter("All")}
           >
             <h1>
-              All ( {appliedSearch === "" ? users.length : searchedUsers.length}{" "}
+              All ( {debounceSearch === "" ? users.length : searchedUsers.length}{" "}
               )
             </h1>
           </div>
@@ -205,7 +216,7 @@ function TeamMembers() {
             onClick={() => setRoleFilter("Admins")}
           >
             <h1>
-              Admins ( {appliedSearch === "" ? adminCount : filterAdminCount} )
+              Admins ( {debounceSearch === "" ? adminCount : filterAdminCount} )
             </h1>
           </div>
           <div
@@ -214,7 +225,7 @@ function TeamMembers() {
           >
             <h1>
               Managers ({" "}
-              {appliedSearch === "" ? managerCount : filterManagerCount} )
+              {debounceSearch === "" ? managerCount : filterManagerCount} )
             </h1>
           </div>
           <div
@@ -223,7 +234,7 @@ function TeamMembers() {
           >
             <h1>
               Employees ({" "}
-              {appliedSearch === "" ? employeeCount : filterEmployeeCount} )
+              {debounceSearch === "" ? employeeCount : filterEmployeeCount} )
             </h1>
           </div>
         </div>
@@ -248,12 +259,12 @@ function TeamMembers() {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map((u) => {
+                {filteredUsers.map((u ,index) => {
                   const status = formatLastActive(u.lastActiveAt);
                   return (
                     <tr key={u.userId}>
                       <td className="flex gap-2 px-4 py-2 items-center">
-                        <div className="border rounded-full pt-[6px] w-8 h-8 text-[12px] text-center font-semibold text-white bg-blue-500">
+                        <div className={`border rounded-full pt-[6px] w-8 h-8 text-[12px] text-center font-semibold text-white ${colors[index % colors.length]}`}>
                           {u.firstName.charAt(0).toUpperCase()}
                           {u.lastName.charAt(0).toUpperCase()}
                         </div>

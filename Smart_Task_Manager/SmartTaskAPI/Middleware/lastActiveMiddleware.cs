@@ -17,12 +17,11 @@ namespace SmartTaskAPI.Middleware
                 var user = await userManager.GetUserAsync(context.User);
                 if(user != null)
                 {
-                    if(user.LastActiveAt == null || (DateTime.UtcNow - user.LastActiveAt.Value).TotalMinutes > 2)
-                    {
+                    
                     user.LastActiveAt = DateTime.UtcNow;
                     await userManager.UpdateAsync(user);
 
-                    }
+                    
                 }
             }
             await _next(context);

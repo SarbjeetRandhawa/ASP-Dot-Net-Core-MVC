@@ -35,6 +35,15 @@ export const DashBoardRoutes = [
     }
   />,
   <Route
+    
+    path="/projects/:projectName"
+    element={
+      <ProtectedRoute>
+        <div>Detail page</div>
+      </ProtectedRoute>
+    }
+  />,
+  <Route
     key="team"
     path="/team"
     element={

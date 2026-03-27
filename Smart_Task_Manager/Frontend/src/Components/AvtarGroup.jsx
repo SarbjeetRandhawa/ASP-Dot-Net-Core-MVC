@@ -1,17 +1,24 @@
 const AvatarGroup = ({ members = [] }) => {
   const visibleMembers = members.slice(0, 3);
   const remaining = members.length - 3;
-
+  const colors = [
+    "bg-red-500",
+    "bg-green-500",
+    "bg-blue-500",
+    "bg-yellow-500",
+    "bg-purple-500",
+    "bg-pink-500",
+  ]
   return (
     <div className="flex items-center">
 
       {visibleMembers.map((m, index) => (
         <div
           key={m.userId}
-          className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold border-2 border-white"
+          className={`w-8 h-8 rounded-full ${colors[index % colors.length]} text-white flex items-center justify-center text-sm font-bold border-2 border-white`}
           style={{
             marginLeft: index === 0 ? "0px" : "-10px",
-            zIndex: 10 - index
+            zIndex: 0 + index
           }}
         >
           {m.firstName?.[0]}{m.lastName?.[0]}
@@ -33,3 +40,5 @@ const AvatarGroup = ({ members = [] }) => {
     </div>
   );
 };
+
+export default AvatarGroup;

@@ -12,16 +12,16 @@ namespace SmartTaskAPI.Repository.Implementation
     public class ProjectRepository : IProjectRepository
     {
         private readonly AppDbContext _Context;
-        public ProjectRepository(AppDbContext context )
+        public ProjectRepository(AppDbContext context)
         {
             _Context = context;
         }
 
         public async Task CreateProjectAsync(Project project)
         {
-                
+
             await _Context.Projects.AddAsync(project);
-            
+
         }
         public async Task CreateProjectMemberAsync(List<ProjectMember> projectMember)
         {
@@ -30,12 +30,12 @@ namespace SmartTaskAPI.Repository.Implementation
 
 
 
-        public async Task DeleteAsync(int id, string CurrentUserId , string Role)
+        public async Task DeleteAsync(int id, string CurrentUserId, string Role)
         {
             var Project = await _Context.Projects.FindAsync(id);
             if (Project == null) throw new Exception("Project Not Found");
-            
-            var members  = await _Context.ProjectMembers.FirstOrDefaultAsync(x => x.Id == id && x.UserId == CurrentUserId);
+
+            var members = await _Context.ProjectMembers.FirstOrDefaultAsync(x => x.Id == id && x.UserId == CurrentUserId);
 
             if (members == null) throw new Exception("Your are not part of this Project");
 
@@ -44,7 +44,32 @@ namespace SmartTaskAPI.Repository.Implementation
             _Context.Projects.Remove(Project);
         }
 
-        public async Task UpdateAsync(int id, CreateProjectDto dto, string CurrentUserId , string Role)
+        public async Task<List<ProjectResponseDto>> GetAllProjectsAsync(string userId)
+        {
+            var Projects = await _Context.Projects.Where(p => p.Members.Any(m => m.UserId == userId)).Select(x => new ProjectResponseDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                StartDate = x.StartDate,
+                Members = x.Members.Select(m => new  ProjectMemberResponseDto
+                {
+                    UserId = m.UserId,
+                    FirstName = m.User.FirstName,
+                    LastName = m.User.LastName,
+                    Role = m.Role.Name
+                }).ToList(),
+                EndDate = x.EndDate,
+                colorTheme = x.colorTheme,
+                Status = x.Status,
+                Icon = x.Icon
+
+            }).ToListAsync();
+
+            return Projects;
+        }
+
+        public async Task UpdateAsync(int id, ProjectDto dto, string CurrentUserId, string Role)
         {
             var Project = await _Context.Projects.FindAsync(id);
 
@@ -52,7 +77,7 @@ namespace SmartTaskAPI.Repository.Implementation
             if (Project == null) throw new Exception("Project Not Found");
 
             var members = await _Context.ProjectMembers.FirstOrDefaultAsync(x => x.Id == id && x.UserId == CurrentUserId);
-  
+
 
             if (Role == "Employee") throw new Exception("Not Allowed");
 
@@ -69,7 +94,7 @@ namespace SmartTaskAPI.Repository.Implementation
 
         }
 
-       
-        
+
+
     }
 }

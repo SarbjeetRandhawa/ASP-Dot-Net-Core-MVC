@@ -2,24 +2,21 @@ import Sidebar from "../Sidebar";
 import "../../App.css";
 import { useState, useMemo } from "react";
 import ProjectMembers from "./ProjectMembers";
-import { useForm  } from "react-hook-form";
-import { createProject } from "../../Services/CreateProject";
+import { useForm } from "react-hook-form";
+import { createProject } from "../../Services/Project";
 import { useNavigate } from "react-router-dom";
-import { useWatch } from "react-hook-form";
-
 import Swal from "sweetalert2";
+import AvatarGroup from "../AvtarGroup";
 
 function CreateProject() {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
-    
+    // watch,
   } = useForm();
-  const startDate = useWatch({control , name: "StartDate",});
-
+  // const startDate = watch("StartDate");
   const [members, setMembers] = useState([]);
 
   const [projectFormData, setProjectFormData] = useState({
@@ -144,7 +141,7 @@ function CreateProject() {
         showConfirmButton: false,
         timer: 1500,
       });
-      navigate("/dashboard");
+      navigate("/projects");
     } catch (e) {
       console.log(e);
     }
@@ -311,10 +308,10 @@ function CreateProject() {
                       {...register("EndDate", {
                         required: "End Date is required",
                         validate: (value) => {
-                          if (!startDate) return true;
+                          if (!projectFormData.StartDate) return true;
                           return (
                             new Date(value) >
-                              new Date(startDate) ||
+                              new Date(projectFormData.StartDate) ||
                             "End date must be greater than start date"
                           );
                         },
@@ -609,24 +606,7 @@ function CreateProject() {
                     </div>
                     <div className="flex justify-between">
                       <div>
-                        {members.map((m, offset) => {
-
-                          const left = offset * 20;
-                          const randomHSL = `hsl(${Math.random() * 360}, 100%, 70%)`;
-                          return(
-                            <div
-                              key={m.userId}
-                              style={{
-                                left: `${left}px`,
-                                backgroundColor: randomHSL,
-                              }}
-                              className="absolute ml-5 w-8 h-8 sm:w-9 sm:h-9 border-4 border-[#b3b9f2f4]  rounded-full text-[12px] text-center p-[6px] bg-[blue] font-bold"
-                            >
-                              {m.firstName?.charAt(0)}
-                              {m.lastName?.charAt(0)}
-                            </div>
-                          );
-                        })}
+                        <AvatarGroup members={members} />
                       </div>
                       <p className="mb-4 text-[#FFFFFFA6]">0 tasks - 0% done</p>
                     </div>

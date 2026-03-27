@@ -14,7 +14,7 @@ namespace SmartTaskAPI.Services.Implementation
         {
             _uow = uow;
         }
-        public async Task CreateAsync(CreateProjectDto dto, string CreatoruserId)
+        public async Task CreateAsync(ProjectDto dto, string CreatoruserId)
         {
             var role = await _uow.UserRepository.GetUserRoleAsync(CreatoruserId);
             if (role != "Admin" && role != "Manager") throw new Exception("Only Admin or Manager Can Create Project");
@@ -73,7 +73,12 @@ namespace SmartTaskAPI.Services.Implementation
 
         }
 
-        public async Task UpdateAsync(int id, CreateProjectDto dto, string CurrentUserId)
+        public async Task<List<ProjectResponseDto>> GetAllProjectsAsync(string userId)
+        {
+            return await _uow.ProjectRepository.GetAllProjectsAsync(userId);
+        }
+
+        public async Task UpdateAsync(int id, ProjectDto dto, string CurrentUserId)
         {
             string Role = _uow.UserRepository.GetUserRoleAsync(CurrentUserId).ToString() ?? string.Empty;
             await _uow.ProjectRepository.UpdateAsync(id,dto,CurrentUserId,Role);

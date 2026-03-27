@@ -44,10 +44,10 @@ namespace SmartTaskAPI.Repository.Implementation
         }
         
 
-        public async Task<List<ProjectMemberResponseDto>> GetAllMembersAsync(int projectId)
+        public async Task<List<ProjectMemberDto>> GetAllMembersAsync(int projectId)
         {
             var members = await _Context.ProjectMembers.Where(pm =>  pm.ProjectId == projectId)
-                .Include( pm => pm.User).Select(pm => new ProjectMemberResponseDto
+                .Include( pm => pm.User).Select(pm => new ProjectMemberDto
                 {
                     UserId=pm.UserId,
                     FirstName=pm.User.FirstName,

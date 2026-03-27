@@ -21,7 +21,7 @@ namespace SmartTaskAPI.Services.Implementation
             await _uow.SaveAsync();
         }
 
-        public async Task<List<ProjectMemberResponseDto>> GetAllMembersAsync(int projectId)
+        public async Task<List<ProjectMemberDto>> GetAllMembersAsync(int projectId)
         {
             return await _uow.ProjectMemberRepository.GetAllMembersAsync(projectId);
         }

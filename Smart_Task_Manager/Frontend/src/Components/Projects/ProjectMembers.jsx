@@ -9,6 +9,15 @@ function ProjectMembers({ members, setMembers }) {
   const { users = [] } = useSelector((state) => state.users);
   const { roles = [] } = useSelector((state) => state.projectRoles);
   const currentUser = useSelector((state) => state.auth.user);
+  
+  const colors = [
+    "bg-red-500",
+    "bg-green-500",
+    "bg-blue-500",
+    "bg-yellow-500",
+    "bg-purple-500",
+    "bg-pink-500",
+  ]
 
   // console.log(currentUser);
   // console.log(users);
@@ -20,7 +29,7 @@ function ProjectMembers({ members, setMembers }) {
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchProjectRoles());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -120,7 +129,7 @@ function ProjectMembers({ members, setMembers }) {
 
           {showDropdown && (
             <div className="absolute  bg-white w-11/12 md:w-4/5 top-16 border rounded-md max-h-60 overflow-y-auto z-10">
-              {FilteredUsers.map((user) => (
+              {FilteredUsers.map((user, index) => (
                 <div
                   className="cursor-pointer border p-2 px-4 flex justify-between"
                   key={user.userId}
@@ -129,7 +138,7 @@ function ProjectMembers({ members, setMembers }) {
                   }}
                 >
                   <div className="flex gap-3 items-center">
-                    <h1 className=" p-[7px] w-7 h-7 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
+                    <h1 className={`p-[7px] w-7 h-7 rounded-full font-semibold text-white ${colors[index % colors.length]}  text-[11px]`}>
                       {user.firstName?.charAt(0)}
                       {user.lastName?.charAt(0)}
                     </h1>
@@ -158,7 +167,7 @@ function ProjectMembers({ members, setMembers }) {
           <div className="min-h-[56px] rounded-md flex flex-col md:flex-row bg-[#f8f8f8]">
             <div className="w-full md:w-1/2 flex items-center">
               <div className="px-4">
-                <h1 className=" p-2 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
+                <h1 className={` p-[9px] w-8 h-8 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]`}>
                   {currentUser.firstName?.charAt(0)}
                   {currentUser.lastName?.charAt(0)}
                 </h1>
@@ -192,20 +201,26 @@ function ProjectMembers({ members, setMembers }) {
                   ))}
                 </select>
               )}
-              <h2 className="rounded-2xl text-[10px] p-2 bg-[#F0FDF4] text-[#10B981] font-semibold">
+              <h2 className={`rounded-full text-[10px] py-1 px-3 ${currentUser.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : currentUser.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}>
                 {currentUser.role}
               </h2>
+              {currentUser.role == "Admin" && (
+                <div
+                >
+                  🔒
+                </div>
+              )}
             </div>
           </div>
 
-          {members.map((m) => (
+          {members.map((m,index) => (
             <div
               key={m.userId}
               className="min-h-[56px] rounded-md flex flex-col md:flex-row bg-[#f8f8f8]"
             >
               <div className="w-full md:w-1/2 flex items-center">
                 <div className="px-4">
-                  <h1 className=" p-2 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]">
+                  <h1 className={`p-[9px] w-8 h-8 rounded-full font-semibold ${colors[index % colors.length]} text-white text-[11px]`}>
                     {m.firstName?.charAt(0)}
                     {m.lastName?.charAt(0)}
                   </h1>
@@ -237,7 +252,7 @@ function ProjectMembers({ members, setMembers }) {
                     </option>
                   ))}
                 </select>
-                <h2 className="rounded-2xl text-[10px] p-2 bg-[#F0FDF4] text-[#10B981] font-semibold">
+                <h2 className={`rounded-full  py-1 text-[10px] px-3 ${m.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : m.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}>
                   {m.role}
                 </h2>
                 <div

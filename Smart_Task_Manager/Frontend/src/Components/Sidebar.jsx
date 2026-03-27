@@ -63,7 +63,7 @@ function Sidebar() {
                   }
                 >
                   <div>📊</div>
-                  <span>DashBoard</span>
+                  <span>Dashboard</span>
                 </NavLink>
                 <NavLink
                   to="/projects"

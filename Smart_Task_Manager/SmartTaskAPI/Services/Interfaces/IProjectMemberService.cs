@@ -8,6 +8,6 @@ namespace SmartTaskAPI.Services.Interfaces
         Task RemoveMemberAsync(int projectId, string targetUserId, string currentUserId);
 
 
-        Task<List<ProjectMemberResponseDto>> GetAllMembersAsync(int projectId);
+        Task<List<ProjectMemberDto>> GetAllMembersAsync(int projectId);
     }
 }

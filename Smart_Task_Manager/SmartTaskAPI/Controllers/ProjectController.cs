@@ -31,9 +31,17 @@ namespace SmartTaskAPI.Controllers
             return User.FindFirst(ClaimTypes.Role)?.Value; 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllProjects()
+        {
+            var userId = GetUserId();
+            var Projects =await _projectService.GetAllProjectsAsync(userId);
+            return Ok(Projects);
+        }
+
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(CreateProjectDto dto)
+        public async Task<IActionResult> Create(ProjectDto dto)
         {
            
             var userId = GetUserId();
@@ -46,7 +54,7 @@ namespace SmartTaskAPI.Controllers
 
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, CreateProjectDto dto)
+        public async Task<IActionResult> Update(int id, ProjectDto dto)
         {
            
             await _projectService.UpdateAsync(id,dto, GetUserId());

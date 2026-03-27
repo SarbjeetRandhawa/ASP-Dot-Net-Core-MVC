@@ -4,8 +4,10 @@ namespace SmartTaskAPI.Services.Interfaces
 {
     public interface IProjectService
     {
-        Task CreateAsync(CreateProjectDto dto, string CreatoruserId);
-        Task UpdateAsync(int id, CreateProjectDto dto, string CurrentUserId);
+        Task CreateAsync(ProjectDto dto, string CreatoruserId);
+        Task UpdateAsync(int id, ProjectDto dto, string CurrentUserId);
         Task DeleteProjectAsync(int id, string CurrentUserId);
+        Task<List<ProjectResponseDto>> GetAllProjectsAsync(string userId);
+        
     }
 }
