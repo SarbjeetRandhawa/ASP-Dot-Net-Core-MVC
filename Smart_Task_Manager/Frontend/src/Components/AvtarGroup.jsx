@@ -2,12 +2,12 @@ const AvatarGroup = ({ members = [] }) => {
   const visibleMembers = members.slice(0, 3);
   const remaining = members.length - 3;
   const colors = [
-    "bg-red-500",
-    "bg-green-500",
-    "bg-blue-500",
-    "bg-yellow-500",
-    "bg-purple-500",
-    "bg-pink-500",
+   "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#9d00ff)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#eeff00)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#ff00e6)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#00ffff)]",
   ]
   return (
     <div className="flex items-center">

@@ -31,10 +31,10 @@ function ProjectPage() {
   useEffect(() => {
     const HandleClickOutside = () => {
       setIsProjectMenuOpen(null);
-
-      document.addEventListener("mouse", HandleClickOutside);
-      return () => document.removeEventListener("click", HandleClickOutside);
     };
+
+    document.addEventListener("click", HandleClickOutside);
+    return () => document.removeEventListener("click", HandleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -81,25 +81,21 @@ function ProjectPage() {
   const HandleProjectInfoNavigate = (project) => {
     const formatedName = project.name.toLowerCase().replace(/\s+/g, "-");
 
-    navigate(`
-      /projects/${formatedName}`);
+    navigate(`/projects/${formatedName}`);
   };
 
   const HandleMenuClick = (e, projectId) => {
     e.stopPropagation();
     setIsProjectMenuOpen((prev) => (prev === projectId ? null : projectId));
   };
-  const HandleEdit = (id) =>{
+  const HandleEdit = (id) => {
     console.log(id);
     setIsProjectMenuOpen(null);
-    
-  }
-  const HandleDelete = (id) =>{
+  };
+  const HandleDelete = (id) => {
     console.log(id);
     setIsProjectMenuOpen(null);
-
-    
-  }
+  };
 
   return (
     <div className="flex ">
@@ -300,10 +296,18 @@ function ProjectPage() {
                             onClick={(e) => e.stopPropagation()}
                             className={` border absolute right-2 top-12  bg-white shadow-md rounded h-auto w-28 z-50 transform transition- duration-300 ${isProjectMenuOpen == p.id ? "translate-x-0" : "translate-x-32"}`}
                           >
-                            <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm font-semibold" onClick={()=>HandleEdit(p.id)}>Edit</div>
-                            <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm font-semibold text-red-600" onClick={()=>HandleDelete(p.id)}>Delete</div>
-
-                            
+                            <div
+                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm font-semibold"
+                              onClick={() => HandleEdit(p.id)}
+                            >
+                              Edit
+                            </div>
+                            <div
+                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm font-semibold text-red-600"
+                              onClick={() => HandleDelete(p.id)}
+                            >
+                              Delete
+                            </div>
                           </div>
                         </div>
                       </div>

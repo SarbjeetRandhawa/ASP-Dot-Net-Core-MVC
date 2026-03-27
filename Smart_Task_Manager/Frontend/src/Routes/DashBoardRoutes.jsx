@@ -3,6 +3,7 @@ import CreateProject from "../Components/Projects/CreateProject";
 import ProtectedRoute from "../Components/ProtectedRoute";
 import TeamMembers from "../Components/TeamMembers/TeamMembers";
 import ProjectPage from "../Components/Projects/ProjectPage";
+import ProjectDetails from "../Components/Projects/ProjectDetails";
 // import ProtectedRoute from './Components/ProtectedRoute'
 
 export const DashBoardRoutes = [
@@ -39,7 +40,7 @@ export const DashBoardRoutes = [
     path="/projects/:projectName"
     element={
       <ProtectedRoute>
-        <div>Detail page</div>
+        <ProjectDetails/>
       </ProtectedRoute>
     }
   />,

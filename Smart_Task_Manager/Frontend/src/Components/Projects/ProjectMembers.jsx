@@ -11,12 +11,12 @@ function ProjectMembers({ members, setMembers }) {
   const currentUser = useSelector((state) => state.auth.user);
   
   const colors = [
-    "bg-red-500",
-    "bg-green-500",
-    "bg-blue-500",
-    "bg-yellow-500",
-    "bg-purple-500",
-    "bg-pink-500",
+   "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#eeff00)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#9d00ff)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#ff00e6)]",
+   "bg-[linear-gradient(to_bottom_right,#363434,#00ffff)]",
   ]
 
   // console.log(currentUser);
@@ -139,8 +139,8 @@ function ProjectMembers({ members, setMembers }) {
                 >
                   <div className="flex gap-3 items-center">
                     <h1 className={`p-[7px] w-7 h-7 rounded-full font-semibold text-white ${colors[index % colors.length]}  text-[11px]`}>
-                      {user.firstName?.charAt(0)}
-                      {user.lastName?.charAt(0)}
+                      {user.firstName?.charAt(0).toUpperCase()}
+                      {user.lastName?.charAt(0).toUpperCase()}
                     </h1>
                     <div className="">
                       <h1 className="font-bold text-[13px] ">
@@ -167,9 +167,10 @@ function ProjectMembers({ members, setMembers }) {
           <div className="min-h-[56px] rounded-md flex flex-col md:flex-row bg-[#f8f8f8]">
             <div className="w-full md:w-1/2 flex items-center">
               <div className="px-4">
-                <h1 className={` p-[9px] w-8 h-8 rounded-full font-semibold text-white bg-[#1313bbcc] text-[11px]`}>
-                  {currentUser.firstName?.charAt(0)}
-                  {currentUser.lastName?.charAt(0)}
+   
+                <h1 className={` p-[9px] w-8 h-8 rounded-full font-semibold text-white bg-[linear-gradient(to_bottom_right,#363434,#9d00ff)] text-[11px]`}>
+                  {currentUser.firstName?.charAt(0).toUpperCase()}
+                  {currentUser.lastName?.charAt(0).toUpperCase()}
                 </h1>
               </div>
               <div>
@@ -221,8 +222,8 @@ function ProjectMembers({ members, setMembers }) {
               <div className="w-full md:w-1/2 flex items-center">
                 <div className="px-4">
                   <h1 className={`p-[9px] w-8 h-8 rounded-full font-semibold ${colors[index % colors.length]} text-white text-[11px]`}>
-                    {m.firstName?.charAt(0)}
-                    {m.lastName?.charAt(0)}
+                    {m.firstName?.charAt(0).toUpperCase()}
+                    {m.lastName?.charAt(0).toUpperCase()}
                   </h1>
                 </div>
                 <div>
