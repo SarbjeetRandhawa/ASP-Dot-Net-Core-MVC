@@ -1,5 +1,5 @@
 ﻿using SmartTaskAPI.Models.DB;
-using SmartTaskAPI.Models.DTO;
+using SmartTaskAPI.Models.DTO.ProjectDto;
 
 namespace SmartTaskAPI.Services.Interfaces
 {

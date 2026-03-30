@@ -1,4 +1,4 @@
-﻿namespace SmartTaskAPI.Models.DTO
+﻿namespace SmartTaskAPI.Models.DTO.ProjectDto
 {
     public class ProjectRoleDTO
     {

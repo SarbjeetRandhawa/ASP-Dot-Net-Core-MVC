@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using SmartTaskAPI.Data;
 using SmartTaskAPI.Models.DB;
-using SmartTaskAPI.Models.DTO;
+using SmartTaskAPI.Models.DTO.ProjectDto;
 using SmartTaskAPI.Repository.Interface;
 using System.Net.NetworkInformation;
 
@@ -58,7 +58,7 @@ namespace SmartTaskAPI.Repository.Implementation
                     UserId = m.UserId,
                     FirstName = m.User.FirstName,
                     LastName = m.User.LastName,
-                    Role = m.Role.Name
+                   
 
                 }).ToList(),
                 EndDate = x.EndDate,
@@ -67,6 +67,38 @@ namespace SmartTaskAPI.Repository.Implementation
                 Icon = x.Icon
 
             }).ToListAsync();
+
+            return Projects;
+        }
+
+        public async Task<ProjectDetailsResponseDto> GetProjectByIdAsync(int id)
+        {
+            var Projects = await _Context.Projects.Where(p => p.Id == id).Select(x => new ProjectDetailsResponseDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                StartDate = x.StartDate,
+                CreatedAt = x.CreatedAt,
+                CreatedBy = _Context.Users.Where(u => u.Id == x.CreatedBy).Select(u => u.FirstName + " " + u.LastName).FirstOrDefault(),
+                Members = x.Members.Select(m => new ProjectDetailsMemberResponseDto
+                {
+
+                    UserId = m.UserId,
+                    FirstName = m.User.FirstName,
+                    LastName = m.User.LastName,
+
+                    Email = m.User.Email,
+                    Role = m.Role.Name
+
+
+                }).ToList(),
+                EndDate = x.EndDate,
+                colorTheme = x.colorTheme,
+                Status = x.Status,
+                Icon = x.Icon
+
+            }).FirstOrDefaultAsync();
 
             return Projects;
         }

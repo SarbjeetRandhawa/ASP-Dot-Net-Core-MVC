@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { GetAllProjects } from "../../Services/Project";
+import { GetAllProjects, GetProjectById } from "../../Services/Project";
 
 
 export const fetchProjects = createAsyncThunk("projects/fetchProjects",
@@ -12,10 +12,15 @@ export const fetchProjects = createAsyncThunk("projects/fetchProjects",
     }
 );
 
+export const fetchProjectById = createAsyncThunk("projects/fetchProjectById", async (id) =>{
+    return await GetProjectById(id);
+});
+
 const projectSlice = createSlice({
     name: "projects",
     initialState:{
         projects:[],
+        selectedProject:null,
         loading:false,
         error:null,
     },
@@ -28,7 +33,17 @@ const projectSlice = createSlice({
         }).addCase(fetchProjects.rejected , (state,action) =>{
             state.loading = false,
             state.error = action.payload;
-        });
+        })
+        .addCase(fetchProjectById.pending , (state)=>{
+            state.loading = true;
+            state.selectedProject = null;
+        }).addCase(fetchProjectById.fulfilled ,(state,action)=>{
+            state.loading = false,
+            state.selectedProject = action.payload;
+        }).addCase(fetchProjectById.rejected , (state,action) =>{
+            state.loading = false,
+            state.error = action.payload;
+        })
     },
 });
 

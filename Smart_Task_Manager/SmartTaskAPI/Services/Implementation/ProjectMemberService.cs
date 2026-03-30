@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartTaskAPI.Models.DTO;
+using SmartTaskAPI.Models.DTO.ProjectDto;
 using SmartTaskAPI.Services.Interfaces;
 using SmartTaskAPI.UnitOfWork;
 

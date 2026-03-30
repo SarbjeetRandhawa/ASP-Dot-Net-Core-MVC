@@ -2,6 +2,7 @@
 using SmartTaskAPI.Data;
 using SmartTaskAPI.Models.DB;
 using SmartTaskAPI.Models.DTO;
+using SmartTaskAPI.Models.DTO.ProjectDto;
 using SmartTaskAPI.Repository.Interface;
 
 namespace SmartTaskAPI.Repository.Implementation

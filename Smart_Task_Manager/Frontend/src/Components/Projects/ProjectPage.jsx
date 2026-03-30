@@ -3,6 +3,8 @@ import Sidebar from "../Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { fetchProjects } from "../../features/project/projectSlice";
+
+
 import { useDispatch } from "react-redux";
 import AvatarGroup from "../AvtarGroup";
 
@@ -22,20 +24,20 @@ function ProjectPage() {
     (u) => u.status === "Archived",
   ).length;
   const OverdueProjects = projects.filter((u) => u.status === "overdue").length;
-  console.log(projects);
+ 
 
   useEffect(() => {
     dispatch(fetchProjects());
   }, [dispatch]);
 
-  useEffect(() => {
-    const HandleClickOutside = () => {
-      setIsProjectMenuOpen(null);
-    };
+  // useEffect(() => {
+  //   const HandleClickOutside = () => {
+  //     setIsProjectMenuOpen(null);
+  //   };
 
-    document.addEventListener("click", HandleClickOutside);
-    return () => document.removeEventListener("click", HandleClickOutside);
-  }, []);
+  //   document.addEventListener("click", HandleClickOutside);
+  //   return () => document.removeEventListener("click", HandleClickOutside);
+  // }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -79,9 +81,7 @@ function ProjectPage() {
   };
 
   const HandleProjectInfoNavigate = (project) => {
-    const formatedName = project.name.toLowerCase().replace(/\s+/g, "-");
-
-    navigate(`/projects/${formatedName}`);
+    navigate(`/projects/${project.id}-${createSlug(project.name)}`);
   };
 
   const HandleMenuClick = (e, projectId) => {
@@ -95,6 +95,10 @@ function ProjectPage() {
   const HandleDelete = (id) => {
     console.log(id);
     setIsProjectMenuOpen(null);
+  };
+
+  const createSlug = (name) => {
+    return name.toLowerCase().replace(/\s+/g,"-");
   };
 
   return (

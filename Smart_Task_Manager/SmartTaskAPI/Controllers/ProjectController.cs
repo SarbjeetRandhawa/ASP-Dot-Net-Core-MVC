@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartTaskAPI.Models.DTO;
+using SmartTaskAPI.Models.DTO.ProjectDto;
 using SmartTaskAPI.Services.Interfaces;
 using SmartTaskAPI.UnitOfWork;
 using System.Security.Claims;
@@ -39,6 +40,14 @@ namespace SmartTaskAPI.Controllers
             return Ok(Projects);
         }
 
+        [HttpGet("{projectid}")]
+        public async Task<IActionResult> GetProjectById(int projectid)
+        {
+            var project = await _projectService.GetProjectByIdAsync(projectid);
+            return Ok(project);
+        }
+
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Create(ProjectDto dto)
@@ -51,8 +60,8 @@ namespace SmartTaskAPI.Controllers
 
             return Ok("Project Created");
 
-
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, ProjectDto dto)
         {
@@ -61,6 +70,17 @@ namespace SmartTaskAPI.Controllers
 
             return Ok("Project Updated");
         }
+        [HttpPut("{id}/archive")]
+        public async Task<IActionResult> ArchiveProject(int id)
+        {
+            var userId = GetUserId();
+            var userRole = GetUserRole();
+            var result = await _projectService.ArchiveProjectAsync(id , userId , userRole);
+            if (!result) return NotFound();
+            return Ok(new { message = "Project Archived Successfully" });
+        }
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

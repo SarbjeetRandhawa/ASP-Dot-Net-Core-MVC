@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartTaskAPI.Models.DB;
-using SmartTaskAPI.Models.DTO;
+using SmartTaskAPI.Models.DTO.ProjectDto;
 using SmartTaskAPI.Services.Interfaces;
 using SmartTaskAPI.UnitOfWork;
 
@@ -76,6 +76,11 @@ namespace SmartTaskAPI.Services.Implementation
         public async Task<List<ProjectResponseDto>> GetAllProjectsAsync(string userId)
         {
             return await _uow.ProjectRepository.GetAllProjectsAsync(userId);
+        }
+
+        public async Task<ProjectDetailsResponseDto> GetProjectByIdAsync(int id)
+        {
+            return await _uow.ProjectRepository.GetProjectByIdAsync(id);
         }
 
         public async Task UpdateAsync(int id, ProjectDto dto, string CurrentUserId)

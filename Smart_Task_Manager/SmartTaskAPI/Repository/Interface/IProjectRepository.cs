@@ -1,5 +1,5 @@
 ﻿using SmartTaskAPI.Models.DB;
-using SmartTaskAPI.Models.DTO;
+using SmartTaskAPI.Models.DTO.ProjectDto;
 
 namespace SmartTaskAPI.Repository.Interface
 {
@@ -8,6 +8,7 @@ namespace SmartTaskAPI.Repository.Interface
 
         
         Task<List<ProjectResponseDto>> GetAllProjectsAsync(string userId);
+        Task<ProjectDetailsResponseDto> GetProjectByIdAsync(int id);
 
         Task CreateProjectAsync(Project project);
         Task CreateProjectMemberAsync(List<ProjectMember> projectMembers);

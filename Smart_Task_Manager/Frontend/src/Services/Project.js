@@ -10,3 +10,8 @@ export const GetAllProjects = async () => {
     const res = await axiosInstance.get(`${API_URL}/Project`);
     return res.data;
 }
+
+export const GetProjectById = async (id) => {
+    const res = await axiosInstance.get(`${API_URL}/Project/${id}`);
+    return res.data;
+}
