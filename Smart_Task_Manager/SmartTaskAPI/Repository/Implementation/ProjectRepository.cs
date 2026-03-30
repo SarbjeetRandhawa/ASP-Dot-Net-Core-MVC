@@ -53,11 +53,13 @@ namespace SmartTaskAPI.Repository.Implementation
                 Description = x.Description,
                 StartDate = x.StartDate,
                 Members = x.Members.Select(m => new  ProjectMemberResponseDto
-                {
+                { 
+
                     UserId = m.UserId,
                     FirstName = m.User.FirstName,
                     LastName = m.User.LastName,
                     Role = m.Role.Name
+
                 }).ToList(),
                 EndDate = x.EndDate,
                 colorTheme = x.colorTheme,

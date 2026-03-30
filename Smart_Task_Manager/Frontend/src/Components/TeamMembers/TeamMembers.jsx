@@ -278,9 +278,9 @@ function TeamMembers() {
                       <td className="pr-2 text-[12px] font-semibold text-[#94A3B8]">
                         {u.email}
                       </td>
-                      <td className="pr-2 flex border items-center text-[12px] font-semibold ">
+                      <td className="pr-2 flex  items-center text-[12px] font-semibold ">
                         <h1
-                          className={`rounded-full border  py-1 px-3 ${u.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : u.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
+                          className={`rounded-full  py-1 px-3 ${u.role === "Admin" ? "bg-[#F5F3FF] text-[#7C3AED]" : u.role === "Manager" ? "bg-[#EFF6FF] text-[#3B82F6]" : "bg-[#F0FDF4] text-[#10B981]"}`}
                         >
                           {roleIcon[u.role]} {u.role}
                         </h1>
