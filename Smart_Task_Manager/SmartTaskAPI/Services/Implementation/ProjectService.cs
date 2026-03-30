@@ -18,7 +18,7 @@ namespace SmartTaskAPI.Services.Implementation
         public async Task<bool> ArchiveProjectAsync(int id)
         {
             var project = await _uow.ProjectRepository.ArchiveAsync(id);
-            _uow.SaveAsync();
+            await _uow.SaveAsync();
             return true;
             
         }

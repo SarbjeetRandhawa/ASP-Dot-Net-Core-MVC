@@ -13,7 +13,7 @@ function ProjectPage() {
   const dispatch = useDispatch();
   const { projects } = useSelector((state) => state.projects);
   const [StatusFilter, setStatusFilter] = useState("All");
-  const [Status, setStatus] = useState("Active");
+  
   const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(null);
   const [search, setsearch] = useState("");
   const [debounceSearch, setDebounceSearch] = useState("");
@@ -23,7 +23,7 @@ function ProjectPage() {
   const ArchievedProjects = projects.filter(
     (u) => u.status === "Archived",
   ).length;
-  const OverdueProjects = projects.filter((u) => u.status === "overdue").length;
+ 
  
   console.log(projects);
   
@@ -53,24 +53,10 @@ function ProjectPage() {
     return p.name.toLowerCase().includes(debounceSearch.toLowerCase());
   });
 
-  const filteredProjects = searchedProjects.filter((u) => {
-    if (StatusFilter === "All") return true;
-    if (StatusFilter === "Active") return u.status === "Active";
-    if (StatusFilter === "Archived") return u.status === "Archived";
-    if (StatusFilter === "Overdue") return u.status === "Overdue";
-  });
+  
 
-  const filterActiveCount = searchedProjects.filter(
-    (u) => u.status === "Active",
-  ).length;
-
-  const filterArchivedCount = searchedProjects.filter(
-    (u) => u.status === "Archived",
-  ).length;
-
-  const filterOverdueCount = searchedProjects.filter(
-    (u) => u.status === "Overdue",
-  ).length;
+ 
+   
 
   const formFullDate = (date) => {
     if (!date) return "";
@@ -101,6 +87,33 @@ function ProjectPage() {
   const createSlug = (name) => {
     return name.toLowerCase().replace(/\s+/g,"-");
   };
+
+  const getProjectStatus = (project) =>{
+    if(!project) return "";
+    if(project.status === "Archived") return "Archived";
+    const today = new Date();
+    const endDate = new Date(project.endDate);
+    if(today> endDate) return "Overdue";
+    return "Active";
+  }
+   const OverdueProjects = projects.filter((u) => getProjectStatus(u) === "Overdue").length;
+   const FilteredOverdueProjects = searchedProjects.filter((u) => getProjectStatus(u) === "Overdue").length;
+
+   const filteredProjects = searchedProjects.filter((u) => {
+    if (StatusFilter === "All") return true;
+    if (StatusFilter === "Active") return getProjectStatus(u) === "Active";
+    if (StatusFilter === "Archived") return getProjectStatus(u) === "Archived";
+    if (StatusFilter === "Overdue") return getProjectStatus(u) === "Overdue";
+  });
+
+  const filterActiveCount = searchedProjects.filter(
+    (u) => getProjectStatus(u) === "Active",
+  ).length;
+
+  const filterArchivedCount = searchedProjects.filter(
+    (u) => getProjectStatus(u) === "Archived",
+  ).length;
+  
 
   return (
     <div className="flex ">
@@ -226,7 +239,7 @@ function ProjectPage() {
           >
             <h1>
               Overdue ({" "}
-              {debounceSearch === "" ? OverdueProjects : filterOverdueCount} )
+              {debounceSearch === "" ? OverdueProjects : FilteredOverdueProjects} )
             </h1>
           </div>
         </div>
@@ -272,9 +285,9 @@ function ProjectPage() {
                         </div>
                         <div className="flex items-center ">
                           <p
-                            className={`text-[11px] font-bold ${Status == "Active" ? "text-[#10B981] bg-[#ECFDF5]" : Status == "Archived" ? " text-[#64748B] bg-[#F1F5F9]" : " text-[#f50000] bg-[#ffefef]"} px-2 py-1  rounded-lg`}
+                            className={`text-[11px] font-bold ${getProjectStatus(p) == "Active" ? "text-[#10B981] bg-[#ECFDF5]" : getProjectStatus(p) == "Archived" ? " text-[#64748B] bg-[#F1F5F9]" : " text-[#f50000] bg-[#ffefef]"} px-2 py-1  rounded-lg`}
                           >
-                            {p.status}
+                            {getProjectStatus(p)}
                           </p>
                           {(CurrentUser.role === "Admin" ||
                             CurrentUser.role === "Manager") && (

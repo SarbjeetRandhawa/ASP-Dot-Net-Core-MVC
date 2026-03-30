@@ -247,7 +247,7 @@ function ProjectMembers({ members, setMembers }) {
                   <option value="" disabled hidden>
                     Select Role
                   </option>
-                  {roles.map((role) => (
+                  {roles.slice(1).map((role) => (
                     <option key={role.id} value={role.id}>
                       {role.name}
                     </option>

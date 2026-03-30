@@ -3,9 +3,12 @@ import Sidebar from "../Sidebar";
 
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
-import { archiveProjectById, fetchProjectById } from "../../features/project/projectSlice";
-
+import {
+  archiveProjectById,
+  fetchProjectById,
+} from "../../features/project/projectSlice";
 
 function ProjectDetails() {
   const navigate = useNavigate();
@@ -26,6 +29,7 @@ function ProjectDetails() {
   const projectId = projectIdSlug.split("-")[0];
   const dispatch = useDispatch();
   const { selectedProject, loading } = useSelector((state) => state.projects);
+  const CurrentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(fetchProjectById(projectId));
@@ -73,14 +77,42 @@ function ProjectDetails() {
     return days;
   };
 
-  const HandleArchive = async (id)=> {
+  const HandleArchive = async (id) => {
     try {
       await dispatch(archiveProjectById(id)).unwrap();
+      if (selectedProject.status == "Active") {
+        await Swal.fire({
+          position: "top",
+          title: "Archived!",
+          text: "Project is Archived",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      } else {
+        await Swal.fire({
+          position: "top",
+          title: "Unarchived!",
+          text: "Project is Unarchived",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+
       navigate("/projects");
-    }catch(err){
+    } catch (err) {
       alert(err);
     }
-  }
+  };
+  const getProjectStatus = (project) => {
+    if (!project) return "";
+    if (project.status === "Archived") return "Archived";
+    const today = new Date();
+    const endDate = new Date(project.endDate);
+    if (today > endDate) return "Overdue";
+    return "Active";
+  };
 
   return (
     <div className="flex ">
@@ -107,18 +139,25 @@ function ProjectDetails() {
             >
               Back
             </button>
-            <button
-              type="button"
-              onClick={()=>HandleArchive(selectedProject.id)}
-              className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap"
-            >
-              📦 Archive
-            </button>
-            <button
-              className={`border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold rounded-md px-2 sm:px-3 bg-[${selectedProject?.colorTheme}] whitespace-nowrap`}
-            >
-              + Add Task
-            </button>
+            {(CurrentUser.role == "Admin" ||
+              CurrentUser.role === "Manager") && (
+              <button
+                type="button"
+                onClick={() => HandleArchive(selectedProject.id)}
+                className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap"
+              >
+                📦{" "}
+                {selectedProject?.status == "Active" ? "Archive" : "Unarchive"}
+              </button>
+            )}
+            {(CurrentUser.role == "Admin" ||
+              CurrentUser.role === "Manager") && (
+              <button
+                className={`border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold rounded-md px-2 sm:px-3 bg-[${selectedProject?.colorTheme}] whitespace-nowrap`}
+              >
+                + Add Task
+              </button>
+            )}
           </div>
         </div>
 
@@ -259,7 +298,7 @@ function ProjectDetails() {
                       18 total in this Project
                     </p>
                   </div>
-                  <div className=" bg-white  w-full  overflow-x-scroll  overflow-y-scroll lg:h-screen h-80  rounded-b-md ">
+                  <div className=" bg-white  w-full  overflow-x-scroll  overflow-y-scroll lg:h-auto lg:max-h-screen h-80  rounded-b-md ">
                     <table className=" tabel w-full text-left  text-nowrap">
                       <thead>
                         <tr className="border  h-8 bg-[#F1F5F9]  text-[10px] text-[#94A3B8]">
@@ -349,27 +388,30 @@ function ProjectDetails() {
                               Mar 10
                             </p>
                           </td>
-                          <td className="pr-4 relative">
-                            {" "}
-                            <div
-                              onClick={() => {
-                                setshowoptions(!showoptions);
-                              }}
-                              className="flex z-30 cursor-pointer items-center"
-                            >
-                              &middot;&middot;&middot;{" "}
+                          {(CurrentUser.role == "Admin" ||
+                            CurrentUser.role === "Manager") && (
+                            <td className="pr-4 relative">
+                              {" "}
                               <div
-                                className={`absolute  bg-white w-20  overflow-hidden -top-4 right-12 border rounded-md transition-all duration-200 ${showoptions ? "" : "hidden"}`}
+                                onClick={() => {
+                                  setshowoptions(!showoptions);
+                                }}
+                                className="flex z-30 cursor-pointer items-center"
                               >
-                                <div className="text-center cursor-pointer hover:bg-[#f5f5f5]  py-1 border-b text-[13px] font-semibold">
-                                  Edit
-                                </div>
-                                <div className="text-center cursor-pointer hover:bg-[#f5f5f5] py-1 text-[13px] font-semibold text-red-600">
-                                  Delete
+                                &middot;&middot;&middot;{" "}
+                                <div
+                                  className={`absolute  bg-white w-20  overflow-hidden -top-4 right-12 border rounded-md transition-all duration-200 ${showoptions ? "" : "hidden"}`}
+                                >
+                                  <div className="text-center cursor-pointer hover:bg-[#f5f5f5]  py-1 border-b text-[13px] font-semibold">
+                                    Edit
+                                  </div>
+                                  <div className="text-center cursor-pointer hover:bg-[#f5f5f5] py-1 text-[13px] font-semibold text-red-600">
+                                    Delete
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </td>
+                            </td>
+                          )}
                         </tr>
                       </tbody>
                     </table>
@@ -378,17 +420,20 @@ function ProjectDetails() {
               </div>
 
               <div className="rounded-md  lg:w-3/12 lg:flex-col flex flex-col gap-2 w-full">
-                <div className="flex lg:flex-col gap-2
-                ">
+                <div
+                  className="flex lg:flex-col gap-2
+                "
+                >
                   <div className="border h-auto bg-white rounded-md w-full  lg:w-full ">
                     <div className="flex items-center border-b justify-between px-2 py-1  md:px-4 md:py-2">
                       <h1 className="text-[14px] font-bold">Team Members</h1>
+                      {(CurrentUser.role == "Admin" || CurrentUser.role === "Manager")   && (
                       <button
                         type="button"
                         className="hover:bg-[#f6f6f6] border px-2 py-[2px] text-[11px] rounded-md font-bold"
                       >
                         + Add
-                      </button>
+                      </button>)}
                     </div>
                     <div className="px-2 max-h-[250px] overflow-x-scroll">
                       <div className="border-b flex items-center justify-between gap-2 py-2">
@@ -421,7 +466,10 @@ function ProjectDetails() {
                       </div>
                       {selectedProject.members.slice(1).map((m, index) => {
                         return (
-                          <div className="border-b flex items-center justify-between gap-2 py-2">
+                          <div
+                            key={m.userId}
+                            className="border-b flex items-center justify-between gap-2 py-2"
+                          >
                             <div className="flex gap-2">
                               <div
                                 className={`border text-white ${colors[index + (1 % colors.length)]} flex justify-center p-3 items-center w-8 h-8 rounded-full text-[12px] font-bold`}
@@ -485,19 +533,24 @@ function ProjectDetails() {
                           STATUS
                         </h1>
                         <div className="flex">
-                          <p className="text-[13px] bg-[#ECFDF5] text-[#10B981] px-2 py-1 rounded-full mt-1 font-bold">
-                            {selectedProject.status}
+                          <p
+                            className={`text-[13px] ${getProjectStatus(selectedProject) == "Active" ? "text-[#10B981] bg-[#ECFDF5]" : getProjectStatus(selectedProject) == "Archived" ? " text-[#64748B] bg-[#F1F5F9]" : " text-[#f50000] bg-[#ffefef]"} px-2 py-1 rounded-full mt-1 font-bold`}
+                          >
+                            {getProjectStatus(selectedProject)}
                           </p>
                         </div>
                       </div>
-                      <div>
-                        <h1 className="text-[#94A3B8] text-[10px] font-bold tracking-widest">
-                          DAYS REMAINING
-                        </h1>
-                        <p className="text-[13px] text-[#F59E0B] font-bold">
-                          {getDaysLeft(selectedProject.endDate)} days left
-                        </p>
-                      </div>
+                      {getProjectStatus(selectedProject) == "Active" && (
+                        <div>
+                          <h1 className="text-[#94A3B8] text-[10px] font-bold tracking-widest">
+                            DAYS REMAINING
+                          </h1>
+
+                          <p className="text-[13px] text-[#F59E0B] font-bold">
+                            {getDaysLeft(selectedProject.endDate)} days left
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
