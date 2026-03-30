@@ -73,9 +73,7 @@ namespace SmartTaskAPI.Controllers
         [HttpPut("{id}/archive")]
         public async Task<IActionResult> ArchiveProject(int id)
         {
-            var userId = GetUserId();
-            var userRole = GetUserRole();
-            var result = await _projectService.ArchiveProjectAsync(id , userId , userRole);
+            var result = await _projectService.ArchiveProjectAsync(id);
             if (!result) return NotFound();
             return Ok(new { message = "Project Archived Successfully" });
         }

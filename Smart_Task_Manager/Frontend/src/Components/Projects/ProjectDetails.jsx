@@ -4,7 +4,8 @@ import Sidebar from "../Sidebar";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProjectById } from "../../features/project/projectSlice";
+import { archiveProjectById, fetchProjectById } from "../../features/project/projectSlice";
+
 
 function ProjectDetails() {
   const navigate = useNavigate();
@@ -72,6 +73,15 @@ function ProjectDetails() {
     return days;
   };
 
+  const HandleArchive = async (id)=> {
+    try {
+      await dispatch(archiveProjectById(id)).unwrap();
+      navigate("/projects");
+    }catch(err){
+      alert(err);
+    }
+  }
+
   return (
     <div className="flex ">
       <Sidebar />
@@ -99,6 +109,7 @@ function ProjectDetails() {
             </button>
             <button
               type="button"
+              onClick={()=>HandleArchive(selectedProject.id)}
               className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap"
             >
               📦 Archive

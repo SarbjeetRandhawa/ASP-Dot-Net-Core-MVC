@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { GetAllProjects, GetProjectById } from "../../Services/Project";
+import { GetAllProjects, GetProjectById , archiveProject } from "../../Services/Project";
+import { act } from "react";
 
 
 export const fetchProjects = createAsyncThunk("projects/fetchProjects",
@@ -14,6 +15,17 @@ export const fetchProjects = createAsyncThunk("projects/fetchProjects",
 
 export const fetchProjectById = createAsyncThunk("projects/fetchProjectById", async (id) =>{
     return await GetProjectById(id);
+});
+
+export const archiveProjectById = createAsyncThunk("project/archiveProject", async (id , {rejectWithValue})=>{
+    try{
+        await archiveProject(id);
+        return id;
+    }catch(err){
+        return rejectWithValue(err.response?.data || 
+        "error"
+        );
+    }
 });
 
 const projectSlice = createSlice({
@@ -44,6 +56,16 @@ const projectSlice = createSlice({
             state.loading = false,
             state.error = action.payload;
         })
+
+        .addCase(archiveProjectById.pending , (state)=>{
+            state.loading = true;
+        }).addCase(archiveProjectById.fulfilled ,(state)=>{
+            state.loading = false;
+        }).addCase(archiveProjectById.rejected , (state,action) =>{
+            state.loading = false,
+            state.error = action.payload;
+        })
+        
     },
 });
 

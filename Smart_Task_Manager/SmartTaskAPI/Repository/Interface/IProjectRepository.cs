@@ -15,5 +15,6 @@ namespace SmartTaskAPI.Repository.Interface
 
         Task UpdateAsync(int id , ProjectDto dto , string CurrentUserId , string role);
         Task DeleteAsync(int id , string CurrentUserId, string role);
+        Task <bool> ArchiveAsync(int id);
     }
 }

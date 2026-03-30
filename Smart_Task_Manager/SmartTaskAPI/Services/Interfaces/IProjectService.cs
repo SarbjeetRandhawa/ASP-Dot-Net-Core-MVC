@@ -8,7 +8,7 @@ namespace SmartTaskAPI.Services.Interfaces
         Task UpdateAsync(int id, ProjectDto dto, string CurrentUserId);
         Task DeleteProjectAsync(int id, string CurrentUserId);
         Task<List<ProjectResponseDto>> GetAllProjectsAsync(string userId);
-        Task<bool> ArchiveProjectAsync(int id , string userId , string userRole);
+        Task<bool> ArchiveProjectAsync(int id);
 
 
         Task<ProjectDetailsResponseDto> GetProjectByIdAsync(int id);

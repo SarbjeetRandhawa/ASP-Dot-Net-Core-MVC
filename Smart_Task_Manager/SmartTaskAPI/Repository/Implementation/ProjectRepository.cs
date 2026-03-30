@@ -17,6 +17,21 @@ namespace SmartTaskAPI.Repository.Implementation
             _Context = context;
         }
 
+        public async Task<bool> ArchiveAsync(int id)
+        {
+            var project = await _Context.Projects.FindAsync(id);
+            if(project.Status == "Active")
+            {
+                project.Status = "Archived";
+            }
+            else
+            {
+                project.Status = "Active";
+            }
+            _Context.Projects.Update(project);
+            return true;
+        }
+
         public async Task CreateProjectAsync(Project project)
         {
 

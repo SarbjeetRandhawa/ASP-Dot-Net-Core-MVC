@@ -25,19 +25,20 @@ function ProjectPage() {
   ).length;
   const OverdueProjects = projects.filter((u) => u.status === "overdue").length;
  
-
+  console.log(projects);
+  
   useEffect(() => {
     dispatch(fetchProjects());
-  }, [dispatch]);
+  }, []);
 
-  // useEffect(() => {
-  //   const HandleClickOutside = () => {
-  //     setIsProjectMenuOpen(null);
-  //   };
+  useEffect(() => {
+    const HandleClickOutside = () => {
+      setIsProjectMenuOpen(null);
+    };
 
-  //   document.addEventListener("click", HandleClickOutside);
-  //   return () => document.removeEventListener("click", HandleClickOutside);
-  // }, []);
+    document.addEventListener("click", HandleClickOutside);
+    return () => document.removeEventListener("click", HandleClickOutside);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {

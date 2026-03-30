@@ -15,3 +15,8 @@ export const GetProjectById = async (id) => {
     const res = await axiosInstance.get(`${API_URL}/Project/${id}`);
     return res.data;
 }
+
+export const archiveProject = async (id)=>{
+    const res = await axiosInstance.put(`${API_URL}/Project/${id}/archive`);
+    return res.data;
+}

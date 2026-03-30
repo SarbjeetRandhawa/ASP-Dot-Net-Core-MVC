@@ -14,6 +14,15 @@ namespace SmartTaskAPI.Services.Implementation
         {
             _uow = uow;
         }
+
+        public async Task<bool> ArchiveProjectAsync(int id)
+        {
+            var project = await _uow.ProjectRepository.ArchiveAsync(id);
+            _uow.SaveAsync();
+            return true;
+            
+        }
+
         public async Task CreateAsync(ProjectDto dto, string CreatoruserId)
         {
             var role = await _uow.UserRepository.GetUserRoleAsync(CreatoruserId);
