@@ -363,6 +363,56 @@ const ToolBar = ({ editor }) => {
   );
 };
 
+const HighlightPicker = ({ editor }) => {
+  const [open, setOpen] = useState(false);
+
+  if (!editor) return null;
+
+  return (
+    <div className="relative">
+      {/* Button */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="px-2 py-1 border rounded"
+      >
+        Highlight
+      </button>
+
+      {/* Popup */}
+      {open && (
+        <div className="absolute top-10 left-0 bg-white shadow-lg border rounded p-2 flex gap-2 z-50">
+          {highlightColors.map((item) => (
+            <button
+              key={item.color}
+              onClick={() => {
+                editor
+                  .chain()
+                  .focus()
+                  .toggleHighlight({ color: item.color })
+                  .run();
+                setOpen(false);
+              }}
+              className="w-6 h-6 rounded"
+              style={{ backgroundColor: item.color }}
+            />
+          ))}
+
+          {/* Remove highlight */}
+          <button
+            onClick={() => {
+              editor.chain().focus().unsetHighlight().run();
+              setOpen(false);
+            }}
+            className="px-2 text-sm"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export function BubbleMenu({ editor }) {
   const editorState = useEditorState({
     editor,
