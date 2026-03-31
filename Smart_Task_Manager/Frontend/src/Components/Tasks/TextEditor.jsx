@@ -1,6 +1,6 @@
 "use client";
 
-// src/Tiptap.tsx
+
 import {
   useEditor,
   EditorContent,
@@ -10,6 +10,7 @@ import {
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
 import { Toggle } from "./ui/toggle.jsx";
+
 import {
   BoldIcon,
   CodeIcon,
@@ -25,6 +26,7 @@ import {
   UndoIcon,
   UnlinkIcon,
 } from "lucide-react";
+
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -45,9 +47,6 @@ import { FloatingMenu as TiptapFloatingMenu } from "@tiptap/react/menus";
 const Tiptap = ({
   content,
   onChange,
-}: {
-  content?: string;
-  onChange?: (content: string) => void;
 }) => {
   const editor = useEditor({
     extensions: [StarterKit, Highlight.configure({ multicolor: true })], // define your extension array
@@ -83,9 +82,6 @@ export default Tiptap;
 function LinkComponent({
   editor,
   children,
-}: {
-  editor: Editor;
-  children: ReactNode;
 }) {
   const [linkUrl, setLinkUrl] = useState("");
   const [isLinkPopoverOpen, setIsLinkPopoverOpen] = useState(false);
@@ -170,13 +166,7 @@ const ToolBar = ({ editor }) => {
     if (value === "paragraph") {
       editor.chain().focus().setParagraph().run();
     } else {
-      const level = Number.parseInt(value.replace("heading", "")) as
-        | 1
-        | 2
-        | 3
-        | 4
-        | 5
-        | 6;
+      const level = Number.parseInt(value.replace("heading", ""));
       editor.chain().focus().setHeading({ level }).run();
     }
   };
@@ -206,7 +196,7 @@ const ToolBar = ({ editor }) => {
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Paragraph" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white">
           <SelectItem value="paragraph">Paragraph</SelectItem>
           <SelectItem value="heading2">Heading 1</SelectItem>
           <SelectItem value="heading3">Heading 2</SelectItem>
@@ -369,7 +359,7 @@ export function BubbleMenu({ editor }) {
   return (
     <TiptapBubbleMenu
       editor={editor}
-      className="bg-background flex items-center rounded-md border shadow-md relative z-200"
+      className="bg-background bg-white ml-36 flex items-center rounded-md border shadow-md relative z-200"
     >
       <Toggle
         size="sm"
