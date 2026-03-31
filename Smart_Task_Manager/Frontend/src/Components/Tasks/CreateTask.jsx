@@ -1,7 +1,8 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
-import RichTextEditor from "../TextEditor";
+import TextEditor from "../TipTap";
+import TipTap from "../TipTap";
 
 
 
@@ -64,7 +65,7 @@ function CreateTask() {
               </div>
 
               <div className="bg-white w-full p-4 border-2 rounded-md">
-               <RichTextEditor />
+              <TipTap/>
               </div>
               <div className="bg-white w-full p-4 border-2 rounded-md"></div>
             </div>
