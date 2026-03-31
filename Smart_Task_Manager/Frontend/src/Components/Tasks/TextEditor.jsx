@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   useEditor,
   EditorContent,
@@ -10,6 +9,7 @@ import {
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
 import { Toggle } from "./ui/toggle.jsx";
+import CodeBlock from "@tiptap/extension-code-block";
 
 import {
   BoldIcon,
@@ -40,23 +40,29 @@ import {
 } from "./ui/select";
 import { BubbleMenu as TiptapBubbleMenu } from "@tiptap/react/menus";
 import { FloatingMenu as TiptapFloatingMenu } from "@tiptap/react/menus";
+import Placeholder from "@tiptap/extension-placeholder";
 
 // editorProps lets me customize the HTML element that Tiptap creates for the editor.
 // I add Tailwind’s prose classes so my editor text looks beautiful — with proper heading sizes, spacing, lists, blockquotes, and typography. Without this, the editor looks plain and unstyled
 
-const Tiptap = ({
-  content,
-  onChange,
-}) => {
+const Tiptap = ({ onChange }) => {
   const editor = useEditor({
-    extensions: [StarterKit, Highlight.configure({ multicolor: true })], // define your extension array
+    extensions: [
+      StarterKit,
+      Highlight.configure({ multicolor: true }),
+      Placeholder.configure({
+        placeholder: "hello",
+        showOnlyWhenEditable: true,
+      }),
+      CodeBlock,
+    ],
     editorProps: {
       attributes: {
         class:
           "prose dark:prose-invert prose-sm sm:prose-base focus:outline-none max-w-none",
       },
     },
-    content,
+
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML());
     },
@@ -64,7 +70,7 @@ const Tiptap = ({
   });
 
   return (
-    <div className="bg-background relative rounded-lg border shadow-sm">
+    <div className="bg-background rounded-md relative rounded-lg border shadow-sm">
       {editor && (
         <>
           <ToolBar editor={editor} />
@@ -72,27 +78,31 @@ const Tiptap = ({
           <FloatingMenu editor={editor} />
         </>
       )}
-      <EditorContent editor={editor} className="min-h-[300px] px-4 py-3" />
+      <EditorContent
+        editor={editor}
+        className=" min-h-[80px] max-h-[400px] rounded-md overflow-y-scroll px-4 py-3"
+      />
     </div>
   );
 };
 
 export default Tiptap;
 
-function LinkComponent({
-  editor,
-  children,
-}) {
+function LinkComponent({ editor, children }) {
   const [linkUrl, setLinkUrl] = useState("");
   const [isLinkPopoverOpen, setIsLinkPopoverOpen] = useState(false);
 
   const handleSetLink = () => {
-    if (linkUrl) {
+    let Url = linkUrl.trim();
+    if (Url) {
+      if (!Url.startsWith("http://") && !Url.startsWith("https://" + Url)) {
+        Url = "https://" + Url;
+      }
       editor
         .chain()
         .focus()
         .extendMarkRange("link")
-        .setLink({ href: linkUrl })
+        .setLink({ href: Url, target: "_blank" })
         .run();
     } else {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
@@ -106,13 +116,14 @@ function LinkComponent({
       <PopoverTrigger>{children}</PopoverTrigger>
       {/* // this is the main */}
       {/* trigger point */}
-      <PopoverContent className="w-80 p-4">
+      <PopoverContent className="w-80 p-4 bg-white">
         <div className="flex flex-col gap-4">
           <h3 className="font-medium">Insert Link</h3>
           <Input
             placeholder="https://example.com"
             type="url"
             value={linkUrl}
+            className="px-3 py-1"
             onChange={(e) => setLinkUrl(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -152,15 +163,25 @@ const ToolBar = ({ editor }) => {
         isLink: ctx.editor.isActive("link") ?? false,
         canRedo: editor.can().redo(),
         canUndo: editor.can().undo(),
+        isHeading1: ctx.editor.isActive("heading", { level: 1 }) ?? false,
         isHeading2: ctx.editor.isActive("heading", { level: 2 }) ?? false,
         isHeading3: ctx.editor.isActive("heading", { level: 3 }) ?? false,
         isHeading4: ctx.editor.isActive("heading", { level: 4 }) ?? false,
-        isHeading5: ctx.editor.isActive("heading", { level: 5 }) ?? false,
-        isHeading6: ctx.editor.isActive("heading", { level: 6 }) ?? false,
         isParagraph: ctx.editor.isActive("paragraph") ?? false,
       };
     },
   });
+
+  const highlightColors= [
+    {name: "yellow" , color: "#fef08a"},
+    {name: "Green" , color: "#bbf7d0"},
+    {name: "Blue" , color: "#bfdbfe"},
+    {name: "Red" , color: "#fecaca"},
+    {name: "Purple" , color: "#e9d5ff"},
+    {name: "Gray" , color: "#e5e7eb"},
+
+
+  ]
 
   const handleHeadingChange = (value) => {
     if (value === "paragraph") {
@@ -174,23 +195,21 @@ const ToolBar = ({ editor }) => {
   return (
     <div
       className={
-        "bg-background sticky top-0 z-10 flex flex-wrap items-center gap-1 border-b p-2"
+        "bg-background rounded-md bg-white sticky top-0 z-10 flex flex-wrap items-center gap-1 border-b p-2 "
       }
     >
       <Select
         onValueChange={handleHeadingChange}
         value={
-          editorState.isHeading2
-            ? "heading2"
-            : editorState.isHeading3
-              ? "heading3"
-              : editorState.isHeading4
-                ? "heading4"
-                : editorState.isHeading5
-                  ? "heading5"
-                  : editorState.isHeading6
-                    ? "heading6"
-                    : "paragraph"
+          editorState.isHeading1
+            ? "heading1"
+            : editorState.isHeading2
+              ? "heading2"
+              : editorState.isHeading3
+                ? "heading3"
+                : editorState.isHeading4
+                  ? "heading4"
+                  : "paragraph"
         }
       >
         <SelectTrigger className="w-[180px]">
@@ -198,11 +217,18 @@ const ToolBar = ({ editor }) => {
         </SelectTrigger>
         <SelectContent className="bg-white">
           <SelectItem value="paragraph">Paragraph</SelectItem>
-          <SelectItem value="heading2">Heading 1</SelectItem>
-          <SelectItem value="heading3">Heading 2</SelectItem>
-          <SelectItem value="heading4">Heading 3</SelectItem>
-          <SelectItem value="heading5">Heading 4</SelectItem>
-          <SelectItem value="heading6">Heading 5</SelectItem>
+          <SelectItem value="heading1" className="text-[15px] font-extrabold">
+            Heading 1
+          </SelectItem>
+          <SelectItem value="heading2" className="text-[14px] font-extrabold">
+            Heading 2
+          </SelectItem>
+          <SelectItem value="heading3" className="text-[13px] font-extrabold">
+            Heading 3
+          </SelectItem>
+          <SelectItem value="heading4" className="text-[12px] font-extrabold">
+            Heading 4
+          </SelectItem>
         </SelectContent>
       </Select>
 
@@ -256,7 +282,7 @@ const ToolBar = ({ editor }) => {
       <Toggle
         size="sm"
         pressed={editorState.isCode}
-        onPressedChange={() => editor.chain().focus().toggleCode().run()}
+        onPressedChange={() => editor.chain().focus().toggleCodeBlock().run()}
         aria-label="Toggle code"
       >
         <CodeIcon className="h-4 w-4" />
@@ -359,7 +385,7 @@ export function BubbleMenu({ editor }) {
   return (
     <TiptapBubbleMenu
       editor={editor}
-      className="bg-background bg-white ml-36 flex items-center rounded-md border shadow-md relative z-200"
+      className="bg-background bg-white ml-36 mt-16 flex items-center rounded-md border shadow-md absolute z-200"
     >
       <Toggle
         size="sm"
@@ -489,7 +515,7 @@ export function FloatingMenu({ editor }) {
   return (
     <TiptapFloatingMenu
       editor={editor}
-      className="bg-background flex items-center rounded-md border shadow-md relative z-200"
+      className="bg-background bg-white flex items-center rounded-md border shadow-md relative z-200"
     >
       <Toggle
         size="sm"

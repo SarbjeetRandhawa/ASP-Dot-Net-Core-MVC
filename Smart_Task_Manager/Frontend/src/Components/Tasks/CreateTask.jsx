@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import Tiptap from "./TextEditor";
+import { Color } from "@tiptap/extension-text-style";
 
 
 
@@ -64,7 +65,8 @@ function CreateTask() {
                 />
               </div>
 
-              <div className="bg-white w-full p-4 border-2 rounded-md">
+              <div className="  bg-white w-full flex flex-col gap-2 p-4 border-2 rounded-md" style={{Color:"#000000"}}>
+                <h1 className="text-[13px] font-bold ">Description</h1>
               <Tiptap/>
               </div>
               <div className="bg-white w-full p-4 border-2 rounded-md"></div>
