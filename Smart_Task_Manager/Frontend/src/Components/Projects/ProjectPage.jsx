@@ -255,7 +255,7 @@ function ProjectPage() {
                   onClick={() => {
                     HandleProjectInfoNavigate(p);
                   }}
-                  className="border  bg-white hover:border-[#4F46E5] overflow-hidden cursor-pointer z-0 p-4 relative h-auto col rounded-md text-black"
+                  className="border-2 bg-white hover:border-[#4F46E5] overflow-hidden cursor-pointer z-0 p-4 relative h-auto col rounded-md text-black"
                 >
                   <div className="z-0 absolute w-[10rem] h-[10rem] bg-[#ffffff2e] -right-10 -top-10 rounded-full"></div>
                   <div className="">

@@ -5,9 +5,13 @@ import {  useSelector } from 'react-redux'
 import CreateProject from './Components/Projects/CreateProject'
 import { DashBoardRoutes } from './Routes/DashBoardRoutes'
 import { AuthRoutes } from './Routes/AuthRoute'
+import { useEffect } from 'react'
 function App() {
  
 const {token} = useSelector((state) => state.auth);
+useEffect(()=>{
+  fetch("/api/ping");
+},[])
   return (
     <BrowserRouter>
       <Routes>

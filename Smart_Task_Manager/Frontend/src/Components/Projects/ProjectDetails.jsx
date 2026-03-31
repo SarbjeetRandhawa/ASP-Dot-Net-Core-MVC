@@ -153,6 +153,7 @@ function ProjectDetails() {
             {(CurrentUser.role == "Admin" ||
               CurrentUser.role === "Manager") && (
               <button
+                onClick={()=>navigate("/projects/CreateTask")}
                 className={`border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold rounded-md px-2 sm:px-3 bg-[${selectedProject?.colorTheme}] whitespace-nowrap`}
               >
                 + Add Task
@@ -180,7 +181,13 @@ function ProjectDetails() {
                   background: `linear-gradient(to right,#1E1B4B,${selectedProject.colorTheme})`,
                 }}
               >
-                <div className="p-4 w-2/3 flex flex-col justify-between">
+                <div className="p-4 w-2/3 flex relative  flex-col justify-between">
+                
+                
+                  <div className="absolute w-36 h-32   md:w-44 md:h-44 bg-[#ffffff0f] rounded-full -top-16 -right-0 md:-top-20 md:-right-0"></div>
+                  <div className="absolute w-36 h-32   md:w-44 md:h-44 bg-[#ffffff0f] rounded-full top-24 right-40 md:top-20 md:right-80"></div>
+
+
                   <div className=" text-white">
                     <div className="flex  items-center">
                       <div className=" p-[6px] text-2xl">
@@ -236,8 +243,8 @@ function ProjectDetails() {
                       <div className="h-[7px] bg-[#c1d3d5] w-[60%] rounded-lg "></div>
                     </div>
                   </div>
-                  <div className="absolute w-36 h-32   md:w-44 md:h-44 bg-[#FFFFFF0D] rounded-full top-0 -right-10 md:-top-10 md:-right-10"></div>
-                  <div className="absolute w-24 h-24 md:w-32 md:h-32 bg-[#FFFFFF0D] rounded-full top-24 right-6 md:top-20 md:right-14"></div>
+                  <div className="absolute w-36 h-32   md:w-44 md:h-44 bg-[#ffffff23] rounded-full top-0 -right-10 md:-top-10 md:-right-10"></div>
+                  <div className="absolute w-24 h-24 md:w-32 md:h-32 bg-[#ffffff13] rounded-full top-24 right-6 md:top-20 md:right-14"></div>
                 </div>
               </div>
             </div>
@@ -246,13 +253,13 @@ function ProjectDetails() {
 
             <div className="px-4">
               <div className="grid grid-flow-col gap-2 text-nowrap">
-                <div className="text-center border px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
+                <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold">18</h1>
                   <p className="text-[10px] md:text-[12px] text-[#64748B]">
                     Total Tasks
                   </p>
                 </div>
-                <div className="text-center border px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
+                <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold  text-[#10B981]">
                     13
                   </h1>
@@ -260,7 +267,7 @@ function ProjectDetails() {
                     Completed
                   </p>
                 </div>
-                <div className="text-center border px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
+                <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold  text-[#3B82F6]">
                     2
                   </h1>
@@ -268,7 +275,7 @@ function ProjectDetails() {
                     In Progress
                   </p>
                 </div>
-                <div className="text-center border px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
+                <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold  text-[#F59E0B]">
                     3
                   </h1>
@@ -276,7 +283,7 @@ function ProjectDetails() {
                     To Do
                   </p>
                 </div>
-                <div className="text-center border px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
+                <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold text-[#EF4444]">
                     3
                   </h1>
@@ -290,7 +297,7 @@ function ProjectDetails() {
             {/* ----------------------------------------------------------------- */}
 
             <div className="p-4 flex flex-col lg:flex-row gap-2 ">
-              <div className="border rounded-md bg-white   lg:w-9/12">
+              <div className="border-2 rounded-md bg-white   lg:w-9/12">
                 <div>
                   <div className="px-4  py-2 text-[14px] font-bold ">
                     <h1>Tasks</h1>
@@ -298,7 +305,7 @@ function ProjectDetails() {
                       18 total in this Project
                     </p>
                   </div>
-                  <div className=" bg-white  w-full  overflow-x-scroll  overflow-y-scroll lg:h-auto lg:max-h-screen h-80  rounded-b-md ">
+                  <div className=" bg-white  w-full  overflow-x-scroll  overflow-y-scroll lg:h-auto lg:max-h-screen h-auto max-h-80 rounded-b-md ">
                     <table className=" tabel w-full text-left  text-nowrap">
                       <thead>
                         <tr className="border  h-8 bg-[#F1F5F9]  text-[10px] text-[#94A3B8]">
@@ -424,7 +431,7 @@ function ProjectDetails() {
                   className="flex lg:flex-col gap-2
                 "
                 >
-                  <div className="border h-auto bg-white rounded-md w-full  lg:w-full ">
+                  <div className="border-2 h-auto bg-white rounded-md w-full  lg:w-full ">
                     <div className="flex items-center border-b justify-between px-2 py-1  md:px-4 md:py-2">
                       <h1 className="text-[14px] font-bold">Team Members</h1>
                       {(CurrentUser.role == "Admin" || CurrentUser.role === "Manager")   && (
@@ -499,7 +506,7 @@ function ProjectDetails() {
                     </div>
                   </div>
 
-                  <div className="border rounded-md bg-white h-auto w-1/2  lg:w-full">
+                  <div className="border-2 rounded-md bg-white h-auto w-1/2  lg:w-full">
                     <div className="flex items-center border-b justify-between px-2 py-1  md:px-4 md:py-2">
                       <h1 className="text-[14px] font-bold">Project Info</h1>
                     </div>
@@ -555,8 +562,8 @@ function ProjectDetails() {
                   </div>
                 </div>
 
-                <div className="w-full border">
-                  <div className="border rounded-md bg-white h-auto w-full  lg:w-full">
+                <div className="w-full ">
+                  <div className="border-2 rounded-md bg-white h-auto w-full  lg:w-full">
                     <div className="flex items-center border-b justify-between px-2 py-1  md:px-4 md:py-2">
                       <h1 className="text-[14px] font-bold">Activity</h1>
                       <p className="text-[12px] hover:underline cursor-pointer font-semibold text-[#4F46E5]">
