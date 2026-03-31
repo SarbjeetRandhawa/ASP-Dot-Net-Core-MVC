@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import RichTextEditor from "../TextEditor";
 
 
 
@@ -63,10 +64,7 @@ function CreateTask() {
               </div>
 
               <div className="bg-white w-full p-4 border-2 rounded-md">
-                <div className="flex gap-2 mb-2">
-                  <button onClick={()=> editor.chain().focus().toggleBold().run()}>B</button>
-                </div>
-                <EditorContent editor={editor}/>
+               <RichTextEditor />
               </div>
               <div className="bg-white w-full p-4 border-2 rounded-md"></div>
             </div>
