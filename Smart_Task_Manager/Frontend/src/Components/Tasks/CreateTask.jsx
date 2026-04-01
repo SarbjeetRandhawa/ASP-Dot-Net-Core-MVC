@@ -4,10 +4,11 @@ import Sidebar from "../Sidebar";
 
 import Tiptap from "./TextEditor";
 import { Color } from "@tiptap/extension-text-style";
+import FileUplode from "./FileUplode";
 
 function CreateTask() {
   const navigate = useNavigate();
-
+  const [Files, setFiles] = useState([])
   const [TaskFormData, setTaskFormData] = useState({
     Title: "",
     Descriprion: "",
@@ -115,21 +116,7 @@ function CreateTask() {
                     </p>
                   </div>
                   <div className="py-4">
-                    <div className="border-dashed flex flex-col justify-center items-center  border-2 bg-[#F8FAFC] rounded-md h-60">
-                      <h1 className="text-5xl mb-4">📂</h1>
-                      <p className="font-bold text-[14px] text-[#64748B]">
-                        Drop files here or click to browe
-                      </p>
-                      <p className="text-[#94A3B8] text-[12px]">
-                        Supports PDF, DOC, XLS, PNG, JPG up to 25MB each
-                      </p>
-                      <button
-                        type="button"
-                        className="border mt-4 px-2 py-1 rounded-md bg-white text-[13px] font-bold"
-                      >
-                        Browse Files
-                      </button>
-                    </div>
+                    <FileUplode files={Files} setfiles={setFiles}/>
                   </div>
                 </div>
               </div>
