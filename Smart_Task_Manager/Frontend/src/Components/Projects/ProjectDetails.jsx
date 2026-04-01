@@ -153,7 +153,13 @@ function ProjectDetails() {
             {(CurrentUser.role == "Admin" ||
               CurrentUser.role === "Manager") && (
               <button
-                onClick={()=>navigate("/projects/CreateTask")}
+                onClick={() =>
+                  navigate("/Task/CreateTask", {
+                    state: {
+                      projectId: selectedProject.id
+                    }
+                  })
+                }
                 className={`border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold rounded-md px-2 sm:px-3 bg-[${selectedProject?.colorTheme}] whitespace-nowrap`}
               >
                 + Add Task
@@ -182,11 +188,8 @@ function ProjectDetails() {
                 }}
               >
                 <div className="p-4 w-2/3 flex relative  flex-col justify-between">
-                
-                
                   <div className="absolute w-36 h-32   md:w-44 md:h-44 bg-[#ffffff0f] rounded-full -top-16 -right-0 md:-top-20 md:-right-0"></div>
                   <div className="absolute w-36 h-32   md:w-44 md:h-44 bg-[#ffffff0f] rounded-full top-24 right-40 md:top-20 md:right-80"></div>
-
 
                   <div className=" text-white">
                     <div className="flex  items-center">
@@ -434,13 +437,15 @@ function ProjectDetails() {
                   <div className="border-2 h-auto bg-white rounded-md w-full  lg:w-full ">
                     <div className="flex items-center border-b justify-between px-2 py-1  md:px-4 md:py-2">
                       <h1 className="text-[14px] font-bold">Team Members</h1>
-                      {(CurrentUser.role == "Admin" || CurrentUser.role === "Manager")   && (
-                      <button
-                        type="button"
-                        className="hover:bg-[#f6f6f6] border px-2 py-[2px] text-[11px] rounded-md font-bold"
-                      >
-                        + Add
-                      </button>)}
+                      {(CurrentUser.role == "Admin" ||
+                        CurrentUser.role === "Manager") && (
+                        <button
+                          type="button"
+                          className="hover:bg-[#f6f6f6] border px-2 py-[2px] text-[11px] rounded-md font-bold"
+                        >
+                          + Add
+                        </button>
+                      )}
                     </div>
                     <div className="px-2 max-h-[250px] overflow-x-scroll">
                       <div className="border-b flex items-center justify-between gap-2 py-2">

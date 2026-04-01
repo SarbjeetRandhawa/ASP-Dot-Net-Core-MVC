@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
 const FileUplode = ({ files, setfiles }) => {
@@ -26,6 +26,16 @@ const FileUplode = ({ files, setfiles }) => {
     [setfiles],
   );
 
+  useEffect(() => {
+    return () => {
+      files.forEach((file) => {
+        if (file.preview) {
+          URL.revokeObjectURL(file.preview);
+        }
+      });
+    };
+  }, [files]);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxSize: 25 * 1024 * 1024,
@@ -50,19 +60,60 @@ const FileUplode = ({ files, setfiles }) => {
 
   return (
     <>
-      <div className="mt-4 space-y-2">
+      <div className="my-2  space-y-2 gap-4 flex">
         {files.map((file) => (
           <div
             key={file.name}
-            className="flex  border p-2 rounded"
+            className="flex flex-col relative 
+             mt-2 h-auto  overflow-hidden  rounded"
           >
-            <span className="text-sm text-black"><img src={file.preview}className="w-10 h-10" alt="" />{file.name}</span>
+            {file.type.startsWith("image/") ? (
+              <img src={file.preview} className="h-14 w-14" alt="" />
+            ) : file.type.startsWith("application/pdf") ? (
+              <img
+                src={"/public/pdf_4726010.png"}
+                className="h-14 w-14"
+                alt=""
+              />
+            ) : file.type.startsWith("application/msword") ||
+              file.type.startsWith(
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              ) ? (
+              <img
+                src={"/public/doc_10301478.png"}
+                className="h-14 w-14"
+                alt=""
+              />
+            ) : file.type.startsWith("application/vnd.ms-excel") ||
+              file.type.startsWith(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              ) ? (
+              <img
+                src={"/public/excel-file_11384076.png"}
+                className="h-14 w-14"
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+            <span className="text-[10px] w-14 text-">{file.name}</span>
             <button
               onClick={() => {
                 removeFiles(file.name);
               }}
-              className="text-red-400"
-            >X</button>
+              className="text-red-600  absolute top-0 right-0 p-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-x-circle-fill"
+                viewBox="0 0 16 16"
+              >
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+              </svg>
+            </button>
           </div>
         ))}
       </div>

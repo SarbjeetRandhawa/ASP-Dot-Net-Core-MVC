@@ -42,7 +42,7 @@ function Sidebar() {
       >
         <div>
           <div className="border-b border-[#ffffff31] flex h-20 p-4 gap-2">
-            <div className="p-2 text-[20px] bg-[#06B6D4] rounded-2xl ">⚡</div>
+            <div className="p-2 flex items-center justify-center text-2xl bg-[#217a8a4c] rounded-2xl ">⚡</div>
             <div>
               <h1 className="text-white text-[15px] font-bold leading-5">
                 TaskFlow
@@ -62,7 +62,7 @@ function Sidebar() {
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
                 >
-                  <div>📊</div>
+                  <div className="text-white">📊</div>
                   <span>Dashboard</span>
                 </NavLink>
                 <NavLink
@@ -71,7 +71,7 @@ function Sidebar() {
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
                 >
-                  <div>📂</div>
+                  <div className="text-white">📂</div>
                   <span>Projects</span>
                 </NavLink>
                 <NavLink
@@ -80,7 +80,7 @@ function Sidebar() {
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
                 >
-                  <div>✅</div>
+                  <div className="text-white">✅</div>
                   <span>My Tasks</span>
                 </NavLink>
                 <NavLink
@@ -89,7 +89,7 @@ function Sidebar() {
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
                 >
-                  <div>📋</div>
+                  <div className="text-white">📋</div>
                   <span>Kanban Board</span>
                 </NavLink>
               </div>
@@ -103,7 +103,7 @@ function Sidebar() {
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
                 >
-                  <div className="bg-[#ffffff70] rounded-md">👥</div>
+                  <div className="text-white rounded-md">👥</div>
                   <span>Team Members</span>
                 </NavLink>
                 <NavLink
@@ -112,7 +112,7 @@ function Sidebar() {
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
                 >
-                  <div>🕒</div>
+                  <div className="text-white">🕒</div>
                   <span>Activity Log</span>
                 </NavLink>
               </div>
@@ -126,7 +126,7 @@ function Sidebar() {
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
                 >
-                  <div>⚙️</div>
+                  <div className="text-white">⚙️</div>
                   <span>Settings</span>
                 </NavLink>
                 <NavLink
@@ -135,7 +135,7 @@ function Sidebar() {
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
                 >
-                  <div>🔔</div>
+                  <div className="text-white">🔔</div>
                   <span>Notifications</span>
                 </NavLink>
               </div>

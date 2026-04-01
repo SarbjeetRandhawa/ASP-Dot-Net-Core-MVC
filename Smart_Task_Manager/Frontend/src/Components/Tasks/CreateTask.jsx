@@ -1,23 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
-
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProjects } from "../../features/project/projectSlice";
 import Tiptap from "./TextEditor";
-import { Color } from "@tiptap/extension-text-style";
 import FileUplode from "./FileUplode";
+import { useLocation } from "react-router-dom";
 
 function CreateTask() {
   const navigate = useNavigate();
-  const [Files, setFiles] = useState([])
+  const [Files, setFiles] = useState([]);
+  const dispatch = useDispatch();
+  const { projects } = useSelector((state) => state.projects);
+
+  const location = useLocation();
+
   const [TaskFormData, setTaskFormData] = useState({
     Title: "",
     Descriprion: "",
-    ProjectId: null,
+    ProjectId: location.state?.projectId,
     AssignTo: null,
     Priority: "",
     Status: "",
     DueDate: "",
   });
+  const selectedProject = projects.find((p) => p.id === TaskFormData.ProjectId);
+  console.log(TaskFormData);
+  console.log(selectedProject);
+
+
   const HandleDescriptionChange = (value) => {
     setTaskFormData((prev) => ({
       ...prev,
@@ -39,7 +50,10 @@ function CreateTask() {
     }));
   };
 
-  console.log(TaskFormData);
+  useEffect(() => {
+    dispatch(fetchProjects());
+  }, []);
+
   return (
     <>
       <div className="flex ">
@@ -115,8 +129,8 @@ function CreateTask() {
                       Optional - uplode relevant files
                     </p>
                   </div>
-                  <div className="py-4">
-                    <FileUplode files={Files} setfiles={setFiles}/>
+                  <div>
+                    <FileUplode files={Files} setfiles={setFiles} />
                   </div>
                 </div>
               </div>
@@ -133,10 +147,21 @@ function CreateTask() {
                     >
                       Project <span className="text-red-600">*</span>
                     </label>
-                    <input
-                      type="text"
-                      className="border focus:outline-none focus:border-blue-600 px-4 py-1 rounded-md"
-                    />
+                    <select
+                      name="ProjectId"
+                      value={TaskFormData.ProjectId || ""}
+                      onChange={HandleChange}
+                      className="rounded-md border p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
+                    >
+                      <option value="" disabled hidden>
+                        Select Project
+                      </option>
+                      {projects.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="h-auto flex flex-col gap-2  ">
                     <label
@@ -145,10 +170,23 @@ function CreateTask() {
                     >
                       Assign To <span className="text-red-600">*</span>
                     </label>
-                    <input
-                      type="text"
-                      className="border focus:outline-none focus:border-blue-600 px-4 py-1 rounded-md"
-                    />
+                    <select
+                      name="project"
+                      value={selectedProject?.members.userId || ""}
+                      // onChange={(e) => {
+                      //   handleChange(m.userId, Number(e.target.value));
+                      // }}
+                      className="rounded-md border p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
+                    >
+                      <option value="" disabled hidden>
+                        Select Member
+                      </option>
+                      {selectedProject?.members.map((m) => (
+                        <option key={m.userId} value={m.userId}>
+                          {m.firstName} {m.lastName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="flex flex-col gap-2">

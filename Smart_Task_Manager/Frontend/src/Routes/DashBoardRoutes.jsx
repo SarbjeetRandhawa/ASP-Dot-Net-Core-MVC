@@ -47,7 +47,7 @@ export const DashBoardRoutes = [
   />,
    <Route
     
-    path="/projects/CreateTask"
+    path="/Task/CreateTask"
     element={
       <ProtectedRoute>
         <CreateTask/>
