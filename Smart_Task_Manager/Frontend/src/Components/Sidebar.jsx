@@ -31,7 +31,7 @@ function Sidebar() {
       </div>
       {isOpen && (
         <div
-          className="fixed z-10 inset-0  bg-black bg-opacity-50 md:hidden"
+          className="fixed z-20 inset-0  bg-black bg-opacity-50 md:hidden"
           onClick={() => setIsOpen(false)}
         ></div>
       )}

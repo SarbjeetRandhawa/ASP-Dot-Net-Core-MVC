@@ -13,8 +13,10 @@ import CodeBlock from "@tiptap/extension-code-block";
 
 import {
   BoldIcon,
+  BrushIcon,
   CodeIcon,
   HighlighterIcon,
+  Icon,
   ItalicIcon,
   LinkIcon,
   ListIcon,
@@ -51,10 +53,10 @@ const Tiptap = ({ onChange }) => {
       StarterKit,
       Highlight.configure({ multicolor: true }),
       Placeholder.configure({
-        placeholder: "hello",
+        placeholder: `Describe the task in detail. What needs to be done? Any specific requirements or acceptance criteria?
+        `,
         showOnlyWhenEditable: true,
       }),
-      CodeBlock,
     ],
     editorProps: {
       attributes: {
@@ -70,12 +72,12 @@ const Tiptap = ({ onChange }) => {
   });
 
   return (
-    <div className="bg-background rounded-md relative rounded-lg border shadow-sm">
+    <div className="bg-background rounded-md relative   ">
       {editor && (
         <>
           <ToolBar editor={editor} />
-          <BubbleMenu editor={editor} />
-          <FloatingMenu editor={editor} />
+          {/* <BubbleMenu editor={editor} />
+          <FloatingMenu editor={editor} /> */}
         </>
       )}
       <EditorContent
@@ -113,7 +115,7 @@ function LinkComponent({ editor, children }) {
 
   return (
     <Popover open={isLinkPopoverOpen} onOpenChange={setIsLinkPopoverOpen}>
-      <PopoverTrigger>{children}</PopoverTrigger>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
       {/* // this is the main */}
       {/* trigger point */}
       <PopoverContent className="w-80 p-4 bg-white">
@@ -172,17 +174,6 @@ const ToolBar = ({ editor }) => {
     },
   });
 
-  const highlightColors= [
-    {name: "yellow" , color: "#fef08a"},
-    {name: "Green" , color: "#bbf7d0"},
-    {name: "Blue" , color: "#bfdbfe"},
-    {name: "Red" , color: "#fecaca"},
-    {name: "Purple" , color: "#e9d5ff"},
-    {name: "Gray" , color: "#e5e7eb"},
-
-
-  ]
-
   const handleHeadingChange = (value) => {
     if (value === "paragraph") {
       editor.chain().focus().setParagraph().run();
@@ -212,21 +203,35 @@ const ToolBar = ({ editor }) => {
                   : "paragraph"
         }
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="md:w-[180px] w-[100px] text-[11px] md:text-[15px]">
           <SelectValue placeholder="Paragraph" />
         </SelectTrigger>
-        <SelectContent className="bg-white">
-          <SelectItem value="paragraph">Paragraph</SelectItem>
-          <SelectItem value="heading1" className="text-[15px] font-extrabold">
+        <SelectContent className="bg-white ">
+          <SelectItem value="paragraph" className="text-[11px] md:text-[15px]">
+            Paragraph
+          </SelectItem>
+          <SelectItem
+            value="heading1"
+            className="text-[11px] md:text-[14px] font-extrabold"
+          >
             Heading 1
           </SelectItem>
-          <SelectItem value="heading2" className="text-[14px] font-extrabold">
+          <SelectItem
+            value="heading2"
+            className="text-[10px] md:text-[13px] font-extrabold"
+          >
             Heading 2
           </SelectItem>
-          <SelectItem value="heading3" className="text-[13px] font-extrabold">
+          <SelectItem
+            value="heading3"
+            className="text-[9px] md:text-[12px] font-extrabold"
+          >
             Heading 3
           </SelectItem>
-          <SelectItem value="heading4" className="text-[12px] font-extrabold">
+          <SelectItem
+            value="heading4"
+            className="text-[8px] md:text-[11px] font-extrabold"
+          >
             Heading 4
           </SelectItem>
         </SelectContent>
@@ -238,7 +243,7 @@ const ToolBar = ({ editor }) => {
         onPressedChange={() => editor.chain().focus().toggleBold().run()}
         aria-label="Toggle bold"
       >
-        <BoldIcon className="h-4 w-4" />
+        <BoldIcon />
       </Toggle>
 
       <Toggle
@@ -247,7 +252,7 @@ const ToolBar = ({ editor }) => {
         onPressedChange={() => editor.chain().focus().toggleItalic().run()}
         aria-label="Toggle bold"
       >
-        <ItalicIcon className="h-4 w-4" />
+        <ItalicIcon />
       </Toggle>
 
       <Toggle
@@ -256,7 +261,7 @@ const ToolBar = ({ editor }) => {
         onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
         aria-label="Toggle underline"
       >
-        <UnderlineIcon className="h-4 w-4" />
+        <UnderlineIcon />
       </Toggle>
 
       <Toggle
@@ -265,19 +270,10 @@ const ToolBar = ({ editor }) => {
         onPressedChange={() => editor.chain().focus().toggleStrike().run()}
         aria-label="Toggle strikethrough"
       >
-        <StrikethroughIcon className="h-4 w-4" />
+        <StrikethroughIcon />
       </Toggle>
 
-      <Toggle
-        size="sm"
-        pressed={editorState.isHighlight}
-        onPressedChange={() =>
-          editor.chain().focus().toggleHighlight({ color: "#fdeb80" }).run()
-        }
-        aria-label="Toggle highlight"
-      >
-        <HighlighterIcon className="h-4 w-4" />
-      </Toggle>
+      <HighlightPicker editor={editor} />
 
       <Toggle
         size="sm"
@@ -285,7 +281,7 @@ const ToolBar = ({ editor }) => {
         onPressedChange={() => editor.chain().focus().toggleCodeBlock().run()}
         aria-label="Toggle code"
       >
-        <CodeIcon className="h-4 w-4" />
+        <CodeIcon />
       </Toggle>
 
       <Toggle
@@ -294,7 +290,7 @@ const ToolBar = ({ editor }) => {
         onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
         aria-label="Toggle bullet list"
       >
-        <ListIcon className="h-4 w-4" />
+        <ListIcon />
       </Toggle>
 
       <Toggle
@@ -303,7 +299,7 @@ const ToolBar = ({ editor }) => {
         onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
         aria-label="Toggle ordered list"
       >
-        <ListOrderedIcon className="h-4 w-4" />
+        <ListOrderedIcon />
       </Toggle>
 
       <Toggle
@@ -312,7 +308,7 @@ const ToolBar = ({ editor }) => {
         onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
         aria-label="Toggle blockquote"
       >
-        <Quote className="h-4 w-4" />
+        <Quote />
       </Toggle>
 
       <div className="bg-border mx-1 h-6 w-px" />
@@ -324,12 +320,12 @@ const ToolBar = ({ editor }) => {
             editor.chain().focus().extendMarkRange("link").unsetLink().run()
           }
         >
-          <UnlinkIcon className="h-4 w-4" />
+          <UnlinkIcon />
         </Toggle>
       ) : (
         <LinkComponent editor={editor}>
           <Toggle size="sm" aria-label="Toggle link">
-            <LinkIcon className="h-4 w-4" />
+            <LinkIcon />
           </Toggle>
         </LinkComponent>
       )}
@@ -346,7 +342,7 @@ const ToolBar = ({ editor }) => {
         disabled={!editorState.canUndo}
         aria-label="Undo"
       >
-        <UndoIcon className="h-4 w-4" />
+        <UndoIcon />
       </Button>
 
       <Button
@@ -357,7 +353,7 @@ const ToolBar = ({ editor }) => {
         disabled={!editorState.canRedo}
         aria-label="Redo"
       >
-        <RedoIcon className="h-4 w-4" />
+        <RedoIcon />
       </Button>
     </div>
   );
@@ -368,14 +364,21 @@ const HighlightPicker = ({ editor }) => {
 
   if (!editor) return null;
 
+  const highlightColors = [
+    { name: "yellow", color: "#fef08a" },
+    { name: "Green", color: "#bbf7d0" },
+    { name: "Blue", color: "#bfdbfe" },
+    { name: "Red", color: "#fecaca" },
+    { name: "Purple", color: "#e9d5ff" },
+    { name: "Gray", color: "#e5e7eb" },
+  ];
+
   return (
     <div className="relative">
       {/* Button */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="px-2 py-1 border rounded"
-      >
-        Highlight
+      <button type="button" onClick={() => setOpen(!open)} className="px-2 py-1  rounded">
+        
+        <HighlighterIcon className="h-4 w-4" />
       </button>
 
       {/* Popup */}
@@ -383,6 +386,7 @@ const HighlightPicker = ({ editor }) => {
         <div className="absolute top-10 left-0 bg-white shadow-lg border rounded p-2 flex gap-2 z-50">
           {highlightColors.map((item) => (
             <button
+              type="button"
               key={item.color}
               onClick={() => {
                 editor
@@ -399,6 +403,7 @@ const HighlightPicker = ({ editor }) => {
 
           {/* Remove highlight */}
           <button
+            type="button"
             onClick={() => {
               editor.chain().focus().unsetHighlight().run();
               setOpen(false);
@@ -412,263 +417,3 @@ const HighlightPicker = ({ editor }) => {
     </div>
   );
 };
-
-export function BubbleMenu({ editor }) {
-  const editorState = useEditorState({
-    editor,
-    selector: (ctx) => {
-      return {
-        isBold: ctx.editor.isActive("bold") ?? false,
-        isItalic: ctx.editor.isActive("italic") ?? false,
-        isUnderline: ctx.editor.isActive("underline") ?? false,
-        isHighlight: ctx.editor.isActive("highlight") ?? false,
-        isStrike: ctx.editor.isActive("strike") ?? false,
-        isCode: ctx.editor.isActive("code") ?? false,
-        isBulletList: ctx.editor.isActive("bulletList") ?? false,
-        isOrderedList: ctx.editor.isActive("orderedList") ?? false,
-        isBlockquote: ctx.editor.isActive("blockquote") ?? false,
-        isLink: ctx.editor.isActive("link") ?? false,
-      };
-    },
-  });
-
-  return (
-    <TiptapBubbleMenu
-      editor={editor}
-      className="bg-background bg-white ml-36 mt-16 flex items-center rounded-md border shadow-md absolute z-200"
-    >
-      <Toggle
-        size="sm"
-        pressed={editorState.isBold}
-        onPressedChange={() => editor.chain().focus().toggleBold().run()}
-        aria-label="Toggle bold"
-      >
-        <BoldIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isItalic}
-        onPressedChange={() => editor.chain().focus().toggleItalic().run()}
-        aria-label="Toggle bold"
-      >
-        <ItalicIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isUnderline}
-        onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
-        aria-label="Toggle underline"
-      >
-        <UnderlineIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isStrike}
-        onPressedChange={() => editor.chain().focus().toggleStrike().run()}
-        aria-label="Toggle strikethrough"
-      >
-        <StrikethroughIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isHighlight}
-        onPressedChange={() =>
-          editor.chain().focus().toggleHighlight({ color: "#fdeb80" }).run()
-        }
-        aria-label="Toggle highlight"
-      >
-        <HighlighterIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isCode}
-        onPressedChange={() => editor.chain().focus().toggleCode().run()}
-        aria-label="Toggle code"
-      >
-        <CodeIcon className="h-4 w-4" />
-      </Toggle>
-      <div className="bg-border mx-1 h-6 w-px" />
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isBulletList}
-        onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
-        aria-label="Toggle bullet list"
-      >
-        <ListIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isOrderedList}
-        onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
-        aria-label="Toggle ordered list"
-      >
-        <ListOrderedIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isBlockquote}
-        onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
-        aria-label="Toggle blockquote"
-      >
-        <Quote className="h-4 w-4" />
-      </Toggle>
-
-      <div className="bg-border mx-1 h-6 w-px" />
-
-      {editorState.isLink ? (
-        <Toggle
-          pressed
-          onPressedChange={() =>
-            editor.chain().focus().extendMarkRange("link").unsetLink().run()
-          }
-        >
-          <UnlinkIcon className="h-4 w-4" />
-        </Toggle>
-      ) : (
-        <LinkComponent editor={editor}>
-          <Toggle size="sm" aria-label="Toggle link">
-            <LinkIcon className="h-4 w-4" />
-          </Toggle>
-        </LinkComponent>
-      )}
-    </TiptapBubbleMenu>
-  );
-}
-
-export function FloatingMenu({ editor }) {
-  const editorState = useEditorState({
-    editor,
-    selector: (ctx) => {
-      return {
-        isBold: ctx.editor.isActive("bold") ?? false,
-        isItalic: ctx.editor.isActive("italic") ?? false,
-        isUnderline: ctx.editor.isActive("underline") ?? false,
-        isHighlight: ctx.editor.isActive("highlight") ?? false,
-        isStrike: ctx.editor.isActive("strike") ?? false,
-        isCode: ctx.editor.isActive("code") ?? false,
-        isBulletList: ctx.editor.isActive("bulletList") ?? false,
-        isOrderedList: ctx.editor.isActive("orderedList") ?? false,
-        isBlockquote: ctx.editor.isActive("blockquote") ?? false,
-        isLink: ctx.editor.isActive("link") ?? false,
-      };
-    },
-  });
-
-  return (
-    <TiptapFloatingMenu
-      editor={editor}
-      className="bg-background bg-white flex items-center rounded-md border shadow-md relative z-200"
-    >
-      <Toggle
-        size="sm"
-        pressed={editorState.isBold}
-        onPressedChange={() => editor.chain().focus().toggleBold().run()}
-        aria-label="Toggle bold"
-      >
-        <BoldIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isItalic}
-        onPressedChange={() => editor.chain().focus().toggleItalic().run()}
-        aria-label="Toggle bold"
-      >
-        <ItalicIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isUnderline}
-        onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
-        aria-label="Toggle underline"
-      >
-        <UnderlineIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isStrike}
-        onPressedChange={() => editor.chain().focus().toggleStrike().run()}
-        aria-label="Toggle strikethrough"
-      >
-        <StrikethroughIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isHighlight}
-        onPressedChange={() =>
-          editor.chain().focus().toggleHighlight({ color: "#fdeb80" }).run()
-        }
-        aria-label="Toggle highlight"
-      >
-        <HighlighterIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isCode}
-        onPressedChange={() => editor.chain().focus().toggleCode().run()}
-        aria-label="Toggle code"
-      >
-        <CodeIcon className="h-4 w-4" />
-      </Toggle>
-      <div className="bg-border mx-1 h-6 w-px" />
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isBulletList}
-        onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
-        aria-label="Toggle bullet list"
-      >
-        <ListIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isOrderedList}
-        onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
-        aria-label="Toggle ordered list"
-      >
-        <ListOrderedIcon className="h-4 w-4" />
-      </Toggle>
-
-      <Toggle
-        size="sm"
-        pressed={editorState.isBlockquote}
-        onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
-        aria-label="Toggle blockquote"
-      >
-        <Quote className="h-4 w-4" />
-      </Toggle>
-
-      <div className="bg-border mx-1 h-6 w-px" />
-
-      {editorState.isLink ? (
-        <Toggle
-          pressed
-          onPressedChange={() =>
-            editor.chain().focus().extendMarkRange("link").unsetLink().run()
-          }
-        >
-          <UnlinkIcon className="h-4 w-4" />
-        </Toggle>
-      ) : (
-        <LinkComponent editor={editor}>
-          <Toggle size="sm" aria-label="Toggle link">
-            <LinkIcon className="h-4 w-4" />
-          </Toggle>
-        </LinkComponent>
-      )}
-    </TiptapFloatingMenu>
-  );
-}
