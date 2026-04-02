@@ -36,8 +36,8 @@ namespace SmartTaskAPI.Controllers
             var result = await taskService.GetTaskItemsByPtojectIdAsync(projectId);
             return Ok(result);
         }
-        
-        
-        
+
+
+
     }
 }

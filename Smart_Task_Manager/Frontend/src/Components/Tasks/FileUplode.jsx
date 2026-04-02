@@ -52,7 +52,7 @@ const FileUplode = ({ files, setfiles }) => {
       "image/jpeg": [".jpeg", ".jpg"],
     },
   });
-  console.log(files);
+  // console.log(files);
 
   const removeFiles = (name) => {
     setfiles(files.filter((file) => file.name !== name));

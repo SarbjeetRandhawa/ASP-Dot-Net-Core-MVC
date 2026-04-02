@@ -13,7 +13,7 @@ function CreateTask() {
   const [Files, setFiles] = useState([]);
   const dispatch = useDispatch();
   const { projects } = useSelector((state) => state.projects);
-  const [DescriptionError, setDescriptionError] = useState("")
+  const [DescriptionError, setDescriptionError] = useState("");
 
   const location = useLocation();
 
@@ -21,8 +21,8 @@ function CreateTask() {
     Title: "",
     Descriprion: "",
     ProjectId: location.state?.projectId || "",
-    AssignTo: "",
-    Priority: null,
+    AssignedTo: "",
+    Priority: 2,
     Status: "",
     DueDate: "",
   });
@@ -51,7 +51,7 @@ function CreateTask() {
     div.innerHTML = Html;
     return div.textContent || div.innerText || "";
   };
-  
+
   const SelectPriority = (Priority) => {
     setTaskFormData({
       ...TaskFormData,
@@ -72,14 +72,22 @@ function CreateTask() {
     dispatch(fetchProjects());
   }, []);
 
-  const onSubmit = async (e) => {
+  
+    
+
+
+  console.log(selectedProject);
+  
+
+  const onSubmit = async (data) => {
     const text = getTextFromHtml(TaskFormData.Descriprion);
 
     if(!text.trim()){
-      setDescriptionError("Description is required");
+      setDescriptionError("Description is Required");
+      return;
     }
+    setDescriptionError("");
     
-    console.log(DescriptionError);
   };
 
   return (
@@ -120,7 +128,9 @@ function CreateTask() {
                 >
                   💾 Save Draft
                 </button>
-                <button className={`border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold bg-[${selectedProject?.colorTheme}] rounded-md px-2 sm:px-3  whitespace-nowrap`}>
+                <button
+                  className={`border sm:h-8 h-6 text-[8px] sm:text-[11px]  font-bold  ${selectedProject?.colorTheme ? `bg-[${selectedProject.colorTheme}] text-white` : "text-black"} rounded-md px-2 sm:px-3  whitespace-nowrap`}
+                >
                   🚀 Create Task
                 </button>
               </div>
@@ -160,10 +170,10 @@ function CreateTask() {
                     content={TaskFormData.Descriprion}
                     onChange={HandleDescriptionChange}
                   />
+                 
                   {DescriptionError && (
-                    <p className="text-red-500 text-sm">
-                      {DescriptionError}
-                    </p>
+                    // <p>hello</p>
+                    <p className="text-red-500 text-sm">{DescriptionError}</p>
                   )}
                 </div>
 
@@ -172,7 +182,7 @@ function CreateTask() {
                     <h1 className="text-[13px] font-bold">Attachment</h1>
                     <p className="text-[12px] text-[#64748B] font-semibold">
                       Optional - uplode relevant files
-                    </p>  
+                    </p>
                   </div>
                   <div>
                     <FileUplode files={Files} setfiles={setFiles} />
@@ -194,6 +204,9 @@ function CreateTask() {
                     </label>
                     <select
                       name="ProjectId"
+                      {...register("ProjectId",{
+                        required:"Project is required"
+                      })}
                       value={TaskFormData.ProjectId || ""}
                       onChange={HandleChange}
                       className="rounded-md border p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
@@ -207,6 +220,9 @@ function CreateTask() {
                         </option>
                       ))}
                     </select>
+                    {errors.ProjectId && (
+                      <p className="text-red-500 text-sm">{errors.ProjectId.message}</p>
+                    )}
                   </div>
                   <div className="h-auto flex flex-col gap-2  ">
                     <label
@@ -217,19 +233,25 @@ function CreateTask() {
                     </label>
                     <select
                       name="AssignTo"
-                      value={TaskFormData.AssignTo || ""}
+                      {...register("AssignedTo",{
+                        required:"Project is required"
+                      })}
+                      value={TaskFormData.AssignedTo || ""}
                       onChange={HandleChange}
                       className="rounded-md border p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
                     >
                       <option value="" disabled hidden>
                         Select Member
                       </option>
-                      {selectedProject?.members?.map((m) => (
+                      {selectedProject?.members?.slice(1).map((m) => (
                         <option key={m.userId} value={m.userId}>
-                          {m.firstName} {m.lastName}
+                          {m.firstName} {m.lastName} 
                         </option>
                       ))}
                     </select>
+                    {errors.AssignedTo && (
+                      <p className="text-red-500 text-sm">{errors.AssignedTo.message}</p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -245,7 +267,7 @@ function CreateTask() {
                         <h1 className=" text-[11px] font-bold">Low</h1>
                       </div>
                       <div
-                        className={`${TaskFormData.Priority == 2  ? " border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5]" : "bg-[#fdfdec] border-[#f3f2a7] text-[#b9b910]"}   border w-1/3 flex flex-col items-center justify-center h-16 cursor-pointer rounded-lg`}
+                        className={`${TaskFormData.Priority == 2 ? " border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5]" : "bg-[#fdfdec] border-[#f3f2a7] text-[#b9b910]"}   border w-1/3 flex flex-col items-center justify-center h-16 cursor-pointer rounded-lg`}
                         onClick={() => SelectPriority(2)}
                       >
                         <div className="">🟡</div>
@@ -277,16 +299,23 @@ function CreateTask() {
                         className="border text-[14px] focus:outline-none focus:border-blue-600 px-4 py-1 rounded-md"
                       />
                       {errors.DueDate && (
-                    <p className="text-red-500 text-sm">
-                      {errors.DueDate.message}
-                    </p>
-                  )}
+                        <p className="text-red-500 text-sm">
+                          {errors.DueDate.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
-                <div className=" w-full flex flex-col gap-4 p-4 border-dashed border-2 border-[#C7D2FE] bg-[#EEF2FF] rounded-md"
-                style={{backgroundColor:`${selectedProject?.colorTheme}33`, borderColor:`${selectedProject?.colorTheme}`}}>
-                  <h1 className={`text-[12px] text-[${selectedProject?.colorTheme}] font-bold tracking-wider`}>
+                <div
+                  className=" w-full flex flex-col gap-4 p-4 border-dashed border-2 border-[#C7D2FE] bg-[#EEF2FF] rounded-md"
+                  style={{
+                    backgroundColor: `${selectedProject?.colorTheme}33`,
+                    borderColor: `${selectedProject?.colorTheme}`,
+                  }}
+                >
+                  <h1
+                    className={`text-[12px] text-[${selectedProject?.colorTheme}] font-bold tracking-wider`}
+                  >
                     TASK PREVIEW
                   </h1>
                   <h1 className="text-[13px] font-bold">
@@ -299,7 +328,11 @@ function CreateTask() {
                     <div
                       className={` font-semibold ${TaskFormData.Priority == 1 ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981] " : TaskFormData.Priority == 3 ? "bg-[#FEF2F2] border-[#FECACA] text-[#EF4444]" : "bg-[#FFFBEB] text-[#F59E0B]"}  px-2 rounded-full`}
                     >
-                      {TaskFormData.Priority == 1 ? "Low" : TaskFormData.Priority == 3 ? "High"  : "Medium"}
+                      {TaskFormData.Priority == 1
+                        ? "Low"
+                        : TaskFormData.Priority == 3
+                          ? "High"
+                          : "Medium"}
                     </div>
                     <div>E-Commerce Rebuild</div>
                   </div>
@@ -337,8 +370,4 @@ function CreateTask() {
 
 export default CreateTask;
 
-
 /* Container */
-
-
-

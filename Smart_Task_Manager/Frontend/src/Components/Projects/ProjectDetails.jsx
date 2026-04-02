@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   archiveProjectById,
   fetchProjectById,
-  
 } from "../../features/project/projectSlice";
 
 function ProjectDetails() {
@@ -36,9 +35,6 @@ function ProjectDetails() {
   useEffect(() => {
     dispatch(fetchProjectById(projectId));
   }, [projectId]);
-
- 
-  
 
   //  useEffect(() => {
   //     const HandleClickOutside = () => {
@@ -119,8 +115,6 @@ function ProjectDetails() {
     return "Active";
   };
 
-  
-
   return (
     <div className="flex ">
       <Sidebar />
@@ -163,11 +157,11 @@ function ProjectDetails() {
                 onClick={() =>
                   navigate("/Task/CreateTask", {
                     state: {
-                      projectId: selectedProject.id
-                    }
+                      projectId: selectedProject.id,
+                    },
                   })
                 }
-                className={`border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold rounded-md px-2 sm:px-3 bg-[${selectedProject?.colorTheme}] whitespace-nowrap`}
+                className={`border sm:h-8 h-6 text-[8px] sm:text-[11px]  font-bold rounded-md px-2 sm:px-3 ${selectedProject?.colorTheme ? `bg-[${selectedProject.colorTheme}] text-white` : "text-black"} whitespace-nowrap`}
               >
                 + Add Task
               </button>
@@ -225,7 +219,7 @@ function ProjectDetails() {
                   </p>
                   <div className=" h-auto text-[#ffffff99] flex gap-4 text-[7px] md:text-[11px]">
                     <p>
-                      <span className="text-white">📆</span>
+                      <span className="text-white">📆 </span>
                       {formFullDate(
                         new Date(
                           selectedProject.startDate,
@@ -241,7 +235,7 @@ function ProjectDetails() {
                       {selectedProject.members.length} Members
                     </p>
                     <p>
-                      <span className="text-white">✅</span>18 Tasks
+                      <span className="text-white">✅</span> 18 Tasks
                     </p>
                   </div>
                 </div>
@@ -331,27 +325,27 @@ function ProjectDetails() {
                       <tbody>
                         <tr>
                           <td className="px-3 md:px-6 items-center">
-                            <div class="inline-flex items-center">
-                              <label class="flex items-center cursor-pointer relative">
+                            <div className="inline-flex items-center">
+                              <label className="flex items-center cursor-pointer relative">
                                 <input
                                   type="checkbox"
                                   checked={IsChecked}
                                   onChange={(e) => {
                                     HandleCheck(e);
                                   }}
-                                  class="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded-full shadow hover:shadow-md border border-slate-300 checked:bg-green-600 checked:border-green-600"
+                                  className="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded-full shadow hover:shadow-md border border-slate-300 checked:bg-green-600 checked:border-green-600"
                                 />
-                                <span class="absolute  text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                <span className="absolute  text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-3 w-3"
+                                    className="h-3 w-3"
                                     viewBox="0 0 20 20"
                                     fill="currentColor"
                                   >
                                     <path
-                                      fill-rule="evenodd"
+                                      fillRule="evenodd"
                                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                      clip-rule="evenodd"
+                                      clipRule="evenodd"
                                     />
                                   </svg>
                                 </span>
@@ -444,8 +438,6 @@ function ProjectDetails() {
                   <div className="border-2 h-auto bg-white rounded-md w-full  lg:w-full ">
                     <div className="flex items-center border-b justify-between px-2 py-1  md:px-4 md:py-2">
                       <h1 className="text-[14px] font-bold">Team Members</h1>
-                     
-                      
                     </div>
                     <div className="px-2 max-h-[250px] overflow-x-scroll">
                       <div className="border-b flex items-center justify-between gap-2 py-2">
