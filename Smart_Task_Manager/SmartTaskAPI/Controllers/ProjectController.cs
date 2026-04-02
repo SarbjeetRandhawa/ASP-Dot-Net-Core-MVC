@@ -91,11 +91,11 @@ namespace SmartTaskAPI.Controllers
 
 
 
-        [HttpPost("{projectId , ProjectRoleId}/members")]
-        public async Task<IActionResult> AddMember(int projectId, AddMemberDto dto , int ProjectRoleId)
+        [HttpPost("{projectId}/members")]
+        public async Task<IActionResult> AddMember(int projectId, AddMemberDto dto)
         {
             
-            await _projectMemberService.AddMemberAsync(projectId,dto, GetUserId() , ProjectRoleId);
+            await _projectMemberService.AddMemberAsync(projectId,dto);
 
             return Ok("Member Added");
         }

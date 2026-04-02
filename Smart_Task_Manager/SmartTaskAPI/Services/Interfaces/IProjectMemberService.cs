@@ -5,7 +5,7 @@ namespace SmartTaskAPI.Services.Interfaces
 {
     public interface IProjectMemberService
     {
-        Task AddMemberAsync(int projectId, AddMemberDto dto, string currentUserId ,int ProjectRoleId);
+        Task AddMemberAsync(int projectId, AddMemberDto dto);
         Task RemoveMemberAsync(int projectId, string targetUserId, string currentUserId);
 
 

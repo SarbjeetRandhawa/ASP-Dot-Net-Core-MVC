@@ -13,12 +13,11 @@ namespace SmartTaskAPI.Services.Implementation
         {
             _uow = uow;
         }
-        public async Task AddMemberAsync(int projectId, AddMemberDto dto, string currentUserId , int ProjectRoleId)
+        public async Task AddMemberAsync(int projectId, AddMemberDto dto)
         {
-            string adderRole = _uow.UserRepository.GetUserRoleAsync(currentUserId).ToString() ?? "";
-            string targetRole = _uow.UserRepository.GetUserRoleAsync(dto.UserId).ToString() ?? "";
+           
 
-            await _uow.ProjectMemberRepository.AddMemberAsync(projectId, dto, currentUserId, adderRole, targetRole , ProjectRoleId);
+            await _uow.ProjectMemberRepository.AddMemberAsync(projectId, dto);
             await _uow.SaveAsync();
         }
 

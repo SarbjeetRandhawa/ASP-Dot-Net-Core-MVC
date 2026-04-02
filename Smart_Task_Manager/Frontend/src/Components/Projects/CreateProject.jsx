@@ -3,7 +3,7 @@ import "../../App.css";
 import { useState, useMemo } from "react";
 import ProjectMembers from "./ProjectMembers";
 import { useForm } from "react-hook-form";
-import { createProject } from "../../Services/Project";
+import { createProject } from "../../Services/ProjectService";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import AvatarGroup from "../AvtarGroup";

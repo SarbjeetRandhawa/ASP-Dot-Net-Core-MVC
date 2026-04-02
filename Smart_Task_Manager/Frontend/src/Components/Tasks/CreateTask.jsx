@@ -6,6 +6,7 @@ import { fetchProjects } from "../../features/project/projectSlice";
 import Tiptap from "./TextEditor";
 import FileUplode from "./FileUplode";
 import { useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 function CreateTask() {
   const navigate = useNavigate();
@@ -18,16 +19,24 @@ function CreateTask() {
   const [TaskFormData, setTaskFormData] = useState({
     Title: "",
     Descriprion: "",
-    ProjectId: location.state?.projectId,
-    AssignTo: null,
+    ProjectId: location.state?.projectId || "",
+    AssignTo: "",
     Priority: "",
     Status: "",
     DueDate: "",
   });
-  const selectedProject = projects.find((p) => p.id === TaskFormData.ProjectId);
-  console.log(TaskFormData);
-  console.log(selectedProject);
-
+  const selectedProject = projects.find(
+    (p) => p.id === Number(TaskFormData.ProjectId),
+  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    // getValues,
+    // setError,
+    // clearErrors,
+    // watch,
+  } = useForm();
 
   const HandleDescriptionChange = (value) => {
     setTaskFormData((prev) => ({
@@ -47,6 +56,7 @@ function CreateTask() {
     setTaskFormData((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "ProjectId" && { AssignTo: "" }),
     }));
   };
 
@@ -54,19 +64,25 @@ function CreateTask() {
     dispatch(fetchProjects());
   }, []);
 
+  const onSubmit = async (data) => {};
+
   return (
     <>
       <div className="flex ">
         <Sidebar />
 
         <div className="w-full lg:pl-[16.66%]  md:pt-0 md:pl-[33%] pt-14">
-          <form action="" method="post">
+          <form action="" method="post" onSubmit={handleSubmit(onSubmit)}>
             <div className="Navbar border bg-white  flex gap-1 sm:gap-2 h-12 w-full  items-center px-4">
               <div className=" p-3 mx-0 sm:mx-4 ">
                 <p className="text-[7px] sm:text-[11px] font-semibold text-[#64748B]">
                   <span className="text-[#94A3B8]">Projects &gt;</span>{" "}
-                  <span className="text-[#94A3B8]">Mobile APP &gt;</span> Create
-                  Task
+                  <span className="text-[#94A3B8]">
+                    {selectedProject?.name && (
+                      <>{selectedProject?.name} &gt;</>
+                    )}{" "}
+                  </span>{" "}
+                  Create Task
                 </p>
                 <h1 className="font-bold mt-[-1px] text-[#0F172A] text-[12px]">
                   Create New Task
@@ -88,7 +104,7 @@ function CreateTask() {
                 >
                   💾 Save Draft
                 </button>
-                <button className="border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold rounded-md px-2 sm:px-3 bg-[#4F46E5] whitespace-nowrap">
+                <button className={`border sm:h-8 h-6 text-[8px] sm:text-[11px] text-white font-bold bg-[${selectedProject?.colorTheme}] rounded-md px-2 sm:px-3  whitespace-nowrap`}>
                   🚀 Create Task
                 </button>
               </div>
@@ -104,11 +120,19 @@ function CreateTask() {
                   </label>
                   <input
                     type="text"
+                    {...register("Title", {
+                      required: "Title is required",
+                    })}
                     name="Title"
                     onChange={HandleChange}
                     className="border font-semibold  focus:border-blue-600 focus:outline-none text-[12px] p-2 rounded-md"
                     placeholder="Enter a clear, descriptive title for this task..."
                   />
+                  {errors.Title && (
+                    <p className="text-red-500 text-sm">
+                      {errors.Title.message}
+                    </p>
+                  )}
                 </div>
 
                 <div
@@ -171,17 +195,15 @@ function CreateTask() {
                       Assign To <span className="text-red-600">*</span>
                     </label>
                     <select
-                      name="project"
-                      value={selectedProject?.members.userId || ""}
-                      // onChange={(e) => {
-                      //   handleChange(m.userId, Number(e.target.value));
-                      // }}
+                      name="AssignTo"
+                      value={TaskFormData.AssignTo || ""}
+                      onChange={HandleChange}
                       className="rounded-md border p-1 px-4 text-[13px] focus:outline focus:outline-[#1313bbcc] appearance-none  "
                     >
                       <option value="" disabled hidden>
                         Select Member
                       </option>
-                      {selectedProject?.members.map((m) => (
+                      {selectedProject?.members?.map((m) => (
                         <option key={m.userId} value={m.userId}>
                           {m.firstName} {m.lastName}
                         </option>
@@ -226,15 +248,24 @@ function CreateTask() {
                       </label>
                       <input
                         type="Date"
+                        {...register("DueDate", {
+                          required: "Due Date is required",
+                        })}
                         name="DueDate"
                         onChange={HandleChange}
                         className="border text-[14px] focus:outline-none focus:border-blue-600 px-4 py-1 rounded-md"
                       />
+                      {errors.DueDate && (
+                    <p className="text-red-500 text-sm">
+                      {errors.DueDate.message}
+                    </p>
+                  )}
                     </div>
                   </div>
                 </div>
-                <div className=" w-full flex flex-col gap-4 p-4 border-dashed border-2 border-[#C7D2FE] bg-[#EEF2FF] rounded-md">
-                  <h1 className="text-[12px] text-[#4F46E5] font-bold tracking-wider">
+                <div className=" w-full flex flex-col gap-4 p-4 border-dashed border-2 border-[#C7D2FE] bg-[#EEF2FF] rounded-md"
+                style={{backgroundColor:`${selectedProject.colorTheme}33`, borderColor:`${selectedProject.colorTheme}`}}>
+                  <h1 className={`text-[12px] text-[${selectedProject.colorTheme}] font-bold tracking-wider`}>
                     TASK PREVIEW
                   </h1>
                   <h1 className="text-[13px] font-bold">
@@ -259,8 +290,8 @@ function CreateTask() {
                       Assigned to Mike Ross
                     </h1>
                   </div>
-                  <p className="text-[12px] text-[#94A3B8]">
-                    🗓️ Due: Mar 25, 2025
+                  <p className="text-[12px] text-[#5f6978]">
+                    <span className="text-white">🗓️</span> Due: Mar 25, 2025
                   </p>
                 </div>
                 <div className="bg-[#FFFBEB] border-[#FDE68A] w-full p-4 border-2 rounded-md">
@@ -284,3 +315,9 @@ function CreateTask() {
 }
 
 export default CreateTask;
+
+
+/* Container */
+
+
+

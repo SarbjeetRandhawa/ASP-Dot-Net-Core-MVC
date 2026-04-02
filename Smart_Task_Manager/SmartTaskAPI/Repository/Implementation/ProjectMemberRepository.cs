@@ -17,16 +17,9 @@ namespace SmartTaskAPI.Repository.Implementation
            
         }
 
-        public async Task AddMemberAsync(int projectId, AddMemberDto dto, string currentUserId, string adderRole, string targetRole , int ProjectRoleId)
+        public async Task AddMemberAsync(int projectId, AddMemberDto dto)
         {
-            var current = await _Context.ProjectMembers.FirstOrDefaultAsync(x => x.UserId == currentUserId && x.ProjectId == projectId);
             
-            if (current == null) throw new Exception("not part of the project");
-
-            if (adderRole == "Employee") throw new Exception("Not Allowed");
-
-            if (adderRole == "Manager" && targetRole == "Admin") throw new Exception("Manager cannot add Admin");
-
             var exists = await _Context.ProjectMembers.AnyAsync(x => x.UserId == dto.UserId && x.ProjectId == projectId);
 
             if (exists) {
@@ -37,7 +30,7 @@ namespace SmartTaskAPI.Repository.Implementation
             {
                 UserId = dto.UserId,
                 ProjectId = projectId,
-                ProjectRoleID = ProjectRoleId,
+                ProjectRoleID = dto.Role,
                 
 
             };
