@@ -66,7 +66,7 @@ const Tiptap = ({ onChange }) => {
     },
 
     onUpdate: ({ editor }) => {
-      onChange?.(editor.getHTML());
+      onChange?.({ html: editor.getHTML(), text: editor.getText() });
     },
     immediatelyRender: false,
   });
@@ -376,8 +376,11 @@ const HighlightPicker = ({ editor }) => {
   return (
     <div className="relative">
       {/* Button */}
-      <button type="button" onClick={() => setOpen(!open)} className="px-2 py-1  rounded">
-        
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="px-2 py-1  rounded"
+      >
         <HighlighterIcon className="h-4 w-4" />
       </button>
 

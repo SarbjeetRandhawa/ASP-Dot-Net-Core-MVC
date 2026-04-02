@@ -13,6 +13,7 @@ function CreateTask() {
   const [Files, setFiles] = useState([]);
   const dispatch = useDispatch();
   const { projects } = useSelector((state) => state.projects);
+  const [DescriptionError, setDescriptionError] = useState("")
 
   const location = useLocation();
 
@@ -44,6 +45,13 @@ function CreateTask() {
       Descriprion: value,
     }));
   };
+
+  const getTextFromHtml = (Html) => {
+    const div = document.createElement("div");
+    div.innerHTML = Html;
+    return div.textContent || div.innerText || "";
+  };
+  
   const SelectPriority = (Priority) => {
     setTaskFormData({
       ...TaskFormData,
@@ -64,7 +72,15 @@ function CreateTask() {
     dispatch(fetchProjects());
   }, []);
 
-  const onSubmit = async () => {};
+  const onSubmit = async (e) => {
+    const text = getTextFromHtml(TaskFormData.Descriprion);
+
+    if(!text.trim()){
+      setDescriptionError("Description is required");
+    }
+    
+    console.log(DescriptionError);
+  };
 
   return (
     <>
@@ -144,6 +160,11 @@ function CreateTask() {
                     content={TaskFormData.Descriprion}
                     onChange={HandleDescriptionChange}
                   />
+                  {DescriptionError && (
+                    <p className="text-red-500 text-sm">
+                      {DescriptionError}
+                    </p>
+                  )}
                 </div>
 
                 <div className="bg-white w-full p-4 border-2 rounded-md">
@@ -151,7 +172,7 @@ function CreateTask() {
                     <h1 className="text-[13px] font-bold">Attachment</h1>
                     <p className="text-[12px] text-[#64748B] font-semibold">
                       Optional - uplode relevant files
-                    </p>
+                    </p>  
                   </div>
                   <div>
                     <FileUplode files={Files} setfiles={setFiles} />
@@ -159,7 +180,7 @@ function CreateTask() {
                 </div>
               </div>
 
-              <div className="  flex flex-col gap-3 rounded-md lg:w-1/3 w-full h-80">
+              <div className="  flex flex-col gap-3 rounded-md lg:w-1/3 w-full h-auto">
                 <div className="bg-white flex flex-col gap-4 w-full p-4 border-2 rounded-md">
                   <div className="flex justify-between border-b pb-2">
                     <h1 className="text-[13px] font-bold">Task Properties</h1>
@@ -294,7 +315,7 @@ function CreateTask() {
                     <span className="text-white">🗓️</span> Due: Mar 25, 2025
                   </p>
                 </div>
-                <div className="bg-[#FFFBEB] border-[#FDE68A] w-full p-4 border-2 rounded-md">
+                <div className="bg-[#FFFBEB] border-[#FDE68A] w-full p-4 border-2  rounded-md">
                   <h1 className=" text-[#92400E] text-[12px] font-bold">
                     💡 Pro Tips
                   </h1>
