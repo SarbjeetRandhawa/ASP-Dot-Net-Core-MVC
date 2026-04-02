@@ -24,11 +24,15 @@ builder.Services.AddScoped<IProjectMemberRepository,ProjectMemberRepository>();
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IProjectRoleRepository,ProjectRoleRepository>();
+builder.Services.AddScoped<ITaskRepository,TaskRepository>();
+builder.Services.AddScoped<ITaskAttachmentRepository,TaskAttachmentRepository>();
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProjectMemberService, ProjectMemberService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProjectRoleService, ProjectRoleService>();
+builder.Services.AddScoped<ITaskService,TaskService>();
+
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dbcs")));
 
@@ -77,6 +81,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 using (var scope = app.Services.CreateScope())
 {

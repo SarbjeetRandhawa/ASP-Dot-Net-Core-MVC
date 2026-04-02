@@ -91,7 +91,7 @@ namespace SmartTaskAPI.Controllers
 
 
 
-        [HttpPost("{projectId}/members")]
+        [HttpPost("{projectId}/add-members")]
         public async Task<IActionResult> AddMember(int projectId, AddMemberDto dto)
         {
             

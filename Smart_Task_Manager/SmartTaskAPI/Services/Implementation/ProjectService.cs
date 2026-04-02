@@ -42,7 +42,7 @@ namespace SmartTaskAPI.Services.Implementation
             await _uow.SaveAsync();
 
             var projectMembersList = new List<ProjectMember>();
-            int CreatorProjectRoleId = role == "Admin" ? 1 : 2;
+            int CreatorProjectRoleId = role == "Admin" ? 1 : 1;
 
             projectMembersList.Add(new ProjectMember
             {

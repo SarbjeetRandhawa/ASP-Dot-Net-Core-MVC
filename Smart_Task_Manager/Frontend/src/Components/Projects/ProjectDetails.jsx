@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   archiveProjectById,
   fetchProjectById,
+  
 } from "../../features/project/projectSlice";
 
 function ProjectDetails() {
@@ -29,11 +30,15 @@ function ProjectDetails() {
   const projectId = projectIdSlug.split("-")[0];
   const dispatch = useDispatch();
   const { selectedProject, loading } = useSelector((state) => state.projects);
+
   const CurrentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(fetchProjectById(projectId));
   }, [projectId]);
+
+ 
+  
 
   //  useEffect(() => {
   //     const HandleClickOutside = () => {
@@ -44,7 +49,7 @@ function ProjectDetails() {
   //     return () => document.removeEventListener("click", HandleClickOutside);
   //   }, []);
 
-  console.log(selectedProject);
+  // console.log(users);
 
   const HandleCheck = (e) => {
     console.log(e.target.checked);
@@ -113,6 +118,8 @@ function ProjectDetails() {
     if (today > endDate) return "Overdue";
     return "Active";
   };
+
+  
 
   return (
     <div className="flex ">
@@ -437,15 +444,8 @@ function ProjectDetails() {
                   <div className="border-2 h-auto bg-white rounded-md w-full  lg:w-full ">
                     <div className="flex items-center border-b justify-between px-2 py-1  md:px-4 md:py-2">
                       <h1 className="text-[14px] font-bold">Team Members</h1>
-                      {(CurrentUser.role == "Admin" ||
-                        CurrentUser.role === "Manager") && (
-                        <button
-                          type="button"
-                          className="hover:bg-[#f6f6f6] border px-2 py-[2px] text-[11px] rounded-md font-bold"
-                        >
-                          + Add
-                        </button>
-                      )}
+                     
+                      
                     </div>
                     <div className="px-2 max-h-[250px] overflow-x-scroll">
                       <div className="border-b flex items-center justify-between gap-2 py-2">

@@ -60,11 +60,11 @@ const FileUplode = ({ files, setfiles }) => {
 
   return (
     <>
-      <div className="my-2  space-y-2 gap-4 flex">
+      <div className="my-2  space-y-2  flex   ">
         {files.map((file) => (
           <div
             key={file.name}
-            className="flex flex-col relative 
+            className="flex flex-col relative  w-20 p-3
              mt-2 h-auto  overflow-hidden  rounded"
           >
             {file.type.startsWith("image/") ? (
@@ -96,12 +96,12 @@ const FileUplode = ({ files, setfiles }) => {
             ) : (
               ""
             )}
-            <span className="text-[10px] w-14 text-">{file.name}</span>
+            <span className="text-[10px]  overflow-hidden text-wrap">{file.name}</span>
             <button
               onClick={() => {
                 removeFiles(file.name);
               }}
-              className="text-red-600  absolute top-0 right-0 p-1"
+              className="text-red-600  absolute -top-1 -right-1 p-1"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

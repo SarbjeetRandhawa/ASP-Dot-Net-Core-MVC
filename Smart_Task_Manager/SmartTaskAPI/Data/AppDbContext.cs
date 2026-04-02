@@ -47,6 +47,8 @@ namespace SmartTaskAPI.Data
         }
         public DbSet<ProjectMember> ProjectMembers { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
+        public DbSet<TaskAttachment> TaskAttachments { get; set; }
         public DbSet<Models.DB.ProjectRole> projectRoles { get; set; }
     }
 

@@ -9,7 +9,11 @@ namespace SmartTaskAPI.UnitOfWork
         IProjectRoleRepository ProjectRoleRepository { get; }
         IUserRepository UserRepository { get; }
 
-        
+        public ITaskRepository TaskRepository { get; }
+        public ITaskAttachmentRepository TaskAttachmentRepository { get; }
+
+
+
         Task SaveAsync();
     }
 }

@@ -5,7 +5,6 @@ import {
   archiveProject,
   addProjectMember,
 } from "../../Services/ProjectService";
-import { act } from "react";
 
 export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
@@ -91,14 +90,14 @@ const projectSlice = createSlice({
         ((state.loading = false), (state.error = action.payload));
       })
 
-      .addCase(addProjectMember.pending, (state) => {
+      .addCase(addMember.pending, (state) => {
         state.loading = true;
       })
-      .addCase(addProjectMember.fulfilled, (state) => {
+      .addCase(addMember.fulfilled, (state) => {
         state.loading = false;
         state.message = state.payload.message;
       })
-      .addCase(addProjectMember.rejected, (state, action) => {
+      .addCase(addMember.rejected, (state, action) => {
         ((state.loading = false), (state.message = action.payload));
       });
   },
