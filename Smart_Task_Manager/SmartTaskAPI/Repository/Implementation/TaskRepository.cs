@@ -14,10 +14,10 @@ namespace SmartTaskAPI.Repository.Implementation
             _context = context;
         }
 
-        public async Task<TaskItem> AddAsync(TaskItem task)
+        public async Task AddAsync(TaskItem task)
         {
             await _context.Tasks.AddAsync(task);
-            return task;
+            
         }
 
         public async Task<IEnumerable<TaskItem>> GetByProjectIdAsync(int id)

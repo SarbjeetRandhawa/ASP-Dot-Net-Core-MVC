@@ -24,12 +24,13 @@ namespace SmartTaskAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask(CreateTaskDto dto)
+        public async Task<IActionResult> CreateTask([FromForm] CreateTaskDto dto)
         {
             var userId = GetUserId();
-            var result = await taskService.CreateTaskAsync(dto , userId);
-            return Ok(result);
+             await taskService.CreateTaskAsync(dto , userId);
+            return Ok("Success");
         }
+
         [HttpGet("project/{projectId}")]
         public async Task<IActionResult> GetTasks(int projectId)
         {

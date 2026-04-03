@@ -3,8 +3,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProjects } from "../../features/project/projectSlice";
-import { CreateTask } from "../../Services/TaskService";
-
+import { createTask } from "../../Services/TaskService";
+import Swal from "sweetalert2";
 import Tiptap from "./TextEditor";
 import FileUplode from "./FileUplode";
 import { useLocation } from "react-router-dom";
@@ -35,19 +35,20 @@ function CreateTask() {
     register,
     handleSubmit,
     formState: { errors },
-    // getValues,
-    // setError,
-    // clearErrors,
+    getValues,
+    setError,
+    clearErrors,
     // watch,
   } = useForm();
 
   const HandleDescriptionChange = (value) => {
     setTaskFormData((prev) => ({
       ...prev,
-      Descriprion: value,
+      Descriprion: typeof value === "string" ? value : value.html,
     }));
   };
 
+  console.log(TaskFormData);
   const getTextFromHtml = (Html) => {
     const div = document.createElement("div");
     div.innerHTML = Html;
@@ -84,6 +85,40 @@ function CreateTask() {
       return;
     }
     setDescriptionError("");
+
+    const formData = new FormData();
+    formData.append("Title", data.Title);
+    formData.append("Description", TaskFormData.Descriprion);
+    formData.append("ProjectId", data.ProjectId);
+    formData.append("AssignedToUserId", data.AssignedTo);
+    formData.append("Priority", TaskFormData.Priority);
+    formData.append("DueDate", data.DueDate);
+
+    Files.forEach((file) => {
+      formData.append("Files", file);
+    });
+              
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
+    try{
+      const res = await createTask(formData);
+            await Swal.fire({
+              position: "top-end",
+              title: "Created!",
+              text: "Project is Created",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+      console.log(res);
+      navigate("/projects");
+    } catch (error) {
+      console.error("Error creating task:", error);
+
+    }
+
+
   };
 
   return (
@@ -230,7 +265,7 @@ function CreateTask() {
                       Assign To <span className="text-red-600">*</span>
                     </label>
                     <select
-                      name="AssignTo"
+                      name="AssignedTo"
                       {...register("AssignedTo", {
                         required: "Project is required",
                       })}
@@ -291,11 +326,22 @@ function CreateTask() {
                       </label>
                       <input
                         type="Date"
-                        {...register("DueDate", {
-                          required: "Due Date is required",
-                        })}
+                        {...register("Date", {
+                        required: "Due Date is required",
+                        onChange: (e) => {
+                          const End = getValues(selectedProject.endDate);
+                          const Due = e.target.value;
+                          if (End && Due && Due > End) {
+                            setError("DueDate", {
+                              type: "manual",
+                              message:
+                                "Due Date cannot be Larger than Project End Date",
+                            }) ;
+                          }
+                          HandleChange(e);
+                        },
+                      })}
                         name="DueDate"
-                        onChange={HandleChange}
                         className="border text-[14px] focus:outline-none focus:border-blue-600 px-4 py-1 rounded-md"
                       />
                       {errors.DueDate && (

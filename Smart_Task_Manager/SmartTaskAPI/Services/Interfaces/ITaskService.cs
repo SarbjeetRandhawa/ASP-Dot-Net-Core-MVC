@@ -5,7 +5,8 @@ namespace SmartTaskAPI.Services.Interfaces
 {
     public interface ITaskService
     {
-        Task<TaskItem> CreateTaskAsync(CreateTaskDto dto, string userId);
+        Task CreateTaskAsync(CreateTaskDto dto, string userId);
         Task<IEnumerable<TaskItem>> GetTaskItemsByPtojectIdAsync(int projectId);
     }
 }
+         

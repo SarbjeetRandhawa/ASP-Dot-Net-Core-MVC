@@ -13,7 +13,7 @@ namespace SmartTaskAPI.Services.Implementation
 
         public TaskService(IUnitOfWork uow) {  _uow = uow; }
 
-        public async Task<TaskItem> CreateTaskAsync(CreateTaskDto dto, string userId)
+        public async Task CreateTaskAsync(CreateTaskDto dto, string userId)
         {
             var Task = new TaskItem
             {
@@ -67,7 +67,6 @@ namespace SmartTaskAPI.Services.Implementation
                 }
 
              }
-            return Task;
         }
 
         public async Task<IEnumerable<TaskItem>> GetTaskItemsByPtojectIdAsync(int projectId)
