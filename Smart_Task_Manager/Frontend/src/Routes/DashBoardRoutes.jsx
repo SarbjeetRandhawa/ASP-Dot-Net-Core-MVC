@@ -5,6 +5,7 @@ import TeamMembers from "../Components/TeamMembers/TeamMembers";
 import ProjectPage from "../Components/Projects/ProjectPage";
 import ProjectDetails from "../Components/Projects/ProjectDetails";
 import CreateTask from "../Components/Tasks/CreateTask";
+import TaskPage from "../Components/Tasks/TaskPage";
 // import ProtectedRoute from './Components/ProtectedRoute'
 
 export const DashBoardRoutes = [
@@ -47,10 +48,19 @@ export const DashBoardRoutes = [
   />,
    <Route
     
-    path="/Task/CreateTask"
+    path="/Tasks/CreateTask"
     element={
       <ProtectedRoute>
         <CreateTask/>
+      </ProtectedRoute>
+    }
+  />,
+  <Route
+    
+    path="/tasks"
+    element={
+      <ProtectedRoute>
+        <TaskPage/>
       </ProtectedRoute>
     }
   />,

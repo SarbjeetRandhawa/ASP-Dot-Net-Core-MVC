@@ -35,7 +35,6 @@ function CreateTask() {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
     setError,
     clearErrors,
     // watch,
@@ -326,18 +325,21 @@ function CreateTask() {
                       </label>
                       <input
                         type="Date"
-                        {...register("Date", {
+                        {...register("DueDate", {
                         required: "Due Date is required",
                         onChange: (e) => {
-                          const End = getValues(selectedProject.endDate);
+                          const End = selectedProject.endDate;
                           const Due = e.target.value;
                           if (End && Due && Due > End) {
                             setError("DueDate", {
                               type: "manual",
                               message:
                                 "Due Date cannot be Larger than Project End Date",
-                            }) ;
+                            })
                           }
+                          else{
+                              clearErrors("DueDate");
+                            } ;
                           HandleChange(e);
                         },
                       })}

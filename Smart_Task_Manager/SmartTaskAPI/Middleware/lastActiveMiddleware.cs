@@ -10,18 +10,18 @@ namespace SmartTaskAPI.Middleware
         {
             _next = next;
         }
-        public async Task Invoke(HttpContext context , UserManager<ApplicationUser> userManager)
+        public async Task Invoke(HttpContext context, UserManager<ApplicationUser> userManager)
         {
             if (context.User.Identity.IsAuthenticated)
             {
                 var user = await userManager.GetUserAsync(context.User);
-                if(user != null)
+                if (user != null)
                 {
-                    
+
                     user.LastActiveAt = DateTime.UtcNow;
                     await userManager.UpdateAsync(user);
 
-                    
+
                 }
             }
             await _next(context);

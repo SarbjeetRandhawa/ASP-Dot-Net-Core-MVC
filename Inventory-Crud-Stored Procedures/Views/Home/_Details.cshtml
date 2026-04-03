@@ -1,0 +1,20 @@
+﻿@model Inventory_Crud.Models.DataBases.Inventory
+
+@{
+   
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">Product Details</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+    <div class="modal-body">
+        <p><strong>Name:</strong> @Model.Name</p>
+        <p><strong>Category:</strong> @Model.Category</p>
+        <p><strong>Price:</strong> @Model.Price</p>
+        <p><strong>Quantity:</strong> @Model.Quantity</p>
+        <p><strong>Description:</strong> @Model.Discription</p>
+        <p><strong>CreatedDate:</strong> @Model.CreatedDate</p>
+        <p><strong>ExpiryDate:</strong> @Model.ExpiryDate</p>
+    </div>
+</div>

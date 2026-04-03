@@ -155,7 +155,7 @@ function ProjectDetails() {
               CurrentUser.role === "Manager") && (
               <button
                 onClick={() =>
-                  navigate("/Task/CreateTask", {
+                  navigate("/Tasks/CreateTask", {
                     state: {
                       projectId: selectedProject.id,
                     },

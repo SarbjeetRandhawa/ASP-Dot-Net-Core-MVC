@@ -117,7 +117,7 @@ namespace Inventory_Crud.Controllers
                 return NotFound();
             }
 
-            return View(data);
+            return PartialView("_Details", data);
         }
 
 

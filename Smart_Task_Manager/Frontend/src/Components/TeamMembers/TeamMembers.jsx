@@ -26,7 +26,7 @@ function TeamMembers() {
   ]
 
   const dispatch = useDispatch();
-  const { users = [] } = useSelector((state) => state.users);
+  const { users = [] , loading } = useSelector((state) => state.users);
   const CurrentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
@@ -240,7 +240,14 @@ function TeamMembers() {
         </div>
 
         {/* --------------------------------------------------------------------------------- */}
-
+            
+        {loading ? (
+          <div className="flex flex-col gap-2 animate-pulse  p-4 h-64">
+            <div className="bg-gray-200 rounded-md h-8 w-1/2"></div>
+            <div className="bg-gray-200 rounded-md h-14 w-72"></div>
+            <div className="bg-gray-200 rounded-md h-20 w-96"></div>
+          </div>
+        ) : (
         <div className="p-4">
           <div className="border bg-white rounded-md overflow-x-scroll h-auto">
             <table className=" table w-full text-left  text-nowrap">
@@ -333,6 +340,7 @@ function TeamMembers() {
             </table>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
