@@ -25,7 +25,7 @@ function ProjectPage() {
   ).length;
  
  
-  console.log(projects);
+  // console.log(projects);
   
   useEffect(() => {
     dispatch(fetchProjects());

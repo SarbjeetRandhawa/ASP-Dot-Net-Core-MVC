@@ -57,7 +57,7 @@ const FileUplode = ({ files, setfiles }) => {
   const removeFiles = (name) => {
     setfiles(files.filter((file) => file.name !== name));
   };
-
+  
   return (
     <>
       <div className="my-2  space-y-2  flex   ">

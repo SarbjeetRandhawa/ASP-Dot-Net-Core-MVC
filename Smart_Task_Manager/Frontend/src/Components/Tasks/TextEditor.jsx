@@ -66,7 +66,7 @@ const Tiptap = ({ onChange }) => {
     },
 
     onUpdate: ({ editor }) => {
-      onChange?.({ html: editor.getHTML(), text: editor.getText() });
+      onChange?.({ html: editor.getHTML() });
     },
     immediatelyRender: false,
   });

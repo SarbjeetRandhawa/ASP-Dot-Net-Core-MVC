@@ -3,6 +3,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProjects } from "../../features/project/projectSlice";
+import { CreateTask } from "../../Services/TaskService";
+
 import Tiptap from "./TextEditor";
 import FileUplode from "./FileUplode";
 import { useLocation } from "react-router-dom";
@@ -72,22 +74,16 @@ function CreateTask() {
     dispatch(fetchProjects());
   }, []);
 
-  
-    
-
-
-  console.log(selectedProject);
-  
+  // console.log(selectedProject);
 
   const onSubmit = async (data) => {
     const text = getTextFromHtml(TaskFormData.Descriprion);
 
-    if(!text.trim()){
+    if (!text.trim()) {
       setDescriptionError("Description is Required");
       return;
     }
     setDescriptionError("");
-    
   };
 
   return (
@@ -170,7 +166,7 @@ function CreateTask() {
                     content={TaskFormData.Descriprion}
                     onChange={HandleDescriptionChange}
                   />
-                 
+
                   {DescriptionError && (
                     // <p>hello</p>
                     <p className="text-red-500 text-sm">{DescriptionError}</p>
@@ -204,8 +200,8 @@ function CreateTask() {
                     </label>
                     <select
                       name="ProjectId"
-                      {...register("ProjectId",{
-                        required:"Project is required"
+                      {...register("ProjectId", {
+                        required: "Project is required",
                       })}
                       value={TaskFormData.ProjectId || ""}
                       onChange={HandleChange}
@@ -219,9 +215,11 @@ function CreateTask() {
                           {p.name}
                         </option>
                       ))}
-                    </select>
+                    </select> 
                     {errors.ProjectId && (
-                      <p className="text-red-500 text-sm">{errors.ProjectId.message}</p>
+                      <p className="text-red-500 text-sm">
+                        {errors.ProjectId.message}
+                      </p>
                     )}
                   </div>
                   <div className="h-auto flex flex-col gap-2  ">
@@ -233,8 +231,8 @@ function CreateTask() {
                     </label>
                     <select
                       name="AssignTo"
-                      {...register("AssignedTo",{
-                        required:"Project is required"
+                      {...register("AssignedTo", {
+                        required: "Project is required",
                       })}
                       value={TaskFormData.AssignedTo || ""}
                       onChange={HandleChange}
@@ -245,12 +243,14 @@ function CreateTask() {
                       </option>
                       {selectedProject?.members?.slice(1).map((m) => (
                         <option key={m.userId} value={m.userId}>
-                          {m.firstName} {m.lastName} 
+                          {m.firstName} {m.lastName}
                         </option>
                       ))}
                     </select>
                     {errors.AssignedTo && (
-                      <p className="text-red-500 text-sm">{errors.AssignedTo.message}</p>
+                      <p className="text-red-500 text-sm">
+                        {errors.AssignedTo.message}
+                      </p>
                     )}
                   </div>
 

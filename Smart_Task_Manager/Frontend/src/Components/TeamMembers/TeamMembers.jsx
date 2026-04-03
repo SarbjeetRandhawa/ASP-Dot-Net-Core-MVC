@@ -68,7 +68,7 @@ function TeamMembers() {
             text: "Cannot Delete Yourself",
             icon: "error",
           });
-          console.log(error);
+          // console.log(error);
           
         }
       }
@@ -105,7 +105,7 @@ function TeamMembers() {
     (u) => u.role === "Employee",
   ).length;
 
-  console.log(users);
+  // console.log(users);
 
   const formatLastActive = (date) => {
     const d = new Date(date.endsWith("Z") ? date : date + "Z");
