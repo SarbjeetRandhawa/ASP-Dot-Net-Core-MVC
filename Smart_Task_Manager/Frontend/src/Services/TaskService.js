@@ -9,3 +9,8 @@ export const createTask = async (data) => {
     },
   });
 };
+
+export const getTasks = async () => {
+  const res= await axiosInstance.get(`${API_URL}/Task`);
+  return res.data;
+}

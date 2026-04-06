@@ -28,5 +28,12 @@ namespace SmartTaskAPI.Repository.Implementation
         public async Task<TaskItem> GetByIdAsync(int id) {
             return await _context.Tasks.Include(t => t.Attachments).FirstOrDefaultAsync(t => t.Id == id);
         }
+
+        public async  Task<IEnumerable<TaskItem>> GetAllAsync(string userId)
+        {
+            var projectIds = await _context.ProjectMembers.Where(pm=> pm.UserId == userId).Select(pm => pm.ProjectId).ToListAsync();
+
+            return await _context.Tasks.Include(t => t.Project).Include(t=> t.AssignedToUser).Include(t => t.CreatedByUser).Where(t => t.AssignedToUserId == userId || projectIds.Contains(t.ProjectId)).ToListAsync(); ;
+        }
     }
 }

@@ -55,6 +55,8 @@ namespace Inventory_Crud.Repository.Service
                 new SqlParameter("@searchOn", searchOn ?? (object)DBNull.Value),
                 new SqlParameter("@category" ,categoryIds  ?? (object)DBNull.Value)
             ).ToListAsync(); 
+
+              
             
             int totalCount = result.FirstOrDefault()?.TotalCount ?? 0;
             var Pager = new Pager(pg, totalCount, pageSize);

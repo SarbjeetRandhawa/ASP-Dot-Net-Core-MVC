@@ -16,7 +16,14 @@ namespace SmartTaskAPI.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
             builder.Entity<ProjectMember>().HasOne(p => p.User).WithMany().HasForeignKey(pm => pm.UserId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<TaskItem>()
+                .HasOne(t => t.AssignedToUser).WithMany().HasForeignKey(t => t.AssignedToUserId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TaskItem>()
+                .HasOne(t => t.CreatedByUser).WithMany().HasForeignKey(t => t.CreatedByUserId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Models.DB.ProjectRole>().HasData(
                 new Models.DB.ProjectRole

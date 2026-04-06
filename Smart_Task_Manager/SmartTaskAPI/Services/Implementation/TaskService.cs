@@ -69,6 +69,27 @@ namespace SmartTaskAPI.Services.Implementation
              }
         }
 
+        public async Task<IEnumerable<TaskDto>> GetAllTasksAsync(string userId)
+        {
+            var tasks = await _uow.TaskRepository.GetAllAsync(userId);
+            return tasks.Select(t => new TaskDto
+            {
+                Id = t.Id,
+                ProjectId = t.ProjectId,
+                ProjectName = t.Project.Name,
+                Title = t.Title,
+                Description = t.Description,
+                Priority = t.Priority,
+                AssignedToName = t.AssignedToUser?.FirstName + " " + t.AssignedToUser?.LastName,
+                AssignedByName = t.CreatedByUser?.FirstName + " " + t.CreatedByUser?.LastName,
+                Status = t.Status,
+                DueDate = t.DueDate,
+                CreatedAt = t.CreatedAt
+                
+            });
+
+        }
+
         public async Task<IEnumerable<TaskItem>> GetTaskItemsByPtojectIdAsync(int projectId)
         {
             return await _uow.TaskRepository.GetByProjectIdAsync(projectId);

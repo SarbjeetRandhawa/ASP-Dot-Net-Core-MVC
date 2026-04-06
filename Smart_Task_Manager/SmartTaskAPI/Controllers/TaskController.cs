@@ -31,8 +31,18 @@ namespace SmartTaskAPI.Controllers
             return Ok("Success");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetTasks()
+        {
+            var userId = GetUserId();
+            var Tasks = await taskService.GetAllTasksAsync(userId);
+            return Ok(Tasks);
+        }
+
+
+
         [HttpGet("project/{projectId}")]
-        public async Task<IActionResult> GetTasks(int projectId)
+        public async Task<IActionResult> GetTasksById(int projectId)
         {
             var result = await taskService.GetTaskItemsByPtojectIdAsync(projectId);
             return Ok(result);

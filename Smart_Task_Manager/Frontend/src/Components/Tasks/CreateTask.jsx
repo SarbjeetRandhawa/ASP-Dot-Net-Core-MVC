@@ -24,7 +24,7 @@ function CreateTask() {
     Descriprion: "",
     ProjectId: location.state?.projectId || "",
     AssignedTo: "",
-    Priority: 2,
+    Priority: 0,
     Status: "",
     DueDate: "",
   });
@@ -105,7 +105,7 @@ function CreateTask() {
             await Swal.fire({
               position: "top-end",
               title: "Created!",
-              text: "Project is Created",
+              text: "Task is Created",
               icon: "success",
               showConfirmButton: false,
               timer: 1500,
@@ -294,22 +294,22 @@ function CreateTask() {
                     </p>
                     <div className="flex gap-2">
                       <div
-                        className={` ${TaskFormData.Priority == 1 ? " border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5]" : "bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981] "}  border w-1/3 flex flex-col items-center justify-center h-16 cursor-pointer rounded-lg`}
-                        onClick={() => SelectPriority(1)}
+                        className={` ${TaskFormData.Priority == 0 ? " border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5]" : "bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981] "}  border w-1/3 flex flex-col items-center justify-center h-16 cursor-pointer rounded-lg`}
+                        onClick={() => SelectPriority(0)}
                       >
                         <div className="">🟢</div>
                         <h1 className=" text-[11px] font-bold">Low</h1>
                       </div>
                       <div
-                        className={`${TaskFormData.Priority == 2 ? " border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5]" : "bg-[#fdfdec] border-[#f3f2a7] text-[#b9b910]"}   border w-1/3 flex flex-col items-center justify-center h-16 cursor-pointer rounded-lg`}
-                        onClick={() => SelectPriority(2)}
+                        className={`${TaskFormData.Priority == 1 ? " border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5]" : "bg-[#fdfdec] border-[#f3f2a7] text-[#b9b910]"}   border w-1/3 flex flex-col items-center justify-center h-16 cursor-pointer rounded-lg`}
+                        onClick={() => SelectPriority(1)}
                       >
                         <div className="">🟡</div>
                         <h1 className=" text-[11px] font-bold">Medium</h1>
                       </div>
                       <div
-                        className={` ${TaskFormData.Priority == 3 ? " border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5]" : "bg-[#FEF2F2] border-[#FECACA] text-[#EF4444]"}   border w-1/3 flex flex-col items-center justify-center h-16 cursor-pointer rounded-lg`}
-                        onClick={() => SelectPriority(3)}
+                        className={` ${TaskFormData.Priority == 2 ? " border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5]" : "bg-[#FEF2F2] border-[#FECACA] text-[#EF4444]"}   border w-1/3 flex flex-col items-center justify-center h-16 cursor-pointer rounded-lg`}
+                        onClick={() => SelectPriority(2)}
                       >
                         <div className="">🔴</div>
                         <h1 className=" text-[11px] font-bold">High</h1>
@@ -374,11 +374,11 @@ function CreateTask() {
                       Todo
                     </div>
                     <div
-                      className={` font-semibold ${TaskFormData.Priority == 1 ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981] " : TaskFormData.Priority == 3 ? "bg-[#FEF2F2] border-[#FECACA] text-[#EF4444]" : "bg-[#FFFBEB] text-[#F59E0B]"}  px-2 rounded-full`}
+                      className={` font-semibold ${TaskFormData.Priority == 0 ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981] " : TaskFormData.Priority == 2 ? "bg-[#FEF2F2] border-[#FECACA] text-[#EF4444]" : "bg-[#FFFBEB] text-[#F59E0B]"}  px-2 rounded-full`}
                     >
-                      {TaskFormData.Priority == 1
+                      {TaskFormData.Priority == 0
                         ? "Low"
-                        : TaskFormData.Priority == 3
+                        : TaskFormData.Priority == 2
                           ? "High"
                           : "Medium"}
                     </div>

@@ -12,7 +12,7 @@ namespace SmartTaskAPI.Controllers
     public class AuthController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly JwtService _jwtService;
+        private readonly JwtService _jwtService; 
 
         public AuthController(UserManager<ApplicationUser> userManager, JwtService jwtService)
         {

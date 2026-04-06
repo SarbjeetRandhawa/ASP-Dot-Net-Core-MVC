@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchTasks } from "../../features/Task/TaskSlice";
+import { Key } from "lucide-react";
 
 function TaskPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { tasks, loading } = useSelector((state) => state.tasks);
+  // const [page, setPage] = useState(1);
+  // const pageSize = 10;
+  //  const [Filters, setFilters] = useState({
+  //   priority: "",
+  //   Status: 0
+  //  });
   const [FilterBar, setFilterBar] = useState("All");
   const [priority, setPriority] = useState("medium");
-  const [TaskStatus, setTaskStatus] = useState("overdue");
+  const [TaskStatus, setTaskStatus] = useState("");
   const colors = [
     "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
     "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
@@ -17,9 +28,38 @@ function TaskPage() {
     "bg-[linear-gradient(to_bottom_right,#363434,#00ffff)]",
   ];
 
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);
+
+  // const HandleFilterChange = (Key, value) => {
+  //   setPage(1);
+  //   setFilters((prev) => ({
+  //     ...prev,
+  //     [Key]: value
+  //   }));
+  // }
+
+  // const totalPages = Math.ceil(totalCount / pageSize);
+
   const HandleClearFilter = () => {
     setFilterBar("All");
   };
+  console.log(tasks);
+
+  
+
+  const StatusMap = {
+    0: "ToDo",
+    1: "Done",
+    2: "In Progress",
+  };
+  const PriorityMap = {
+    0: "low",
+    1: "medium",
+    2: "high",
+  };
+
   return (
     <>
       <div className="flex ">
@@ -134,91 +174,107 @@ function TaskPage() {
                         <th className="">STATUS</th>
                         <th className="">DUE DATE</th>
                         <th className="">CREATED</th>
-                        <th className="">ACTIONS</th>
+                        <th className=" pr-3">ACTIONS</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td className="pl-8 pr-2">
-                          <div className="py-2">
-                            <h1
-                              className={`text-[10px] md:text-[14px] ${TaskStatus === "Done" ? "line-through text-[#94A3B8]" : ""} font-bold`}
-                            >
-                              Design checkout UI wireframes
-                            </h1>
-                            <p className="text-[#94A3B8] text-[8px] md:text-[12px]">
-                              Devops setup and configuration
-                            </p>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-blue-600"></div>
-                            <p className="text-[12px] font-semibold text-[#64748B]">
-                              E-Commerce
-                            </p>
-                          </div>
-                        </td>
-                        <td className="pr-4">
-                          <div className="flex gap-2 items-center">
-                            <div
-                              className={`border w-4 h-4 md:w-6 md:h-6 text-[8px] md:text-[10px] rounded-full items-center flex justify-center ${colors[0]} text-white font-semibold text-center`}
-                            >
-                              AK
-                            </div>
-                            <p className="text-[10px] md:text-[13px] text-[#64748B] font-semibold">
-                              Alex Kumar
-                            </p>
-                          </div>
-                        </td>
-                        <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
-                          <div className="flex">
-                            <h1
-                              className={`rounded-full py-1 px-3  ${priority === "low" ? "text-[#10B981] bg-[#F0FDF4]" : priority === "medium" ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"} `}
-                            >
-                              Medium
-                            </h1>
-                          </div>
-                        </td>
-                        <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
-                          <div className="flex">
-                            <h1
-                              className={`rounded-full py-1 px-3 ${TaskStatus === "Done" ? "text-[#10B981] bg-[#F0FDF4]" : TaskStatus === "ToDo" ? "text-[#64748B] bg-[#F1F5F9]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                            >
-                              Done
-                            </h1>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="pr-4 flex items-center text-red-600">
-                            <p
-                              className={`pr-2 text-[10px] md:text-[12px] font-semibold ${TaskStatus === "overdue" ? "text-red-600" : "text-[#94A3B8]"} `}
-                            >
-                              Mar 10
-                            </p>
-                            {TaskStatus === "overdue" && (
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                className="bi bi-exclamation-triangle-fill"
-                                viewBox="0 0 16 16"
+                      {tasks.map((task,index) => (
+                        <tr key={task.id} className="">
+                          <td className="pl-8 pr-4 py-1">
+                            <div className="py-2">
+                              <h1
+                                className={`cursor-pointer hover:underline text-[10px] md:text-[14px] ${task.status === 1 ? "line-through text-[#94A3B8]" : ""} font-bold`}
                               >
-                                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-                              </svg>
-                            )}
-                          </div>
-                        </td>
-                        <td></td>
+                                {task.title}
+                              </h1>
+                              <p className="text-[#94A3B8] text-[8px] md:text-[12px]">
+                                {/* Devops setup and configuration */}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="pr-4">
+                            <div className="flex items-center gap-2">
+                              <div className={`w-3 h-3 rounded-full ${colors[(index + 3) % colors.length]}`}></div>
+                              <p className="text-[12px] font-semibold text-[#64748B]">
+                                {task.projectName}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="pr-4">
+                            <div className="flex gap-2 items-center">
+                              <div
+                                className={`border w-4 h-4 md:w-6 md:h-6 text-[8px] md:text-[10px] rounded-full items-center flex justify-center ${colors[index % colors.length]} text-white font-semibold text-center`}
+                              >
+                                {task.assignedByName
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                                  .toUpperCase()}
+                              </div>
+                              <p className="text-[10px] md:text-[13px] text-[#64748B] font-semibold">
+                                {task.assignedToName}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
+                            <div className="flex">
+                              <h1
+                                className={`rounded-full py-1 px-3  ${task.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : task.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"} `}
+                              >
+                                {PriorityMap[task.priority]}
+                              </h1>
+                            </div>
+                          </td>
+                          <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
+                            <div className="flex">
+                              <h1
+                                className={`rounded-full py-1 px-3 ${task.status === 1 ? "text-[#10B981] bg-[#F0FDF4]" : task.status === 0 ? "text-[#64748B] bg-[#F1F5F9]" : task.status === 2 ? "bg-[#EFF6FF] text-[#3B82F6]" : "text-[#EF4444] bg-[#FEF2F2]"} `}
+                              >
+                                {StatusMap[task.status]}
+                              </h1>
+                            </div>
+                          </td>
+                          <td>
+                            <div className="pr-4 flex items-center text-red-600">
+                              <p
+                                className={`pr-2 text-[10px] md:text-[12px] font-semibold ${TaskStatus === "overdue" ? "text-red-600" : "text-[#94A3B8]"} `}
+                              >
+                                {
+                                  new Date(task.dueDate).toLocaleDateString(undefined , {year: "numeric", month: "short", day: "numeric"})
+                                }
+                              </p>
+                              {TaskStatus === "overdue" && (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="currentColor"
+                                  className="bi bi-exclamation-triangle-fill"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                                </svg>
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            <p
+                                className={`pr-2 text-[10px] md:text-[12px] font-semibold ${TaskStatus === "overdue" ? "text-red-600" : "text-[#94A3B8]"} `}
+                              >
+                                {
+                                  new Date(task.createdAt).toLocaleDateString(undefined , {year: "numeric", month: "short", day: "numeric"})
+                                }
+                              </p>
+                          </td>
 
-                        <td className="pr-4 relative">
-                          {" "}
-                          <div className="flex z-30 cursor-pointer items-center">
-                            &middot;&middot;&middot;{" "}
-                          </div>
-                        </td>
-                      </tr>
+                          <td className="pr-4 relative">
+                            {" "}
+                            <div className="flex z-30 cursor-pointer items-center justify-center">
+                              &middot;&middot;&middot;{" "}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>

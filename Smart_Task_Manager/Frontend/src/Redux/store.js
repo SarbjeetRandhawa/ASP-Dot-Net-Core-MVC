@@ -3,8 +3,8 @@ import authReducer from "../features/auth/authSlice"
 import userReducer from "../features/users/userSlice"
 import projectRolesReducer from "../features/project/projectRoleSlice"
 import projectReducer from "../features/project/projectSlice"
+import taskReducer from "../features/Task/TaskSlice"
 
-// import projectReducer from "../features/project/projectSlice"
 
 
 
@@ -13,7 +13,8 @@ export const store = configureStore({
         auth:authReducer,
         users : userReducer,
         projectRoles : projectRolesReducer,
-        projects :projectReducer
+        projects :projectReducer,
+        tasks : taskReducer,
         
     },
 });
