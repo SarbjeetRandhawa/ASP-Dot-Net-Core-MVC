@@ -58,7 +58,7 @@ namespace SmartTaskAPI.Repository.Implementation
                 TaskQuery = TaskQuery.Where(t => t.Title.Contains(query.Search));
             }
 
-            var totalCount = TaskQuery.Count();
+            var totalCount =await TaskQuery.CountAsync();
             var tasks = await TaskQuery.OrderByDescending(t => t.CreatedAt).Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
 
             return (tasks, totalCount);

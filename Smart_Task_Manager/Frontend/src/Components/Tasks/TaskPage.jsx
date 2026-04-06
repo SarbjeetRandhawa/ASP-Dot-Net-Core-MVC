@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
 import { useNavigate } from "react-router-dom";
@@ -9,15 +9,16 @@ import { Key } from "lucide-react";
 function TaskPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { tasks, loading , totalCount } = useSelector((state) => state.tasks);
+  const { tasks, loading, totalCount } = useSelector((state) => state.tasks);
   const [page, setPage] = useState(1);
   const [search, setsearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   //  const [Filters, setFilters] = useState({
   //   priority: "",
   //   Status: 0
   //  });
-
+  const PageSize = 1;
   const [FilterBar, setFilterBar] = useState("All");
   const [priority, setPriority] = useState("medium");
   const [TaskStatus, setTaskStatus] = useState("");
@@ -31,14 +32,22 @@ function TaskPage() {
   ];
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
     let status;
 
-    if(FilterBar === "ToDo") status = 0;
+    if (FilterBar === "ToDo") status = 0;
     else if (FilterBar === "Done") status = 1;
-    else if(FilterBar === "inProgress") status = 2;
+    else if (FilterBar === "inProgress") status = 2;
 
-    dispatch(fetchTasks(page , status ,  search));
-  }, [dispatch , page , FilterBar , search]);
+    dispatch(fetchTasks({ page, status, search }));
+  }, [debouncedSearch, page, FilterBar, dispatch]);
 
   // const HandleFilterChange = (Key, value) => {
   //   setPage(1);
@@ -48,7 +57,7 @@ function TaskPage() {
   //   }));
   // }
 
-  const totalPages = Math.ceil(totalCount / 2);
+  const totalPages = Math.ceil(totalCount / PageSize);
 
   const HandleClearFilter = () => {
     setFilterBar("All");
@@ -82,8 +91,8 @@ function TaskPage() {
               <div className="absolute w-0 left-1 top-1">🔍</div>
               <input
                 type="text"
-                  value={search}
-                  onChange={(e) => setsearch(e.target.value)}
+                value={search}
+                onChange={(e) => setsearch(e.target.value)}
                 className="h-7 border pl-8 text-[11px] font-bold rounded-md focus:outline-2 outline-[#4F46E5]"
                 placeholder="Search Tasks..."
               />
@@ -192,7 +201,7 @@ function TaskPage() {
                     <table className=" tabel w-full text-left  text-nowrap">
                       <thead>
                         <tr className="border  h-8 bg-[#F1F5F9]  text-[10px] text-[#94A3B8]">
-                          <th className="pl-8">TASK</th>
+                          <th className="pl-8 min-w-80">TASK</th>
                           <th className="">PROJECT</th>
                           <th className="">ASSIGNEE</th>
                           <th className="">PRIORITY</th>
@@ -274,9 +283,8 @@ function TaskPage() {
                                       day: "numeric",
                                     },
                                   )}
-
                                 </p>
-                                
+
                                 {TaskStatus === "overdue" && (
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -307,10 +315,8 @@ function TaskPage() {
                             </td>
 
                             <td className="pr-4 relative">
-
                               {" "}
                               <div className="flex z-30 cursor-pointer items-center justify-center">
-
                                 &middot;&middot;&middot;{" "}
                               </div>
                             </td>
@@ -322,17 +328,23 @@ function TaskPage() {
                 </div>
               </div>
             )}
-            <div className="felx gap-2 p-4">
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  className={`px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 ${page === i + 1 ? "bg-blue-700" : "" }`}
-                  onClick={() => setPage(i + 1)}
-                >
-                  
-                  {i + 1}
-                </button>
-              ))}
+            <div className="flex p-4  justify-between">
+              <div>
+                <p className="text-[13px] text-[#64748B] font-semibold">Showing {tasks.length} of {totalCount} Tasks</p>
+              </div>
+              <div className="flex gap-1">
+                
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    className={`px-2 py- bg-blue-500 text-white rounded-md hover:bg-blue-600 ${page === i + 1 ? "bg-blue-700" : ""}`}
+                    onClick={() => setPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+              
             </div>
           </div>
         </div>

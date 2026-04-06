@@ -12,15 +12,15 @@ export const createTask = async (data) => {
 
 export const getTasks = async ({page , status , priority ,search}) => {
 
-  let query = `?page=${page}&pageSize=10`;
+let query = `?PageNumber=${page}&PageSize=1`;
 
-  if (status) {
+  if (status !== undefined) {
     query += `&status=${status}`;
   }
-  if (priority) {
+  if (priority !== undefined) {
     query += `&priority=${priority}`;
   }
-  if (search) {
+  if (search !== undefined) {
     query += `&search=${search}`;
   }
 
