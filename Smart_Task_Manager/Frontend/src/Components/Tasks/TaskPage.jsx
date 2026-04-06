@@ -352,5 +352,42 @@ function TaskPage() {
     </>
   );
 }
+<div className="flex items-center gap-2 mt-4">
 
+  {/* Prev */}
+  <button
+    onClick={() => setPage(page - 1)}
+    disabled={page === 1}
+    className="px-3 py-1 border rounded disabled:opacity-50"
+  >
+    Prev
+  </button>
+
+  {/* Page Numbers */}
+  {[...Array(totalPages)].map((_, i) => {
+    const pageNumber = i + 1;
+
+    return (
+      <button
+        key={pageNumber}
+        onClick={() => setPage(pageNumber)}
+        className={`px-3 py-1 border rounded ${
+          page === pageNumber ? "bg-blue-600 text-white" : ""
+        }`}
+      >
+        {pageNumber}
+      </button>
+    );
+  })}
+
+  {/* Next */}
+  <button
+    onClick={() => setPage(page + 1)}
+    disabled={page === totalPages}
+    className="px-3 py-1 border rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+
+</div>
 export default TaskPage;
