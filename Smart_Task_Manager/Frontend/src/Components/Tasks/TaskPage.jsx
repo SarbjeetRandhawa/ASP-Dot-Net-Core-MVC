@@ -48,7 +48,7 @@ function TaskPage() {
   //   }));
   // }
 
-  const totalPages = Math.ceil(totalCount / 10);
+  const totalPages = Math.ceil(totalCount / 2);
 
   const HandleClearFilter = () => {
     setFilterBar("All");
@@ -326,10 +326,10 @@ function TaskPage() {
               {[...Array(totalPages)].map((_, i) => (
                 <button
                   key={i}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  className={`px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 ${page === i + 1 ? "bg-blue-700" : "" }`}
                   onClick={() => setPage(i + 1)}
                 >
-                  ${page === i + 1 ? "bg-blue-700" : "" }
+                  
                   {i + 1}
                 </button>
               ))}

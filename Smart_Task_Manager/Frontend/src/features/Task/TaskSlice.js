@@ -29,10 +29,10 @@ const taskSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
-        // console.log(action.payload);
+        console.log(action.payload);
         
         state.loading = false;
-        state.tasks = action.payload;
+        state.tasks = action.payload.data;
         state.totalCount = action.payload.totalCount;
       })
       .addCase(fetchTasks.rejected, (state, action) => {

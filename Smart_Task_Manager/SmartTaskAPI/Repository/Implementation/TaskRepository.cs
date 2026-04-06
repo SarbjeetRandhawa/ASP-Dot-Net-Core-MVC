@@ -38,24 +38,24 @@ namespace SmartTaskAPI.Repository.Implementation
                 .Select(pm => pm.ProjectId)
                 .ToListAsync();
 
-            var TaskQuery =  await _context.Tasks
+            var TaskQuery = _context.Tasks
                 .Include(t => t.Project)
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
                 .Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId || projectIds.Contains(t.ProjectId))
-                .ToListAsync();
+       ;
 
             if (query.Status.HasValue)
             {
-                TaskQuery = TaskQuery.Where(t => t.Status == query.Status).ToList();
+                TaskQuery = TaskQuery.Where(t => t.Status == query.Status);
             }
             if (query.Priority.HasValue)
             {
-                TaskQuery = TaskQuery.Where(t => t.Priority == query.Priority).ToList();
+                TaskQuery = TaskQuery.Where(t => t.Priority == query.Priority);
             }
             if (!string.IsNullOrEmpty(query.Search))
             {
-                TaskQuery = TaskQuery.Where(t => t.Title.Contains(query.Search)).ToList();
+                TaskQuery = TaskQuery.Where(t => t.Title.Contains(query.Search));
             }
 
             var totalCount = TaskQuery.Count();

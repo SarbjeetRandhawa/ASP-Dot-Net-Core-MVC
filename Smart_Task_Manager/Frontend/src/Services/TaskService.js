@@ -10,7 +10,21 @@ export const createTask = async (data) => {
   });
 };
 
-export const getTasks = async () => {
-  const res= await axiosInstance.get(`${API_URL}/Task`);
+export const getTasks = async ({page , status , priority ,search}) => {
+
+  let query = `?page=${page}&pageSize=10`;
+
+  if (status) {
+    query += `&status=${status}`;
+  }
+  if (priority) {
+    query += `&priority=${priority}`;
+  }
+  if (search) {
+    query += `&search=${search}`;
+  }
+
+
+  const res= await axiosInstance.get(`${API_URL}/Task${query}`);
   return res.data;
 }
