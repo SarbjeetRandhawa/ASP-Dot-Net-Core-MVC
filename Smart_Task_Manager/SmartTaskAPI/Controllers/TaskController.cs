@@ -32,10 +32,10 @@ namespace SmartTaskAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTasks()
+        public async Task<IActionResult> GetTasks([FromQuery] QueryParams query)
         {
             var userId = GetUserId();
-            var Tasks = await taskService.GetAllTasksAsync(userId);
+            var Tasks = await taskService.GetAllTasksAsync(userId, query);
             return Ok(Tasks);
         }
 

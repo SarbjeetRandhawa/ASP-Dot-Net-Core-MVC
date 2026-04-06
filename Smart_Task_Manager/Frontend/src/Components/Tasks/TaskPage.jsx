@@ -9,13 +9,15 @@ import { Key } from "lucide-react";
 function TaskPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { tasks, loading } = useSelector((state) => state.tasks);
-  // const [page, setPage] = useState(1);
-  // const pageSize = 10;
+  const { tasks, loading , totalCount } = useSelector((state) => state.tasks);
+  const [page, setPage] = useState(1);
+  const [search, setsearch] = useState("");
+
   //  const [Filters, setFilters] = useState({
   //   priority: "",
   //   Status: 0
   //  });
+
   const [FilterBar, setFilterBar] = useState("All");
   const [priority, setPriority] = useState("medium");
   const [TaskStatus, setTaskStatus] = useState("");
@@ -29,8 +31,14 @@ function TaskPage() {
   ];
 
   useEffect(() => {
-    dispatch(fetchTasks());
-  }, [dispatch]);
+    let status;
+
+    if(FilterBar === "ToDo") status = 0;
+    else if (FilterBar === "Done") status = 1;
+    else if(FilterBar === "inProgress") status = 2;
+
+    dispatch(fetchTasks(page , status ,  search));
+  }, [dispatch , page , FilterBar , search]);
 
   // const HandleFilterChange = (Key, value) => {
   //   setPage(1);
@@ -40,7 +48,7 @@ function TaskPage() {
   //   }));
   // }
 
-  // const totalPages = Math.ceil(totalCount / pageSize);
+  const totalPages = Math.ceil(totalCount / 10);
 
   const HandleClearFilter = () => {
     setFilterBar("All");
@@ -74,8 +82,8 @@ function TaskPage() {
               <div className="absolute w-0 left-1 top-1">🔍</div>
               <input
                 type="text"
-                //   value={search}
-                //   onChange={(e) => setsearch(e.target.value)}
+                  value={search}
+                  onChange={(e) => setsearch(e.target.value)}
                 className="h-7 border pl-8 text-[11px] font-bold rounded-md focus:outline-2 outline-[#4F46E5]"
                 placeholder="Search Tasks..."
               />
@@ -314,6 +322,18 @@ function TaskPage() {
                 </div>
               </div>
             )}
+            <div className="felx gap-2 p-4">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  onClick={() => setPage(i + 1)}
+                >
+                  ${page === i + 1 ? "bg-blue-700" : "" }
+                  {i + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

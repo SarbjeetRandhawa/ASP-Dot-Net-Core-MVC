@@ -1,4 +1,5 @@
 ﻿using SmartTaskAPI.Models.DB;
+using SmartTaskAPI.Models.DTO.Task;
 
 namespace SmartTaskAPI.Repository.Interface
 {
@@ -8,6 +9,6 @@ namespace SmartTaskAPI.Repository.Interface
         Task<IEnumerable<TaskItem>> GetByProjectIdAsync(int id);
         Task<TaskItem> GetByIdAsync(int id);
 
-        Task<IEnumerable<TaskItem>> GetAllAsync(string userId);
+        Task<(IEnumerable<TaskItem>, int)> GetAllAsync(string userId, QueryParams query);
     }
 }

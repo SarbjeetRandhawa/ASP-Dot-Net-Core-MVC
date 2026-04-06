@@ -3,9 +3,9 @@ import { getTasks } from "../../Services/TaskService";
 
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
-  async (_ , { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const data = await getTasks();
+      const data = await getTasks(params);
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Error");
@@ -17,7 +17,7 @@ const taskSlice = createSlice({
   name: "tasks",
   initialState: {
     tasks: [],
-    // totalCount: 0,
+    totalCount: 0,
     loading: false,
     error: null
   },
@@ -33,7 +33,7 @@ const taskSlice = createSlice({
         
         state.loading = false;
         state.tasks = action.payload;
-        // state.totalCount = action.payload.totalCount;
+        state.totalCount = action.payload.totalCount;
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.loading = false;

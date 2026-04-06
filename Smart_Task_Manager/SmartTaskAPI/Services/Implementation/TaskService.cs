@@ -69,10 +69,10 @@ namespace SmartTaskAPI.Services.Implementation
              }
         }
 
-        public async Task<IEnumerable<TaskDto>> GetAllTasksAsync(string userId)
+        public async Task<object> GetAllTasksAsync(string userId , QueryParams query)
         {
-            var tasks = await _uow.TaskRepository.GetAllAsync(userId);
-            return tasks.Select(t => new TaskDto
+            var (tasks, totalCount) = await _uow.TaskRepository.GetAllAsync(userId, query);
+            var result = tasks.Select(t => new TaskDto
             {
                 Id = t.Id,
                 ProjectId = t.ProjectId,
@@ -88,6 +88,11 @@ namespace SmartTaskAPI.Services.Implementation
                 
             });
 
+            return new
+            {
+                data = result,
+                totalCount
+            };
         }
 
         public async Task<IEnumerable<TaskItem>> GetTaskItemsByPtojectIdAsync(int projectId)
