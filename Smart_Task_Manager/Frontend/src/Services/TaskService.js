@@ -10,9 +10,9 @@ export const createTask = async (data) => {
   });
 };
 
-export const getTasks = async ({page , status , priority ,search}) => {
+export const getTasks = async ({page , status , priority ,search , PageSize, myTask}) => {
 
-let query = `?PageNumber=${page}&PageSize=1`;
+let query = `?PageNumber=${page}&PageSize=${PageSize}&MyTasks=${myTask}`;
 
   if (status !== undefined) {
     query += `&status=${status}`;

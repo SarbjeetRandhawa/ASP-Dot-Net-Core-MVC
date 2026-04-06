@@ -45,6 +45,12 @@ namespace SmartTaskAPI.Repository.Implementation
                 .Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId || projectIds.Contains(t.ProjectId))
        ;
 
+            if(query.MyTasks)
+            {
+                TaskQuery = TaskQuery.Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId);
+            }
+            
+
             if (query.Status.HasValue)
             {
                 TaskQuery = TaskQuery.Where(t => t.Status == query.Status);

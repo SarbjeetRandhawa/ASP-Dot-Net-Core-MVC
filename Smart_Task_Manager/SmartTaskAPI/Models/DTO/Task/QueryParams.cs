@@ -7,5 +7,7 @@
         public int? Status { get; set; }
         public int? Priority { get; set; }
         public string? Search { get; set; }
+
+        public bool MyTasks { get; set; } = false;
      }
 }

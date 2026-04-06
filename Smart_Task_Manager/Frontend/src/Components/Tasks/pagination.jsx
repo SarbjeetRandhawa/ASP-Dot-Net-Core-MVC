@@ -21,7 +21,7 @@ const Pagination = ({ page, totalPages, setPage }) => {
   const pages = getPages();
 
   return (
-    <div className="flex items-center gap-2 mt-6">
+    <div className="flex items-center gap-2 ">
 
       {/* Prev Button */}
       <button

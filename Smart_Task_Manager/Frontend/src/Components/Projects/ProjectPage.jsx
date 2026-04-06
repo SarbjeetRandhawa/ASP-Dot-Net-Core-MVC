@@ -19,7 +19,7 @@ function ProjectPage() {
   const [debounceSearch, setDebounceSearch] = useState("");
   const CurrentUser = useSelector((state) => state.auth.user);
 
-  const ActiveProjects = projects.filter((u) => u.status === "Active").length;
+  
   const ArchievedProjects = projects.filter(
     (u) => u.status === "Archived",
   ).length;
@@ -106,6 +106,7 @@ function ProjectPage() {
     if (StatusFilter === "Overdue") return getProjectStatus(u) === "Overdue";
   });
 
+  const ActiveProjects = projects.filter((u) => getProjectStatus(u) === "Active").length;
   const filterActiveCount = searchedProjects.filter(
     (u) => getProjectStatus(u) === "Active",
   ).length;
