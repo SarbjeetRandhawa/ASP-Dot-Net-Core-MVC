@@ -8,6 +8,8 @@
         public int? Priority { get; set; }
         public string? Search { get; set; }
 
+        public bool Overdue { get; set; } = false;
+
         public bool MyTasks { get; set; } = false;
      }
 }

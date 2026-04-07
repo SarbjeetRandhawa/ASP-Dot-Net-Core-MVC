@@ -28,3 +28,15 @@ let query = `?PageNumber=${page}&PageSize=${PageSize}&MyTasks=${myTask}`;
   const res= await axiosInstance.get(`${API_URL}/Task${query}`);
   return res.data;
 }
+
+export const getTasksByProjectId = async (id) => {
+  const res = await axiosInstance.get(`${API_URL}/Task/project/${id}`);
+  return res.data;
+}
+
+export const getTaskCounts = async (params) => {
+  const res = await axiosInstance.get(`${API_URL}/Task/counts` , {params});
+  // console.log(res.data);
+  
+  return res.data;
+}

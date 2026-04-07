@@ -21,9 +21,11 @@ namespace SmartTaskAPI.Repository.Implementation
 
         }
 
-        public async Task<IEnumerable<TaskItem>> GetByProjectIdAsync(int id)
+        public async Task<IEnumerable<TaskItem>> GetByProjectIdAsync(string userId ,int id)
         {
-            return await _context.Tasks.Where(t => t.ProjectId == id).Include(t => t.Attachments).ToListAsync();
+            return await _context.Tasks.Include(t => t.AssignedToUser)
+                .Include(t => t.CreatedByUser)
+                .Where(t => (t.AssignedToUserId == userId || t.CreatedByUserId == userId) && t.ProjectId == id).ToListAsync();
         }
 
         public async Task<TaskItem> GetByIdAsync(int id)
@@ -31,7 +33,7 @@ namespace SmartTaskAPI.Repository.Implementation
             return await _context.Tasks.Include(t => t.Attachments).FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<(IEnumerable<TaskItem>,int)> GetAllAsync(string userId , QueryParams query)
+        public async Task<(IEnumerable<TaskItem>, int)> GetAllAsync(string userId, QueryParams query)
         {
             var projectIds = await _context.ProjectMembers
                 .Where(pm => pm.UserId == userId)
@@ -45,11 +47,11 @@ namespace SmartTaskAPI.Repository.Implementation
                 .Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId || projectIds.Contains(t.ProjectId))
        ;
 
-            if(query.MyTasks)
+            if (query.MyTasks)
             {
                 TaskQuery = TaskQuery.Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId);
             }
-            
+
 
             if (query.Status.HasValue)
             {
@@ -64,10 +66,41 @@ namespace SmartTaskAPI.Repository.Implementation
                 TaskQuery = TaskQuery.Where(t => t.Title.Contains(query.Search));
             }
 
-            var totalCount =await TaskQuery.CountAsync();
+            if (query.Overdue)
+            {
+                TaskQuery = TaskQuery.Where(t => t.DueDate < DateTime.UtcNow && t.Status != 1);
+            }
+
+            var totalCount = await TaskQuery.CountAsync();
             var tasks = await TaskQuery.OrderByDescending(t => t.CreatedAt).Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
 
             return (tasks, totalCount);
-        } 
+        }
+
+        public async Task<TaskCountDto> GetTaskCountsAsync(string userId, QueryParams query)
+        {
+            var projectIds = await _context.ProjectMembers
+                .Where(pm => pm.UserId == userId)
+                .Select(pm => pm.ProjectId)
+                .ToListAsync();
+            var baseQuery = _context.Tasks.Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId || projectIds.Contains(t.ProjectId));
+
+            if (!string.IsNullOrEmpty(query.Search))
+            {
+
+                baseQuery = baseQuery.Where(t => t.Title.Contains(query.Search));
+            }
+
+            return new TaskCountDto
+            {
+                TotalTasks = await baseQuery.CountAsync(),
+                MyTasks = await baseQuery.Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId).CountAsync(),
+                ToDo = await baseQuery.Where(t => t.Status == 0).CountAsync(),
+                Done = await baseQuery.Where(t => t.Status == 1).CountAsync(),
+                InProgress = await baseQuery.Where(t => t.Status == 2).CountAsync(),
+                OverDue = await baseQuery.Where(t => t.DueDate < DateTime.UtcNow && t.Status != 1).CountAsync()
+            };
+
+        }
     }
 }

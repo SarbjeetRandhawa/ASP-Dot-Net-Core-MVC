@@ -1,9 +1,9 @@
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchTasks } from "../../features/Task/TaskSlice";
+import { fetchTasks, fetchTaskCounts } from "../../features/Task/TaskSlice";
 
 import { Key } from "lucide-react";
 import Pagination from "./pagination";
@@ -11,12 +11,10 @@ import Pagination from "./pagination";
 function TaskPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { tasks, loading, totalCount } = useSelector((state) => state.tasks);
+  const { tasks, loading, Counts , TotalCount } = useSelector((state) => state.tasks);
   const [page, setPage] = useState(1);
   const [search, setsearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-
-  
 
   //  const [Filters, setFilters] = useState({
   //   priority: "",
@@ -25,7 +23,6 @@ function TaskPage() {
   const PageSize = 10;
   const [FilterBar, setFilterBar] = useState("All");
   // const [priority, setPriority] = useState("medium");
-  const [TaskStatus, setTaskStatus] = useState("");
   const colors = [
     "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
     "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
@@ -49,9 +46,20 @@ function TaskPage() {
     if (FilterBar === "ToDo") status = 0;
     else if (FilterBar === "Done") status = 1;
     else if (FilterBar === "inProgress") status = 2;
+    else if (FilterBar === "Overdue") status = 3;
 
-    dispatch(fetchTasks({ page, status, search, PageSize , myTask : FilterBar === "MyTask" ? true : false }));
-  }, [debouncedSearch, page, FilterBar, dispatch ]);
+    const Params = {
+      page,
+      status,
+      search,
+      PageSize,
+      myTask: FilterBar === "MyTask" ? true : false,
+      OverDue : FilterBar === "Overdue" ? true : false
+    };
+
+    dispatch(fetchTasks(Params));
+    dispatch(fetchTaskCounts(Params));
+  }, [debouncedSearch, page, FilterBar, dispatch]);
 
   // const HandleFilterChange = (Key, value) => {
   //   setPage(1);
@@ -61,23 +69,24 @@ function TaskPage() {
   //   }));
   // }
 
-  const totalPages = Math.ceil(totalCount / PageSize);
+  const totalPages = Math.ceil(TotalCount / PageSize);
+ 
+  
 
   const HandleClearFilter = () => {
     setFilterBar("All");
-    setsearch("")
-    
+    setsearch("");
   };
 
- 
-
-  console.log(tasks);
+  console.log(Counts);
 
   const StatusMap = {
     0: "ToDo",
     1: "Done",
     2: "In Progress",
+    3: "Overdue",
   };
+
   const PriorityMap = {
     0: "low",
     1: "medium",
@@ -121,44 +130,44 @@ function TaskPage() {
 
           {/* ------------------------------------------------------- */}
 
-          
-
           <div className="mx-5 my-3 flex justify-between  rounded-md">
             <div className="flex ">
               <h1
                 className={` px-5 py-1 cursor-pointer text-[13px] font-semibold  ${FilterBar === "All" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"} `}
                 onClick={() => setFilterBar("All")}
               >
-                All Tasks (84)
+                All Tasks ( {Counts.totalTasks} )
               </h1>
               <h1
                 className={`px-5 py-1 font-semibold cursor-pointer text-[13px] ${FilterBar === "MyTask" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("MyTask")}
               >
-                My Tasks (4)
+                My Tasks ( {Counts.myTasks} )
               </h1>
               <h1
                 className={`px-5 py-1 font-semibold cursor-pointer text-[13px] ${FilterBar === "ToDo" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("ToDo")}
               >
-                ToDo (12)
+                ToDo ( {Counts.toDo} )
               </h1>
               <h1
                 className={`px-5 py-1 font-semibold cursor-pointer text-[13px] ${FilterBar === "inProgress" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("inProgress")}
               >
-                In Progress (8)
+                In Progress ( {Counts.inProgress} )
               </h1>
               <h1
                 className={`px-5  py-1 font-semibold cursor-pointer text-[13px] ${FilterBar === "Done" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("Done")}
               >
-                Done (52)
+                Done ( {Counts.done} )
               </h1>
             </div>
             <div className="flex items-center gap-3">
-              <div className="px-2 cursor-pointer py-1 text-[12px] font-semibold border rounded-md border-red-600 text-red-600">
-                🔴Overdue (7)
+              <div className="px-2 cursor-pointer py-1 text-[12px] font-semibold border rounded-md border-red-600 text-red-600" 
+                onClick={() => setFilterBar("Overdue")}
+              >
+                🔴Overdue ( {Counts.overDue} )
               </div>
               <div
                 onClick={HandleClearFilter}
@@ -195,7 +204,10 @@ function TaskPage() {
                       </thead>
                       <tbody>
                         {tasks.map((task, index) => (
-                          <tr key={task.id} className={`${task.status === 1 ? "bg-[#F0FDF4]" : ""} `}>
+                          <tr
+                            key={task.id}
+                            className={`${task.status === 1 ? "bg-[#F0FDF4]" : task.status === 3 ? "bg-[#FFFBEB]" : ""} `}
+                          >
                             <td className="pl-8 pr-4 py-1">
                               <div className="py-2">
                                 <h1
@@ -255,7 +267,7 @@ function TaskPage() {
                             <td>
                               <div className="pr-4 flex items-center text-red-600">
                                 <p
-                                  className={`pr-2 text-[10px] md:text-[12px] font-semibold ${TaskStatus === "overdue" ? "text-red-600" : "text-[#94A3B8]"} `}
+                                  className={`pr-2 text-[10px] md:text-[12px] font-semibold ${task.status === 3 ? "text-red-600" : "text-[#94A3B8]"} `}
                                 >
                                   {new Date(task.dueDate).toLocaleDateString(
                                     undefined,
@@ -267,7 +279,7 @@ function TaskPage() {
                                   )}
                                 </p>
 
-                                {TaskStatus === "overdue" && (
+                                {task.status === 3 && (
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="16"
@@ -283,7 +295,7 @@ function TaskPage() {
                             </td>
                             <td>
                               <p
-                                className={`pr-2 text-[10px] md:text-[12px] font-semibold ${TaskStatus === "overdue" ? "text-red-600" : "text-[#94A3B8]"} `}
+                                className={`pr-2 text-[10px] md:text-[12px] font-semibold text-[#94A3B8] `}
                               >
                                 {new Date(task.createdAt).toLocaleDateString(
                                   undefined,
@@ -313,7 +325,7 @@ function TaskPage() {
             <div className="flex p-4  justify-between">
               <div>
                 <p className="text-[13px] text-[#64748B] font-semibold">
-                  Showing {tasks.length} of {totalCount} Tasks
+                  Showing {tasks.length} of {Counts.totalTasks} Tasks
                 </p>
               </div>
               <div className="flex gap-1 ">

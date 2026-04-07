@@ -10,12 +10,15 @@ import {
   fetchProjectById,
 } from "../../features/project/projectSlice";
 
+import { fetchTasksByProjectId } from "../../features/Task/TaskSlice";
+
 function ProjectDetails() {
   const navigate = useNavigate();
   const [priority, setPriority] = useState("medium");
   const [TaskStatus, setTaskStatus] = useState("overdue");
   const [showoptions, setshowoptions] = useState(false);
   const [IsChecked, setIsChecked] = useState(false);
+
   const colors = [
     "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
     "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
@@ -29,11 +32,13 @@ function ProjectDetails() {
   const projectId = projectIdSlug.split("-")[0];
   const dispatch = useDispatch();
   const { selectedProject, loading } = useSelector((state) => state.projects);
+  const { tasks } = useSelector((state) => state.tasks);
 
   const CurrentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(fetchProjectById(projectId));
+    dispatch(fetchTasksByProjectId(projectId));
   }, [projectId]);
 
   //  useEffect(() => {
@@ -44,8 +49,6 @@ function ProjectDetails() {
   //     document.addEventListener("click", HandleClickOutside);
   //     return () => document.removeEventListener("click", HandleClickOutside);
   //   }, []);
-
-  // console.log(users);
 
   const HandleCheck = (e) => {
     console.log(e.target.checked);
@@ -113,6 +116,19 @@ function ProjectDetails() {
     const endDate = new Date(project.endDate);
     if (today > endDate) return "Overdue";
     return "Active";
+  };
+
+  const StatusMap = {
+    0: "ToDo",
+    1: "Done",
+    2: "In Progress",
+    3: "Overdue",
+  };
+
+  const PriorityMap = {
+    0: "low",
+    1: "medium",
+    2: "high",
   };
 
   return (
@@ -313,7 +329,7 @@ function ProjectDetails() {
                     <table className=" tabel w-full text-left  text-nowrap">
                       <thead>
                         <tr className="border  h-8 bg-[#F1F5F9]  text-[10px] text-[#94A3B8]">
-                          <th className=""></th>
+                          <th className="min-w-2"></th>
                           <th className="">TASK</th>
                           <th className="">ASSIGNEE</th>
                           <th className="">PRIORITY</th>
@@ -323,109 +339,122 @@ function ProjectDetails() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td className="px-3 md:px-6 items-center">
-                            <div className="inline-flex items-center">
-                              <label className="flex items-center cursor-pointer relative">
-                                <input
-                                  type="checkbox"
-                                  checked={IsChecked}
-                                  onChange={(e) => {
-                                    HandleCheck(e);
-                                  }}
-                                  className="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded-full shadow hover:shadow-md border border-slate-300 checked:bg-green-600 checked:border-green-600"
-                                />
-                                <span className="absolute  text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-3 w-3"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              </label>
-                            </div>
-                          </td>
-                          <td className="pr-4">
-                            <div className="py-2">
-                              <h1
-                                className={`text-[10px] md:text-[14px] ${TaskStatus === "Done" ? "line-through text-[#94A3B8]" : ""} font-bold`}
-                              >
-                                Design checkout UI wireframes
-                              </h1>
-                              <p className="text-[#94A3B8] text-[8px] md:text-[12px]">
-                                Devops setup and configuration
-                              </p>
-                            </div>
-                          </td>
-                          <td className="pr-4">
-                            <div className="flex gap-2 items-center">
-                              <div
-                                className={`border w-4 h-4 md:w-6 md:h-6 text-[8px] md:text-[10px] rounded-full items-center flex justify-center ${colors[0]} text-white font-semibold text-center`}
-                              >
-                                AK
-                              </div>
-                              <p className="text-[10px] md:text-[13px] text-[#64748B] font-semibold">
-                                Alex Kumar
-                              </p>
-                            </div>
-                          </td>
-                          <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
-                            <div className="flex">
-                              <h1
-                                className={`rounded-full py-1 px-3  ${priority === "low" ? "text-[#10B981] bg-[#F0FDF4]" : priority === "medium" ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"} `}
-                              >
-                                Medium
-                              </h1>
-                            </div>
-                          </td>
-                          <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
-                            <div className="flex">
-                              <h1
-                                className={`rounded-full py-1 px-3 ${TaskStatus === "Done" ? "text-[#10B981] bg-[#F0FDF4]" : TaskStatus === "ToDo" ? "text-[#64748B] bg-[#F1F5F9]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                              >
-                                Done
-                              </h1>
-                            </div>
-                          </td>
-                          <td className="pr-4">
-                            <p className="pr-2 text-[10px] md:text-[12px] font-semibold text-[#94A3B8]">
-                              Mar 10
-                            </p>
-                          </td>
-                          {(CurrentUser.role == "Admin" ||
-                            CurrentUser.role === "Manager") && (
-                            <td className="pr-4 relative">
-                              {" "}
-                              <div
-                                onClick={() => {
-                                  setshowoptions(!showoptions);
-                                }}
-                                className="flex z-30 cursor-pointer items-center"
-                              >
-                                &middot;&middot;&middot;{" "}
-                                <div
-                                  className={`absolute  bg-white w-20  overflow-hidden -top-4 right-12 border rounded-md transition-all duration-200 ${showoptions ? "" : "hidden"}`}
-                                >
-                                  <div className="text-center cursor-pointer hover:bg-[#f5f5f5]  py-1 border-b text-[13px] font-semibold">
-                                    Edit
-                                  </div>
-                                  <div className="text-center cursor-pointer hover:bg-[#f5f5f5] py-1 text-[13px] font-semibold text-red-600">
-                                    Delete
-                                  </div>
-                                </div>
+                        {tasks.map((task) => (
+                          <tr key={task.id} className={`${task.status === 1 ? "bg-[#F0FDF4]" : task.status === 3 ? "bg-[#FFFBEB]" : ""} h-12 `}>
+                            <td className="px-3 md:px-6 items-center">
+                              <div className="inline-flex items-center">
+                                <label className="flex items-center cursor-pointer relative">
+                                  <div
+                                    checked={IsChecked}
+                                    onChange={(e) => {
+                                      HandleCheck(e);
+                                    }}
+                                    className="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded-full shadow hover:shadow-md border border-slate-300 checked:bg-green-600 checked:border-green-600"
+                                  ></div>
+                                  <span className="absolute  text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-3 w-3"
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </label>
                               </div>
                             </td>
-                          )}
-                        </tr>
+                            <td className="pr-4">
+                              <div className="py-2">
+                                <h1
+                                  className={`text-[10px] md:text-[14px] ${task.status === 1 ? "line-through text-[#94A3B8]" : ""} hover:underline cursor-pointer font-bold`}
+                                >
+                                  {task.title}
+                                </h1>
+                              </div>
+                            </td>
+                            <td className="pr-4">
+                              <div className="flex gap-2 items-center">
+                                <div
+                                  className={`border w-4 h-4 md:w-6 md:h-6 text-[8px] md:text-[10px] rounded-full items-center flex justify-center ${colors[task.assignedByName.length % colors.length]} text-white font-semibold text-center`}
+                                >
+                                  {task.assignedByName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
+                                </div>
+                                <p className="text-[10px] md:text-[13px] text-[#64748B] font-semibold">
+                                  {task.assignedByName}
+                                </p>
+                              </div>
+                            </td>
+                            <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
+                              <div className="flex">
+                                <h1
+                                  className={`rounded-full py-1 px-3  ${task.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : task.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"} `}
+                                >
+                                  {PriorityMap[task.priority]}
+                                </h1>
+                              </div>
+                            </td>
+                            <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
+                              <div className="flex">
+                                <h1
+                                  className={`rounded-full py-1 px-3 ${task.status === 1 ? "text-[#10B981] bg-[#F0FDF4]" : task.status === 0 ? "text-[#64748B] bg-[#F1F5F9]" : task.status === 2 ? "border-blue-600 text-[#4F46E5] bg-[#EFF6FF]" :"text-[#EF4444] bg-[#FEF2F2]" }`}
+                                >
+                                  {StatusMap[task.status]}
+                                </h1>
+                              </div>
+                            </td>
+                            <td className="pr-4">
+                              <p className="pr-2 text-[10px] md:text-[12px] font-semibold text-[#94A3B8]">
+                                {new Date(task.dueDate).toLocaleDateString(
+                                  undefined,
+                                  {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  },
+                                )}
+                              </p>
+                            </td>
+                            {(CurrentUser.role == "Admin" ||
+                              CurrentUser.role === "Manager") && (
+                              <td className="pr-4 relative">
+                                {" "}
+                                <div
+                                  onClick={() => {
+                                    setshowoptions(!showoptions);
+                                  }}
+                                  className="flex z-30 cursor-pointer items-center"
+                                >
+                                  &middot;&middot;&middot;{" "}
+                                  <div
+                                    className={`absolute  bg-white w-20  overflow-hidden -top-4 right-12 border rounded-md transition-all duration-200 ${showoptions ? "" : "hidden"}`}
+                                  >
+                                    <div className="text-center cursor-pointer hover:bg-[#f5f5f5]  py-1 border-b text-[13px] font-semibold">
+                                      Edit
+                                    </div>
+                                    <div className="text-center cursor-pointer hover:bg-[#f5f5f5] py-1 text-[13px] font-semibold text-red-600">
+                                      Delete
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
+                    {tasks.length === 0 && 
+                    <p className="flex justify-center h-12 items-center font-semibold text-[#94A3B8] text-[12px]">
+                      No Tasks Yet to show.
+                    </p>}
                   </div>
                 </div>
               </div>

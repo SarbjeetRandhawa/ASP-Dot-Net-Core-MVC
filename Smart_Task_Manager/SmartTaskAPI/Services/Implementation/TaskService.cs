@@ -78,7 +78,6 @@ namespace SmartTaskAPI.Services.Implementation
                 ProjectId = t.ProjectId,
                 ProjectName = t.Project.Name,
                 Title = t.Title,
-                Description = t.Description,
                 Priority = t.Priority,
                 AssignedToName = t.AssignedToUser?.FirstName + " " + t.AssignedToUser?.LastName,
                 AssignedByName = t.CreatedByUser?.FirstName + " " + t.CreatedByUser?.LastName,
@@ -95,9 +94,24 @@ namespace SmartTaskAPI.Services.Implementation
             };
         }
 
-        public async Task<IEnumerable<TaskItem>> GetTaskItemsByPtojectIdAsync(int projectId)
+        public Task<TaskCountDto> GetTaskCountsAsync(string userId, QueryParams query)
         {
-            return await _uow.TaskRepository.GetByProjectIdAsync(projectId);
+            return _uow.TaskRepository.GetTaskCountsAsync(userId, query);
+        }
+
+        public async Task<IEnumerable<TaskDto>> GetTaskItemsByPtojectIdAsync(string userId, int projectId)
+        {
+            var tasks = await _uow.TaskRepository.GetByProjectIdAsync(userId, projectId);
+            return tasks.Select(t => new TaskDto
+            {
+                Id = t.Id,
+                Title = t.Title,
+                Priority = t.Priority,
+                AssignedToName = t.AssignedToUser?.FirstName + " " + t.AssignedToUser?.LastName,
+                AssignedByName = t.CreatedByUser?.FirstName + " " + t.CreatedByUser?.LastName,
+                Status = t.Status,
+                DueDate = t.DueDate,
+            });
         }
 
         

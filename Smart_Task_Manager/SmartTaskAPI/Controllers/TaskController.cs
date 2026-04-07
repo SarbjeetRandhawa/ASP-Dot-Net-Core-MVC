@@ -44,8 +44,17 @@ namespace SmartTaskAPI.Controllers
         [HttpGet("project/{projectId}")]
         public async Task<IActionResult> GetTasksById(int projectId)
         {
-            var result = await taskService.GetTaskItemsByPtojectIdAsync(projectId);
+            var userId = GetUserId();
+            var result = await taskService.GetTaskItemsByPtojectIdAsync(userId, projectId);
             return Ok(result);
+        }
+
+        [HttpGet("counts")]
+        public async Task<IActionResult> GetTaskCounts([FromQuery] QueryParams query)
+        {
+            var userId = GetUserId();
+            var taskCounts = await taskService.GetTaskCountsAsync(userId, query);
+            return Ok(taskCounts);
         }
 
 
