@@ -75,6 +75,7 @@ namespace SmartTaskAPI.Services.Implementation
             var result = tasks.Select(t => new TaskDto
             {
                 Id = t.Id,
+                TaskCode = t.TaskCode,
                 ProjectId = t.ProjectId,
                 ProjectName = t.Project.Name,
                 Title = t.Title,

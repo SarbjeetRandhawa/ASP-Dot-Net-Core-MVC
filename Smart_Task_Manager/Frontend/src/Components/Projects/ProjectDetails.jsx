@@ -14,9 +14,8 @@ import { fetchTasksByProjectId } from "../../features/Task/TaskSlice";
 
 function ProjectDetails() {
   const navigate = useNavigate();
-  const [priority, setPriority] = useState("medium");
   const [TaskStatus, setTaskStatus] = useState("overdue");
-  const [showoptions, setshowoptions] = useState(false);
+  const [TaskMenuOpen, setTaskMenuOpen] = useState(null);
   const [IsChecked, setIsChecked] = useState(false);
 
   const colors = [
@@ -40,6 +39,15 @@ function ProjectDetails() {
     dispatch(fetchProjectById(projectId));
     dispatch(fetchTasksByProjectId(projectId));
   }, [projectId]);
+
+  useEffect(() => {
+    const HandleClickOutside = () => {
+      setTaskMenuOpen(null);
+    };
+
+    document.addEventListener("click", HandleClickOutside);
+    return () => document.removeEventListener("click", HandleClickOutside);
+  });
 
   //  useEffect(() => {
   //     const HandleClickOutside = () => {
@@ -116,6 +124,11 @@ function ProjectDetails() {
     const endDate = new Date(project.endDate);
     if (today > endDate) return "Overdue";
     return "Active";
+  };
+
+  const HandleMenuClick = (e, taskId) => {
+    e.stopPropagation();
+    setTaskMenuOpen((prev) => (prev === taskId ? null : taskId));
   };
 
   const StatusMap = {
@@ -340,32 +353,36 @@ function ProjectDetails() {
                       </thead>
                       <tbody>
                         {tasks.map((task) => (
-                          <tr key={task.id} className={`${task.status === 1 ? "bg-[#F0FDF4]" : task.status === 3 ? "bg-[#FFFBEB]" : ""} h-12 `}>
+                          <tr
+                            key={task.id}
+                            className={`${task.status === 1 ? "bg-[#F0FDF4]" : task.status === 3 ? "bg-[#FFFBEB]" : ""} h-12 `}
+                          >
                             <td className="px-3 md:px-6 items-center">
-                              <div className="inline-flex items-center">
-                                <label className="flex items-center cursor-pointer relative">
-                                  <div
-                                    checked={IsChecked}
-                                    onChange={(e) => {
-                                      HandleCheck(e);
-                                    }}
-                                    className="peer h-4 w-4 cursor-pointer transition-all appearance-none rounded-full shadow hover:shadow-md border border-slate-300 checked:bg-green-600 checked:border-green-600"
-                                  ></div>
-                                  <span className="absolute  text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                              <div className="inline-flex items-center ">
+                                {task.status === 1 && (
+                                  <span className="text-green-600">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
-                                      className="h-3 w-3"
-                                      viewBox="0 0 20 20"
+                                      width="16"
+                                      height="16"
                                       fill="currentColor"
+                                      className="bi bi-check-circle-fill"
+                                      viewBox="0 0 16 16"
                                     >
-                                      <path
-                                        fillRule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clipRule="evenodd"
-                                      />
+                                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                                     </svg>
                                   </span>
-                                </label>
+                                )}
+                                {(task.status === 2 || task.status === 0) && (
+                                  <span className="">
+                                    <div className="w-4 h-4 border-4 border-[#E2E8F0] rounded-full"></div>
+                                  </span>
+                                )}
+                                {task.status === 3 && (
+                                  <span className="">
+                                    <div className="w-4 h-4 border-[5px] border-red-600 rounded-full"></div>
+                                  </span>
+                                )}
                               </div>
                             </td>
                             <td className="pr-4">
@@ -405,7 +422,7 @@ function ProjectDetails() {
                             <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
                               <div className="flex">
                                 <h1
-                                  className={`rounded-full py-1 px-3 ${task.status === 1 ? "text-[#10B981] bg-[#F0FDF4]" : task.status === 0 ? "text-[#64748B] bg-[#F1F5F9]" : task.status === 2 ? "border-blue-600 text-[#4F46E5] bg-[#EFF6FF]" :"text-[#EF4444] bg-[#FEF2F2]" }`}
+                                  className={`rounded-full py-1 px-3 ${task.status === 1 ? "text-[#10B981] bg-[#F0FDF4]" : task.status === 0 ? "text-[#64748B] bg-[#F1F5F9]" : task.status === 2 ? "border-blue-600 text-[#4F46E5] bg-[#EFF6FF]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
                                 >
                                   {StatusMap[task.status]}
                                 </h1>
@@ -428,14 +445,14 @@ function ProjectDetails() {
                               <td className="pr-4 relative">
                                 {" "}
                                 <div
-                                  onClick={() => {
-                                    setshowoptions(!showoptions);
+                                  onClick={(e) => {
+                                    HandleMenuClick(e, task.id);
                                   }}
                                   className="flex z-30 cursor-pointer items-center"
                                 >
                                   &middot;&middot;&middot;{" "}
                                   <div
-                                    className={`absolute  bg-white w-20  overflow-hidden -top-4 right-12 border rounded-md transition-all duration-200 ${showoptions ? "" : "hidden"}`}
+                                    className={`absolute  bg-white w-20  overflow-hidden -top-4 right-12 border rounded-md transition-all duration-200 ${TaskMenuOpen === task.id ? "" : "hidden"}`}
                                   >
                                     <div className="text-center cursor-pointer hover:bg-[#f5f5f5]  py-1 border-b text-[13px] font-semibold">
                                       Edit
@@ -451,10 +468,11 @@ function ProjectDetails() {
                         ))}
                       </tbody>
                     </table>
-                    {tasks.length === 0 && 
-                    <p className="flex justify-center h-12 items-center font-semibold text-[#94A3B8] text-[12px]">
-                      No Tasks Yet to show.
-                    </p>}
+                    {tasks.length === 0 && (
+                      <p className="flex justify-center h-12 items-center font-semibold text-[#94A3B8] text-[12px]">
+                        No Tasks Yet to show.
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

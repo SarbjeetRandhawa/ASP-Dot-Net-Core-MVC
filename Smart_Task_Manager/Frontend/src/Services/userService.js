@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const getAllUsers = async () => {
   const res = await axiosInstance.get(`${API_URL}/users`);
-  console.log(res.data);
+  // console.log(res.data);
   return res.data;
 };
 

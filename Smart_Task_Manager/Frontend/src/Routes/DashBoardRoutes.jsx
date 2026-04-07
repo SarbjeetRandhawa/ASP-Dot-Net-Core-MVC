@@ -6,6 +6,7 @@ import ProjectPage from "../Components/Projects/ProjectPage";
 import ProjectDetails from "../Components/Projects/ProjectDetails";
 import CreateTask from "../Components/Tasks/CreateTask";
 import TaskPage from "../Components/Tasks/TaskPage";
+import TaskDetail from "../Components/Tasks/TaskDetail";
 // import ProtectedRoute from './Components/ProtectedRoute'
 
 export const DashBoardRoutes = [
@@ -46,7 +47,17 @@ export const DashBoardRoutes = [
       </ProtectedRoute>
     }
   />,
-   <Route
+   
+  <Route
+    
+    path="/Tasks"
+    element={
+      <ProtectedRoute>
+        <TaskPage/>
+      </ProtectedRoute>
+    }
+  />,
+  <Route
     
     path="/Tasks/CreateTask"
     element={
@@ -57,10 +68,10 @@ export const DashBoardRoutes = [
   />,
   <Route
     
-    path="/tasks"
+    path="/Tasks/:taskIdSlug"
     element={
       <ProtectedRoute>
-        <TaskPage/>
+        <TaskDetail/>
       </ProtectedRoute>
     }
   />,

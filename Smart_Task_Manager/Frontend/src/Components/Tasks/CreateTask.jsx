@@ -370,7 +370,7 @@ function CreateTask() {
                     {TaskFormData.Title || "New Task (Untitled)"}
                   </h1>
                   <div className="flex gap-2 text-[12px]">
-                    d
+                    
                     <div
                       className={` font-semibold ${TaskFormData.Priority == 0 ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981] " : TaskFormData.Priority == 2 ? "bg-[#FEF2F2] border-[#FECACA] text-[#EF4444]" : "bg-[#FFFBEB] text-[#F59E0B]"}  px-2 rounded-full`}
                     >

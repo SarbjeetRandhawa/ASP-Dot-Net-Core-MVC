@@ -11,7 +11,9 @@ import Pagination from "./pagination";
 function TaskPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { tasks, loading, Counts , TotalCount } = useSelector((state) => state.tasks);
+  const { tasks, loading, Counts, TotalCount } = useSelector(
+    (state) => state.tasks,
+  );
   const [page, setPage] = useState(1);
   const [search, setsearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -54,7 +56,7 @@ function TaskPage() {
       search,
       PageSize,
       myTask: FilterBar === "MyTask" ? true : false,
-      OverDue : FilterBar === "Overdue" ? true : false
+      OverDue: FilterBar === "Overdue" ? true : false,
     };
 
     dispatch(fetchTasks(Params));
@@ -70,15 +72,19 @@ function TaskPage() {
   // }
 
   const totalPages = Math.ceil(TotalCount / PageSize);
- 
-  
 
   const HandleClearFilter = () => {
     setFilterBar("All");
     setsearch("");
   };
 
-  console.log(Counts);
+  const createSlug = (name) => {
+    return name.toUpperCase().replace(/\s+/g,"-");
+  };
+  const HandleTaskInfoNavigate = (task) => {
+    navigate(`/Tasks/${task.id}-${createSlug(task.taskCode)}`);
+  };
+  // console.log(Counts);
 
   const StatusMap = {
     0: "ToDo",
@@ -101,7 +107,7 @@ function TaskPage() {
         <div className="w-full lg:pl-[16.66%]   md:pt-0 md:pl-[33%] pt-14">
           <div className="Navbar border bg-white justify-between  flex gap-1 sm:gap-2 h-12 w-full  items-center px-8">
             <div className="  ">
-              <h1 className="font-bold  text-[#0F172A]  text-[17px]">
+              <h1 className="font-bold  text-[#0F172A] text-[12px] md:text-[14px]  lg:text-[17px]">
                 All Tasks
               </h1>
             </div>
@@ -120,7 +126,7 @@ function TaskPage() {
               <button
                 type="button"
                 onClick={() => navigate("/Tasks/CreateTask")}
-                className="border px-3 h-7 rounded-md text-[11px] font-bold bg-[#4F46E5] text-white"
+                className="border px-3 h-7 rounded-md text-[8px] md:text-[11px] font-bold bg-[#4F46E5] text-white"
               >
                 + New Task
               </button>
@@ -133,45 +139,46 @@ function TaskPage() {
           <div className="mx-5 my-3 flex justify-between  rounded-md">
             <div className="flex ">
               <h1
-                className={` px-5 py-1 cursor-pointer text-[13px] font-semibold  ${FilterBar === "All" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"} `}
+                className={`word-wrap px-2 md:px-5 py-1 cursor-pointer text-[8px] md:text-[12 px] font-semibold  ${FilterBar === "All" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"} `}
                 onClick={() => setFilterBar("All")}
               >
                 All Tasks ( {Counts.totalTasks} )
               </h1>
               <h1
-                className={`px-5 py-1 font-semibold cursor-pointer text-[13px] ${FilterBar === "MyTask" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
+                className={`px-2 md:px-5 py-1 font-semibold cursor-pointer text-[8px] md:text-[12px] ${FilterBar === "MyTask" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("MyTask")}
               >
                 My Tasks ( {Counts.myTasks} )
               </h1>
               <h1
-                className={`px-5 py-1 font-semibold cursor-pointer text-[13px] ${FilterBar === "ToDo" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
+                className={`px-2 md:px-5 py-1 font-semibold cursor-pointer text-[8px] md:text-[12px] ${FilterBar === "ToDo" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("ToDo")}
               >
                 ToDo ( {Counts.toDo} )
               </h1>
               <h1
-                className={`px-5 py-1 font-semibold cursor-pointer text-[13px] ${FilterBar === "inProgress" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
+                className={` px-2 md:px-5 py-1 font-semibold cursor-pointer text-[8px] md:text-[12px] ${FilterBar === "inProgress" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("inProgress")}
               >
                 In Progress ( {Counts.inProgress} )
               </h1>
               <h1
-                className={`px-5  py-1 font-semibold cursor-pointer text-[13px] ${FilterBar === "Done" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
+                className={`px-2 md:px-5   py-1 font-semibold cursor-pointer text-[8px] md:text-[12px] ${FilterBar === "Done" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("Done")}
               >
                 Done ( {Counts.done} )
               </h1>
             </div>
             <div className="flex items-center gap-3">
-              <div className="px-2 cursor-pointer py-1 text-[12px] font-semibold border rounded-md border-red-600 text-red-600" 
+              <div
+                className="px-2 cursor-pointer py-1 text-[8px] md:text-[10px] lg:text-[12px] font-semibold border rounded-md border-red-600 text-red-600"
                 onClick={() => setFilterBar("Overdue")}
               >
                 🔴Overdue ( {Counts.overDue} )
               </div>
               <div
                 onClick={HandleClearFilter}
-                className="px-2 cursor-pointer py-1 text-[12px] font-semibold border-2 rounded-md  text-[#64748B]"
+                className="px-2 cursor-pointer py-1 text-[8px] md:text-[10px] lg:text-[12px] font-semibold border-2 rounded-md  text-[#64748B]"
               >
                 Clear Filters
               </div>
@@ -208,10 +215,13 @@ function TaskPage() {
                             key={task.id}
                             className={`${task.status === 1 ? "bg-[#F0FDF4]" : task.status === 3 ? "bg-[#FFFBEB]" : ""} `}
                           >
-                            <td className="pl-8 pr-4 py-1">
+                            <td className="pl-8 pr-4 py-2">
                               <div className="py-2">
                                 <h1
-                                  className={`cursor-pointer hover:underline text-[10px] md:text-[14px] ${task.status === 1 ? "line-through text-[#94A3B8]" : ""} font-bold`}
+                                  className={`cursor-pointer hover:underline text-[10px] md:text-[13px] ${task.status === 1 ? "line-through text-[#94A3B8]" : ""} font-semibold`}
+                                  onClick={() => {
+                                    HandleTaskInfoNavigate(task);
+                                  }}
                                 >
                                   {task.title}
                                 </h1>
@@ -241,7 +251,7 @@ function TaskPage() {
                                     .join("")
                                     .toUpperCase()}
                                 </div>
-                                <p className="text-[10px] md:text-[13px] text-[#64748B] font-semibold">
+                                <p className="text-[10px] md:text-[12px] text-[#64748B] font-semibold">
                                   {task.assignedToName}
                                 </p>
                               </div>

@@ -75,7 +75,7 @@ function Sidebar() {
                   <span>Projects</span>
                 </NavLink>
                 <NavLink
-                  to="/tasks"
+                  to="/Tasks"
                   className={({ isActive }) =>
                     `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
                   }
