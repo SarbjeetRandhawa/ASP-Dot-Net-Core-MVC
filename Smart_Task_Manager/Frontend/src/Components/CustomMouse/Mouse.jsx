@@ -1,46 +1,40 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const useMousePosition = () => {
-  const [mousePosition, setMousePosition] = useState({ x: null, y: null });
-  
+export default function CustomCursor() {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isPointer, setIsPointer] = useState(false);
+
   useEffect(() => {
-    const updateMousePosition = (ev) => {
-      setMousePosition({ x: ev.clientX, y: ev.clientY });
+    const move = (e) => {
+      setPosition({ x: e.clientX, y: e.clientY });
     };
-    
-    window.addEventListener("mousemove", updateMousePosition);
-    
-    // Cleanup event listener on unmount
+
+    const handlePointer = () => setIsPointer(true);
+    const handleDefault = () => setIsPointer(false);
+
+    window.addEventListener("mousemove", move);
+
+    document.querySelectorAll("button, a, .cursor-pointer").forEach(el => {
+      el.addEventListener("mouseenter", handlePointer);
+      el.addEventListener("mouseleave", handleDefault);
+    });
+
     return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
+      window.removeEventListener("mousemove", move);
     };
   }, []);
-  
-  return mousePosition;
-};
 
-export default function App() {
-  const mousePosition = useMousePosition();
-  
   return (
-    <div style={{ position: 'relative' }}>
-      {/* Custom Cursor Element */}
-      <div 
-        className="custom-cursor" 
-        style={{ 
-          left: `${mousePosition.x}px`, 
-          top: `${mousePosition.y}px`,
-          position: 'fixed',
-          transform: 'translate(-50%, -50%)',
-          pointerEvents: 'none',
-          width: '20px',
-          height: '20px',
-          backgroundColor: 'invert(100%)',
-          borderRadius: '50%',
-          zIndex: 9999,
-        }} 
-      />
-      
-    </div>
+    <div
+      className={`fixed top-0 left-0 pointer-events-none z-[9999] transition-all duration-150
+        ${isPointer ? "scale-150 bg-black" : "scale-100 bg-gray-500"}
+      `}
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px)`,
+        width: "10px",
+        height: "10px",
+        borderRadius: "50%",
+      }}
+    />
   );
-}   
+}
