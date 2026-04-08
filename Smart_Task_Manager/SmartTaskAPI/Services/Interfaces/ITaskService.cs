@@ -7,6 +7,7 @@ namespace SmartTaskAPI.Services.Interfaces
     {
         Task CreateTaskAsync(CreateTaskDto dto, string userId);
         Task<IEnumerable<TaskDto>> GetTaskItemsByPtojectIdAsync(string userId, int projectId);
+        Task<TaskResponseDetailDto> GetTaskById(int TaskId);
         Task<object> GetAllTasksAsync(string userId, QueryParams query);
 
         Task<TaskCountDto> GetTaskCountsAsync(string userId, QueryParams query);

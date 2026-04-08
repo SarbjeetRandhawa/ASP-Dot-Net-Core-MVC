@@ -3,6 +3,7 @@ import {
   getTasks,
   getTaskCounts,
   getTasksByProjectId,
+  getTaskById
 } from "../../Services/TaskService";
 
 export const fetchTasks = createAsyncThunk(
@@ -41,10 +42,22 @@ export const fetchTasksByProjectId = createAsyncThunk(
   },
 );
 
+export const fetchTaskById = createAsyncThunk(
+  "tasks/fetchTaskById " , async (id , {rejectWithValue}) =>{
+    try{
+      const data = await getTaskById(id);
+      return data;
+    }catch(err){
+      return rejectWithValue(err.response?.data || "error");
+    }
+  }
+)
+
 const taskSlice = createSlice({
   name: "tasks",
   initialState: {
     tasks: [],
+    SelectedTask : null,
     Counts: {},
     TotalCount: 0,
     loading: false,
@@ -91,6 +104,17 @@ const taskSlice = createSlice({
         state.tasks = action.payload;
       })
       .addCase(fetchTasksByProjectId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchTaskById.pending, (state) =>{
+        state.loading = true;
+        state.error = null;
+      }).addCase(fetchTaskById.fulfilled , (state,action)=>{
+        state.loading = false;
+        state.tasks = action.payload;
+      })
+      .addCase(fetchTaskById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

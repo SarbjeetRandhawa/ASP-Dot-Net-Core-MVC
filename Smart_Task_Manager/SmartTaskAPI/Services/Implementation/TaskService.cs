@@ -86,12 +86,41 @@ namespace SmartTaskAPI.Services.Implementation
                 DueDate = t.DueDate,
                 CreatedAt = t.CreatedAt
                 
+                
             });
 
             return new
             {
                 data = result,
                 totalCount
+            };
+        }
+
+        public async Task<TaskResponseDetailDto> GetTaskById(int TaskId)
+        {
+            var  Task = await _uow.TaskRepository.GetByIdAsync(TaskId);
+
+            return new TaskResponseDetailDto
+            {
+                Id = Task.Id,
+                Title = Task.Title,
+                Description = Task.Description,
+                Status = Task.Status,
+                Priority = Task.Priority,
+                ProjectName = Task.Project.Name,
+                AssignedToName = Task.AssignedToUser?.FirstName + " " + Task.AssignedToUser?.LastName,
+                AssignedByName = Task.CreatedByUser?.FirstName + " " + Task.CreatedByUser?.LastName,
+                Files = Task.Attachments.Select(a => new AttachmentDto
+                {
+                   Id = a.Id,
+                   FileName = a.FileName,
+                   FilePath = a.FilePath,
+                   FileSize = a.FileSize,
+                   UploadedByUser = a.UploadeByUserId
+                   
+                }).ToList(),
+                
+
             };
         }
 

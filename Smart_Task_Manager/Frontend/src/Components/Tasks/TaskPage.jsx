@@ -83,7 +83,7 @@ function TaskPage() {
   const HandleTaskInfoNavigate = (task) => {
     navigate(`/tasks/${task.id}-${task.taskCode}`);
   };
-  // console.log(Counts);
+  console.log(tasks);
 
   const StatusMap = {
     0: "ToDo",

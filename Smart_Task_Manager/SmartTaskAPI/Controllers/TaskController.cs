@@ -27,7 +27,7 @@ namespace SmartTaskAPI.Controllers
         public async Task<IActionResult> CreateTask([FromForm] CreateTaskDto dto)
         {
             var userId = GetUserId();
-             await taskService.CreateTaskAsync(dto , userId);
+            await taskService.CreateTaskAsync(dto, userId);
             return Ok("Success");
         }
 
@@ -38,6 +38,16 @@ namespace SmartTaskAPI.Controllers
             var Tasks = await taskService.GetAllTasksAsync(userId, query);
             return Ok(Tasks);
         }
+
+        [HttpGet("{TaskId}")]
+
+        public async Task<IActionResult> GetTaskById(int TaskId) {
+
+            var Task = await taskService.GetTaskById(TaskId);
+
+            return Ok(Task);
+        }
+
 
 
 
@@ -56,6 +66,8 @@ namespace SmartTaskAPI.Controllers
             var taskCounts = await taskService.GetTaskCountsAsync(userId, query);
             return Ok(taskCounts);
         }
+
+       
 
 
 

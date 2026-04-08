@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Paperclip, HeartIcon, AtSign, AtSignIcon } from "lucide-react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
+import { fetchProjectById } from "../../features/project/projectSlice";
+import { useSelector , useDispatch } from "react-redux";
 
 function TaskDetail() {
+
   const [TaskStatus, setTaskStatus] = useState("ToDo");
+  const {selectedTask , loading} = useSelector((state)=>state.tasks);
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(fetchProjectById(4));
+  },[dispatch])
+
+  // console.log(selectedTask);
+
+  
   return (
     <>
       <div className="flex ">
@@ -221,7 +234,7 @@ function TaskDetail() {
                   <div className="absolute border-2 border-[#eeeeee] h-full left-[7px]  z-10"></div>
                   <div className="bg-white absolute w-10 h-[35px]  z-20 -bottom-4" ></div>
 
-                  <div className="flex gap-2 z-20 ">
+                  <div className="flex gap-4 z-20 ">
                     <div className="w-4 h-4 mt-1 border-4  border-red-500 bg-[#f9e6e6] rounded-full"></div>
                     <div>
                       <p className="text-[13px]  ">
@@ -236,7 +249,7 @@ function TaskDetail() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2  z-20">
+                  <div className="flex gap-4  z-20">
                     <div className="w-4 h-4 mt-1 border-4  border-red-500 bg-[#f9e6e6] rounded-full"></div>
                     <div>
                       <p className="text-[13px]  ">

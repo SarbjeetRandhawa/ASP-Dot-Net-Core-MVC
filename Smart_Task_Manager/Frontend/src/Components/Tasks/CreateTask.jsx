@@ -18,6 +18,8 @@ function CreateTask() {
   const [DescriptionError, setDescriptionError] = useState("");
 
   const location = useLocation();
+  console.log(Files);
+  
 
   const [TaskFormData, setTaskFormData] = useState({
     Title: "",

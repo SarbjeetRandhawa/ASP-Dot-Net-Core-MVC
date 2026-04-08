@@ -1,4 +1,6 @@
-﻿namespace SmartTaskAPI.Models.DB
+﻿using SmartTaskAPI.Models.Identity;
+
+namespace SmartTaskAPI.Models.DB
 {
     public class TaskAttachment
     {
@@ -8,6 +10,7 @@
         public string FilePath { get; set; }
         public long FileSize { get; set; }
         public string UploadeByUserId { get; set; }
+        public ApplicationUser UploadedByUser {  get; set; }
         public string MimeType { get; set; }
         public DateTime UploadeAt { get; set; } = DateTime.UtcNow;
         public TaskItem Task { get; set; }

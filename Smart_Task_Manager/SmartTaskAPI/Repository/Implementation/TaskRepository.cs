@@ -21,7 +21,7 @@ namespace SmartTaskAPI.Repository.Implementation
 
         }
 
-        public async Task<IEnumerable<TaskItem>> GetByProjectIdAsync(string userId ,int id)
+        public async Task<IEnumerable<TaskItem>> GetByProjectIdAsync(string userId, int id)
         {
             return await _context.Tasks.Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
@@ -30,7 +30,13 @@ namespace SmartTaskAPI.Repository.Implementation
 
         public async Task<TaskItem> GetByIdAsync(int id)
         {
-            return await _context.Tasks.Include(t => t.Attachments).FirstOrDefaultAsync(t => t.Id == id);
+            return await _context.Tasks
+                .Include(t=> t.Project)
+                .Include(t => t.Attachments)
+                .ThenInclude(a=>a.UploadedByUser)
+                .Include(t => t.AssignedToUser)
+                .Include(t => t.CreatedByUser)
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<(IEnumerable<TaskItem>, int)> GetAllAsync(string userId, QueryParams query)
