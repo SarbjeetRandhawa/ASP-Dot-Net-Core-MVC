@@ -1,40 +1,49 @@
 import { useEffect, useState } from "react";
 
 export default function CustomCursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isPointer, setIsPointer] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [isHover, setIsHover] = useState(false);
 
   useEffect(() => {
     const move = (e) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      setPos({ x: e.clientX, y: e.clientY });
     };
 
-    const handlePointer = () => setIsPointer(true);
-    const handleDefault = () => setIsPointer(false);
+    const addHover = () => setIsHover(true);
+    const removeHover = () => setIsHover(false);
 
     window.addEventListener("mousemove", move);
 
-    document.querySelectorAll("button, a, .cursor-pointer").forEach(el => {
-      el.addEventListener("mouseenter", handlePointer);
-      el.addEventListener("mouseleave", handleDefault);
+    const elements = document.querySelectorAll(
+      "button, a, .cursor-pointer"
+    );
+
+    elements.forEach((el) => {
+      el.addEventListener("mouseenter", addHover);
+      el.addEventListener("mouseleave", removeHover);
     });
 
     return () => {
       window.removeEventListener("mousemove", move);
+      elements.forEach((el) => {
+        el.removeEventListener("mouseenter", addHover);
+        el.removeEventListener("mouseleave", removeHover);
+      });
     };
   }, []);
 
   return (
     <div
-      className={`fixed top-0 left-0 pointer-events-none z-[9999] transition-all duration-150
-        ${isPointer ? "scale-150 bg-black" : "scale-100 bg-gray-500"}
-      `}
+      className="fixed top-0 left-0 pointer-events-none z-[9999] transition-all duration-200 ease-out"
       style={{
-        transform: `translate(${position.x}px, ${position.y}px)`,
-        width: "10px",
-        height: "10px",
-        borderRadius: "50%",
+        transform: `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%)`,
       }}
-    />
+    >
+      <div
+        className={`rounded-full border 
+        ${isHover ? "w-10 h-10" : "w-4 h-4"}
+        border-white mix-blend-difference transition-all duration-200`}
+      />
+    </div>
   );
 }
