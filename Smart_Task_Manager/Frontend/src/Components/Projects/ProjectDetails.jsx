@@ -41,7 +41,7 @@ function ProjectDetails() {
   useEffect(() => {
     dispatch(fetchProjectById(projectId));
     dispatch(fetchTasksByProjectId(projectId));
-  }, [projectId]);
+  }, [projectId , dispatch]);
 
   useEffect(() => {
     const HandleClickOutside = () => {
@@ -129,8 +129,10 @@ function ProjectDetails() {
     return "Active";
   };
 
-  const HandleTaskInfoNavigate = (task) => {
-    navigate(`/Tasks/${task.id}-${task.taskCode}`);
+  const HandleTaskInfoNavigate = (e,task) => {
+    e.stopPropagation();
+    
+    navigate(`/tasks/${task.id}-${task.taskCode}`);
   };
 
   const HandleMenuClick = (e, taskId) => {
@@ -395,7 +397,7 @@ function ProjectDetails() {
                             <td className="pr-4">
                               <div className="py-2">
                                 <h1
-                                onClick={HandleTaskInfoNavigate(task)}
+                                onClick={(e)=>HandleTaskInfoNavigate(e, task)}
                                   className={`text-[10px] md:text-[14px] ${task.status === 1 ? "line-through text-[#94A3B8]" : ""} hover:underline cursor-pointer font-bold`}
                                 >
                                   {task.title}
@@ -631,7 +633,7 @@ function ProjectDetails() {
                         <div>
                           <h1 className="text-[13px] font-bold">
                             Sarah{" "}
-                            <span className="font-normal font-semibold text-[#7d8a9c]">
+                            <span className=" font-semibold text-[#7d8a9c]">
                               Completed CI/CD Task
                             </span>
                           </h1>

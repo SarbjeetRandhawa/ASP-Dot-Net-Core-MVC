@@ -26,7 +26,7 @@ function ProjectPage() {
 
   useEffect(() => {
     dispatch(fetchProjects());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const HandleClickOutside = () => {

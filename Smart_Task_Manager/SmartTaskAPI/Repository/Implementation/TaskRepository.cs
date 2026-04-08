@@ -88,7 +88,7 @@ namespace SmartTaskAPI.Repository.Implementation
             if (!string.IsNullOrEmpty(query.Search))
             {
 
-                baseQuery = baseQuery.Where(t => t.Title.Contains(query.Search));
+                baseQuery = baseQuery.Where(t => (t.Title.Contains(query.Search) || t.AssignedToUser.FirstName.Contains(query.Search)));
             }
 
             return new TaskCountDto

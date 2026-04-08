@@ -61,6 +61,7 @@ function TaskPage() {
 
     dispatch(fetchTasks(Params));
     dispatch(fetchTaskCounts(Params));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, page, FilterBar, dispatch]);
 
   // const HandleFilterChange = (Key, value) => {
@@ -80,7 +81,7 @@ function TaskPage() {
 
   
   const HandleTaskInfoNavigate = (task) => {
-    navigate(`/Tasks/${task.id}-${task.taskCode}`);
+    navigate(`/tasks/${task.id}-${task.taskCode}`);
   };
   // console.log(Counts);
 
