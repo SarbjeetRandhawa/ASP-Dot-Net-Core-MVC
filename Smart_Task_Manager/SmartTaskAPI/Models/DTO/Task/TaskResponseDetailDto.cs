@@ -13,7 +13,6 @@
         public int Priority { get; set; }
         public string AssignedToName { get; set; }
         public string AssignedByName { get; set; }
-        public string AssignedBy { get; set; }
         public int Status { get; set; }
         public DateTime? DueDate { get; set; }
         public DateTime? CreatedAt { get; set; }

@@ -55,6 +55,7 @@ namespace SmartTaskAPI.Services.Implementation
                     var attachment = new TaskAttachment
                     {
                         TaskId = Task.Id,
+                        OrignalName = file.FileName,
                         FileName = fileName,
                         FilePath = "/uploads/" + fileName,
                         FileSize = file.Length,
@@ -108,19 +109,19 @@ namespace SmartTaskAPI.Services.Implementation
                 Description = Task.Description,
                 Status = Task.Status,
                 Priority = Task.Priority,
+                DueDate = Task.DueDate,
                 ProjectName = Task.Project.Name,
                 AssignedToName = Task.AssignedToUser?.FirstName + " " + Task.AssignedToUser?.LastName,
                 AssignedByName = Task.CreatedByUser?.FirstName + " " + Task.CreatedByUser?.LastName,
                 Files = Task.Attachments.Select(a => new AttachmentDto
                 {
-                   Id = a.Id,
-                   FileName = a.FileName,
-                   FilePath = a.FilePath,
-                   FileSize = a.FileSize,
-                   UploadedByUser = a.UploadedByUser.FirstName + " " + a.UploadedByUser.LastName
-                   
+                    Id = a.Id,
+                    FileName = a.FileName,
+                    FilePath = a.FilePath,
+                    FileSize = a.FileSize,
+                    UploadedByUser = a.UploadedByUser.FirstName + " " + a.UploadedByUser.LastName
                 }).ToList(),
-                
+
 
             };
         }

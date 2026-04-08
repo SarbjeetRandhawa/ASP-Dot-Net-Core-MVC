@@ -300,17 +300,18 @@ namespace SmartTaskAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UploadeAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UploadeByUserId")
+                    b.Property<string>("OrignalName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UploadedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -544,7 +545,9 @@ namespace SmartTaskAPI.Migrations
 
                     b.HasOne("SmartTaskAPI.Models.Identity.ApplicationUser", "UploadedByUser")
                         .WithMany()
-                        .HasForeignKey("UploadedByUserId");
+                        .HasForeignKey("UploadedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Task");
 

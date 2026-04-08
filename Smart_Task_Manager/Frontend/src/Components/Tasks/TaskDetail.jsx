@@ -12,7 +12,7 @@ function TaskDetail() {
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    dispatch(fetchTaskById(4));
+    dispatch(fetchTaskById(8));
   },[dispatch])
 
   // console.log(selectedTask);

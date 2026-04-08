@@ -33,7 +33,6 @@ namespace SmartTaskAPI.Repository.Implementation
             return await _context.Tasks
                 .Include(t=> t.Project)
                 .Include(t => t.Attachments)
-                .ThenInclude(a=>a.UploadedByUser)
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
                 .FirstOrDefaultAsync(t => t.Id == id);
