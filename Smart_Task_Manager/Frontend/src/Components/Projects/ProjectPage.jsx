@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { fetchProjects } from "../../features/project/projectSlice";
 
-
 import { useDispatch } from "react-redux";
 import AvatarGroup from "../AvtarGroup";
 
@@ -13,20 +12,18 @@ function ProjectPage() {
   const dispatch = useDispatch();
   const { projects } = useSelector((state) => state.projects);
   const [StatusFilter, setStatusFilter] = useState("All");
-  
+
   const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(null);
   const [search, setsearch] = useState("");
   const [debounceSearch, setDebounceSearch] = useState("");
   const CurrentUser = useSelector((state) => state.auth.user);
 
-  
   const ArchievedProjects = projects.filter(
     (u) => u.status === "Archived",
   ).length;
- 
- 
-  // console.log(projects);
-  
+
+  console.log(projects);
+
   useEffect(() => {
     dispatch(fetchProjects());
   }, []);
@@ -53,11 +50,6 @@ function ProjectPage() {
     return p.name.toLowerCase().includes(debounceSearch.toLowerCase());
   });
 
-  
-
- 
-   
-
   const formFullDate = (date) => {
     if (!date) return "";
 
@@ -68,7 +60,9 @@ function ProjectPage() {
   };
 
   const HandleProjectInfoNavigate = (project) => {
-    navigate(`/projects/${project.id}-${createSlug(project.name)}`);
+    navigate(`/projects/${project.id}-${createSlug(project.name)}`, {
+      state: { progress: project.progress },
+    });
   };
 
   const HandleMenuClick = (e, projectId) => {
@@ -85,28 +79,34 @@ function ProjectPage() {
   };
 
   const createSlug = (name) => {
-    return name.toLowerCase().replace(/\s+/g,"-");
+    return name.toLowerCase().replace(/\s+/g, "-");
   };
 
-  const getProjectStatus = (project) =>{
-    if(!project) return "";
-    if(project.status === "Archived") return "Archived";
+  const getProjectStatus = (project) => {
+    if (!project) return "";
+    if (project.status === "Archived") return "Archived";
     const today = new Date();
     const endDate = new Date(project.endDate);
-    if(today> endDate) return "Overdue";
+    if (today > endDate) return "Overdue";
     return "Active";
-  }
-   const OverdueProjects = projects.filter((u) => getProjectStatus(u) === "Overdue").length;
-   const FilteredOverdueProjects = searchedProjects.filter((u) => getProjectStatus(u) === "Overdue").length;
+  };
+  const OverdueProjects = projects.filter(
+    (u) => getProjectStatus(u) === "Overdue",
+  ).length;
+  const FilteredOverdueProjects = searchedProjects.filter(
+    (u) => getProjectStatus(u) === "Overdue",
+  ).length;
 
-   const filteredProjects = searchedProjects.filter((u) => {
+  const filteredProjects = searchedProjects.filter((u) => {
     if (StatusFilter === "All") return true;
     if (StatusFilter === "Active") return getProjectStatus(u) === "Active";
     if (StatusFilter === "Archived") return getProjectStatus(u) === "Archived";
     if (StatusFilter === "Overdue") return getProjectStatus(u) === "Overdue";
   });
 
-  const ActiveProjects = projects.filter((u) => getProjectStatus(u) === "Active").length;
+  const ActiveProjects = projects.filter(
+    (u) => getProjectStatus(u) === "Active",
+  ).length;
   const filterActiveCount = searchedProjects.filter(
     (u) => getProjectStatus(u) === "Active",
   ).length;
@@ -114,7 +114,6 @@ function ProjectPage() {
   const filterArchivedCount = searchedProjects.filter(
     (u) => getProjectStatus(u) === "Archived",
   ).length;
-  
 
   return (
     <div className="flex ">
@@ -240,7 +239,10 @@ function ProjectPage() {
           >
             <h1>
               Overdue ({" "}
-              {debounceSearch === "" ? OverdueProjects : FilteredOverdueProjects} )
+              {debounceSearch === ""
+                ? OverdueProjects
+                : FilteredOverdueProjects}{" "}
+              )
             </h1>
           </div>
         </div>
@@ -257,7 +259,6 @@ function ProjectPage() {
                     HandleProjectInfoNavigate(p);
                   }}
                   className="shadow-md border-2 bg-white hover:border-[#4F46E5] overflow-hidden cursor-pointer z-0 p-4 relative h-auto col rounded-md text-black"
-                  
                 >
                   <div className="z-0 absolute w-[10rem] h-[10rem] bg-[#ffffff2e] -right-10 -top-10 rounded-full"></div>
                   <div className="">
@@ -340,18 +341,19 @@ function ProjectPage() {
                           className={`font-bold`}
                           style={{ color: `${p.colorTheme}` }}
                         >
-                          30%
+                          {p.progress}%
                         </p>
                       </div>
                       <div className="progressbar w-full bg-[#E2E8F0] h-1 rounded-lg">
                         <div
-                          className={`w-2/12 h-1 rounded-lg bg-[${p.colorTheme}]`}
+                          className={`h-1 rounded-lg bg-[${p.colorTheme}]`}
+                          style={{ width: `${p.progress}%` }}
                         ></div>
                       </div>
                       <div className="flex justify-between relative">
                         <p className="text-[12px] text-[#64748B]">
-                          9 tasks -{" "}
-                          <span className="text-red-600">2 overdue</span>
+                          {p.totalTasks == 1 ? "1 task" : `${p.totalTasks} tasks`} -{" "}
+                          <span className="text-red-600">{p.overdueTasks} overdue</span>
                         </p>
                         <AvatarGroup members={p.members} />
                       </div>

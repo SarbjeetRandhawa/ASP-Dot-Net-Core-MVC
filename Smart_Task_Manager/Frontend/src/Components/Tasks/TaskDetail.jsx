@@ -1,10 +1,10 @@
 import React from "react";
-import { Paperclip, HeartIcon } from "lucide-react";
+import { Paperclip, HeartIcon, AtSign, AtSignIcon } from "lucide-react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
 
 function TaskDetail() {
-    const [TaskStatus, setTaskStatus] = useState("ToDo")
+  const [TaskStatus, setTaskStatus] = useState("ToDo");
   return (
     <>
       <div className="flex ">
@@ -105,7 +105,7 @@ function TaskDetail() {
                   </div>
                 </div>
                 <div className="flex gap-4 mt-4  w-full flex-wrap">
-                  <div className="shadow-md border p-6 rounded-md flex flex-col gap-2 items-center text-[#64748B] text-[10px]  w-[190px]">
+                  <div className="hover:shadow-md cursor-pointer border p-6 rounded-md flex flex-col gap-2 items-center text-[#64748B] text-[10px]  w-[190px]">
                     <img
                       src="/public/pdf_4726010.png"
                       className="w-10"
@@ -121,50 +121,138 @@ function TaskDetail() {
               </div>
 
               <div className="bg-white rounded-xl border-2 shadow-md">
-                <div className="flex p-4 justify-between items-center">
-                  <div>
-                    <h1 className="font-bold text-[14px]">Comments</h1>
-                    <p className="text-[12px] tracking-wide font-semibold text-[#64748B]">
-                      4 Comments
-                    </p>
-                  </div>
-                </div>
-                <div className="border-t p-4 ">
-                  <div className="flex ">
+                <div>
+                  <div className="flex p-4 justify-between items-center">
                     <div>
-                      <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
-                        <span className="text-white text-[10px] font-bold">
-                          JD
-                        </span>
-                      </div>
+                      <h1 className="font-bold text-[14px]">Comments</h1>
+                      <p className="text-[12px] tracking-wide font-semibold text-[#64748B]">
+                        4 Comments
+                      </p>
                     </div>
-                    <div className="ml-4  w-full">
-                      <div className="flex justify-between ">
-                        <h1 className="font-bold text-[13px]">
-                          John Doe{" "}
-                          <span className="ml-3  text-[10px] font-semibold px-2 py-1 rounded-full bg-[#F5F3FF] text-[#7C3AED]">
-                            Admin
+                  </div>
+                  <div className="border-t p-4 ">
+                    <div className="flex ">
+                      <div>
+                        <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
+                          <span className="text-white text-[10px] font-bold">
+                            JD
                           </span>
-                        </h1>
-                        <p className="text-[12px] text-[#94A3B8]">
-                          Mar 12, 2023 at 2:30 PM
+                        </div>
+                      </div>
+                      <div className="ml-4  w-full">
+                        <div className="flex justify-between ">
+                          <h1 className="font-bold text-[13px]">
+                            John Doe{" "}
+                            <span className="ml-3  text-[10px] font-semibold px-2 py-1 rounded-full bg-[#F5F3FF] text-[#7C3AED]">
+                              Admin
+                            </span>
+                          </h1>
+                          <p className="text-[12px] text-[#94A3B8]">
+                            Mar 12, 2023 at 2:30 PM
+                          </p>
+                        </div>
+                        <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
+                          Emma, please make sure the checkout flow is aligned
+                          with our mobile-first approach. Reference the design
+                          system doc I shared earlier. Also, please include a
+                          guest checkout option.
+                        </p>
+                        <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
+                          <HeartIcon className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
+                          2 &nbsp;{" "}
+                          <span className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer">
+                            Reply
+                          </span>
                         </p>
                       </div>
-                      <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
-                        Emma, please make sure the checkout flow is aligned with
-                        our mobile-first approach. Reference the design system
-                        doc I shared earlier. Also, please include a guest
-                        checkout option.
-                      </p>
-                      <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
-                        <HeartIcon className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
-                        2 &nbsp;{" "}
-                        <span className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer">
-                          Reply
-                        </span>
-                      </p>
                     </div>
                   </div>
+                </div>
+
+                <div className="p-4  flex ">
+                  <div className="  gap-4 w-full ">
+                    <div className="flex gap-4 items-start mb-2">
+                      <div className="w-[35px] h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
+                        <span className="text-white text-[10px] font-bold">
+                          AK
+                        </span>
+                      </div>
+                      <div className="w-full">
+                        <textarea
+                          className="w-full h-20 resize-none border rounded-md p-2 text-[12px] font-semibold hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Write a comment..."
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="flex gap-2 ml-12">
+                        <div
+                          className="border-2 cursor-pointer flex items-center 
+                     px-4 h-8 text-[12px] font-semibold rounded-md hover:shadow-md"
+                        >
+                          <Paperclip className="w-4 h-4 mr-2" />
+                          Attach
+                        </div>
+                        <div
+                          className="border-2 cursor-pointer flex items-center 
+                     px-4 h-8 text-[12px] font-semibold rounded-md  hover:shadow-md"
+                        >
+                          <AtSignIcon className="w-4 h-4 mr-2" />
+                          Mention
+                        </div>
+                      </div>
+                      <div
+                        className="border-2 cursor-pointer flex items-center 
+                     px-4 h-8 text-[12px] font-semibold rounded-md bg-[#4F46E5] text-white hover:bg-[#6059e5]"
+                      >
+                        Post Comment
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 border-2 shadow-md bg-white rounded-xl">
+                
+                  <h1 className="font-bold text-[14px] ">Activity Timeline</h1>
+                
+                <div className="mt-4 relative flex flex-col gap-4 pt-4 border-t-2">
+
+                  <div className="absolute border-2 border-[#eeeeee] h-full left-[7px]  z-10"></div>
+                  <div className="bg-white absolute w-10 h-[35px]  z-20 -bottom-4" ></div>
+
+                  <div className="flex gap-2 z-20 ">
+                    <div className="w-4 h-4 mt-1 border-4  border-red-500 bg-[#f9e6e6] rounded-full"></div>
+                    <div>
+                      <p className="text-[13px]  ">
+                        <span className="font-bold"> Alice Smith </span>
+                        <span className="">uploaded</span>{" "}
+                        <span className="text-blue-600"> wireframe-v1.png</span>{" "}
+                        -{" "}
+                      </p>
+                      <span className="text-[11px] text-[#94A3B8]">
+                        2 hours ago
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2  z-20">
+                    <div className="w-4 h-4 mt-1 border-4  border-red-500 bg-[#f9e6e6] rounded-full"></div>
+                    <div>
+                      <p className="text-[13px]  ">
+                        <span className="font-bold"> Alice Smith </span>
+                        <span className="">uploaded</span>{" "}
+                        <span className="text-blue-600"> wireframe-v1.png</span>{" "}
+                        -{" "}
+                      </p>
+                      <span className="text-[11px] text-[#94A3B8]">
+                        2 hours ago
+                      </span>
+                    </div>
+                  </div>
+
+                  
+
                 </div>
               </div>
             </div>
@@ -181,16 +269,21 @@ function TaskDetail() {
                       STATUS
                     </h1>
                     <div className="flex items-center   mt-2">
-                      <div className="flex items-center w-32 gap-2 cursor-pointer" onClick={()=>setTaskStatus("ToDo")}>
+                      <div
+                        className="flex items-center w-32 gap-2 cursor-pointer"
+                        onClick={() => setTaskStatus("ToDo")}
+                      >
                         <div className="w-3 h-3 bg-[#7a7a7a] rounded-full"></div>
                         <p className="text-[12px] font-semibold">ToDo</p>
                         {TaskStatus === "ToDo" && <div>✅</div>}
                       </div>
-                      <div className="flex items-center w-32 gap-2 cursor-pointer" onClick={()=>setTaskStatus("In Progress")}>
+                      <div
+                        className="flex items-center w-32 gap-2 cursor-pointer"
+                        onClick={() => setTaskStatus("In Progress")}
+                      >
                         <div className="w-3 h-3 bg-[#3B82F6] rounded-full"></div>
                         <p className="text-[12px] font-semibold">In Progress</p>
                         {TaskStatus === "In Progress" && <div>✅</div>}
-
                       </div>
                     </div>
                   </div>
@@ -286,13 +379,13 @@ function TaskDetail() {
                   </h1>
                 </div>
                 <div className="p-4 flex flex-col gap-2">
-                  <div className="shadow-md border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
+                  <div className="shadow-md  hover:border-blue-500  border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
                     ✅ Mark as Done
                   </div>
-                  <div className="shadow-md border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
+                  <div className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
                     ✉️ Send Reminder
                   </div>
-                  <div className="shadow-md border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
+                  <div className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
                     🔗 Copy Link
                   </div>
                   <div className=" border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer text-[#EF4444] border-[#EF4444] bg-[#fef2f2]">

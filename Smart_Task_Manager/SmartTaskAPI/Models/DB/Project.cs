@@ -17,6 +17,8 @@ namespace SmartTaskAPI.Models.DB
         public string Icon { get; set; }
         public string colorTheme { get; set; }
 
+        public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+
         public ICollection<ProjectMember> Members { get; set; }
     }
 }

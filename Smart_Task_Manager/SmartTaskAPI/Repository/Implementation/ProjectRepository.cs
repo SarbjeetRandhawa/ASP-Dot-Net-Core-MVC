@@ -62,19 +62,23 @@ namespace SmartTaskAPI.Repository.Implementation
                 Name = x.Name,
                 Description = x.Description,
                 StartDate = x.StartDate,
-                Members = x.Members.Select(m => new  ProjectMemberResponseDto
-                { 
-
+                Members = x.Members.Select(m => new ProjectMemberResponseDto
+                {
                     UserId = m.UserId,
                     FirstName = m.User.FirstName,
                     LastName = m.User.LastName,
-                   
 
                 }).ToList(),
                 EndDate = x.EndDate,
                 colorTheme = x.colorTheme,
                 Status = x.Status,
-                Icon = x.Icon
+                Icon = x.Icon,
+                TotalTasks = x.Tasks.Count(),
+                DoneTasks = x.Tasks.Count(t => t.Status == 1),
+                Progress = x.Tasks.Count() == 0 ? 0 :Math.Round( (double)x.Tasks.Count(t => t.Status == 1) * 100 / x.Tasks.Count(),0),
+                OverdueTasks = x.Tasks.Count(t => t.DueDate < DateTime.UtcNow && t.Status != 1)
+
+
 
             }).ToListAsync();
 

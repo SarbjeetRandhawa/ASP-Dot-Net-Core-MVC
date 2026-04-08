@@ -9,11 +9,14 @@ import {
   archiveProjectById,
   fetchProjectById,
 } from "../../features/project/projectSlice";
+import { useLocation } from "react-router-dom";
 
 import { fetchTasksByProjectId } from "../../features/Task/TaskSlice";
 
 function ProjectDetails() {
   const navigate = useNavigate();
+  const {state} = useLocation();
+  const progress = state?.progress || 0;
   const [TaskStatus, setTaskStatus] = useState("overdue");
   const [TaskMenuOpen, setTaskMenuOpen] = useState(null);
   const [IsChecked, setIsChecked] = useState(false);
@@ -124,6 +127,10 @@ function ProjectDetails() {
     const endDate = new Date(project.endDate);
     if (today > endDate) return "Overdue";
     return "Active";
+  };
+
+  const HandleTaskInfoNavigate = (task) => {
+    navigate(`/Tasks/${task.id}-${task.taskCode}`);
   };
 
   const HandleMenuClick = (e, taskId) => {
@@ -270,10 +277,10 @@ function ProjectDetails() {
                 </div>
                 <div className=" w-1/3 p-4 relative overflow-hidden flex flex-col justify-center md:items-end">
                   <div className="flex  flex-col text-white  items-center ">
-                    <h1 className="  md:text-5xl font-extrabold">72%</h1>
+                    <h1 className="  md:text-5xl font-extrabold">{progress}%</h1>
                     <p className="text-[11px] text-[#ffffffb3]">Completed</p>
                     <div className="w-24 md:w-40 h-2 mt-2 bg-[#FFFFFF26] rounded-lg">
-                      <div className="h-[7px] bg-[#c1d3d5] w-[60%] rounded-lg "></div>
+                      <div className={`h-[7px] bg-[#c1d3d5]  rounded-lg `} style={{ width: `${progress}%` }}></div>
                     </div>
                   </div>
                   <div className="absolute w-36 h-32   md:w-44 md:h-44 bg-[#ffffff23] rounded-full top-0 -right-10 md:-top-10 md:-right-10"></div>
@@ -388,6 +395,7 @@ function ProjectDetails() {
                             <td className="pr-4">
                               <div className="py-2">
                                 <h1
+                                onClick={HandleTaskInfoNavigate(task)}
                                   className={`text-[10px] md:text-[14px] ${task.status === 1 ? "line-through text-[#94A3B8]" : ""} hover:underline cursor-pointer font-bold`}
                                 >
                                   {task.title}

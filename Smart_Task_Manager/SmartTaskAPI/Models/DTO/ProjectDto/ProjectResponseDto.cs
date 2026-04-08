@@ -10,6 +10,11 @@
 
         public string Status { get; set; }
         public string Icon { get; set; }
+
+        public int TotalTasks { get; set; }
+        public int DoneTasks { get; set; }
+        public double Progress { get; set; }
+        public int OverdueTasks { get; set; }
         public string colorTheme { get; set; }
         public List<ProjectMemberResponseDto> Members { get; set; } = new();
     }

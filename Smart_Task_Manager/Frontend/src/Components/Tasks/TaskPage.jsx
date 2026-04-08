@@ -78,11 +78,9 @@ function TaskPage() {
     setsearch("");
   };
 
-  const createSlug = (name) => {
-    return name.toUpperCase().replace(/\s+/g,"-");
-  };
+  
   const HandleTaskInfoNavigate = (task) => {
-    navigate(`/Tasks/${task.id}-${createSlug(task.taskCode)}`);
+    navigate(`/Tasks/${task.id}-${task.taskCode}`);
   };
   // console.log(Counts);
 
@@ -139,7 +137,7 @@ function TaskPage() {
           <div className="mx-5 my-3 flex justify-between  rounded-md">
             <div className="flex ">
               <h1
-                className={`word-wrap px-2 md:px-5 py-1 cursor-pointer text-[8px] md:text-[12 px] font-semibold  ${FilterBar === "All" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"} `}
+                className={` px-2 md:px-5 py-1 cursor-pointer text-[8px] md:text-[12px] font-semibold  ${FilterBar === "All" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"} `}
                 onClick={() => setFilterBar("All")}
               >
                 All Tasks ( {Counts.totalTasks} )

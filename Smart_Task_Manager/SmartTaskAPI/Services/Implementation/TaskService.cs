@@ -107,6 +107,7 @@ namespace SmartTaskAPI.Services.Implementation
             {
                 Id = t.Id,
                 Title = t.Title,
+                TaskCode = t.TaskCode,
                 Priority = t.Priority,
                 AssignedToName = t.AssignedToUser?.FirstName + " " + t.AssignedToUser?.LastName,
                 AssignedByName = t.CreatedByUser?.FirstName + " " + t.CreatedByUser?.LastName,
