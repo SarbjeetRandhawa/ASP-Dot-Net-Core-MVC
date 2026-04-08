@@ -25,6 +25,8 @@ namespace SmartTaskAPI.Data
             builder.Entity<TaskItem>()
                 .HasOne(t => t.CreatedByUser).WithMany().HasForeignKey(t => t.CreatedByUserId).OnDelete(DeleteBehavior.Restrict);
 
+          
+
             builder.Entity<Models.DB.ProjectRole>().HasData(
                 new Models.DB.ProjectRole
                 {

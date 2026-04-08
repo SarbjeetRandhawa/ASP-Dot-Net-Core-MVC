@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Paperclip, HeartIcon, AtSign, AtSignIcon } from "lucide-react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
-import { fetchProjectById } from "../../features/project/projectSlice";
+import { fetchTaskById } from "../../features/Task/TaskSlice";
 import { useSelector , useDispatch } from "react-redux";
 
 function TaskDetail() {
@@ -12,7 +12,7 @@ function TaskDetail() {
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    dispatch(fetchProjectById(4));
+    dispatch(fetchTaskById(4));
   },[dispatch])
 
   // console.log(selectedTask);

@@ -59,7 +59,7 @@ namespace SmartTaskAPI.Services.Implementation
                         FilePath = "/uploads/" + fileName,
                         FileSize = file.Length,
                         MimeType = file.ContentType,
-                        UploadeByUserId = userId,
+                        UploadedByUserId = userId,
                     };
 
                     await _uow.TaskAttachmentRepository.AddAsync(attachment);
@@ -100,6 +100,7 @@ namespace SmartTaskAPI.Services.Implementation
         {
             var  Task = await _uow.TaskRepository.GetByIdAsync(TaskId);
 
+
             return new TaskResponseDetailDto
             {
                 Id = Task.Id,
@@ -116,7 +117,7 @@ namespace SmartTaskAPI.Services.Implementation
                    FileName = a.FileName,
                    FilePath = a.FilePath,
                    FileSize = a.FileSize,
-                   UploadedByUser = a.UploadeByUserId
+                   UploadedByUser = a.UploadedByUser.FirstName + " " + a.UploadedByUser.LastName
                    
                 }).ToList(),
                 

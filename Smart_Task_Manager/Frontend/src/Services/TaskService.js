@@ -29,7 +29,7 @@ let query = `?PageNumber=${page}&PageSize=${PageSize}&MyTasks=${myTask}`;
   return res.data;
 }
 
-export const getTaskById = async ({id}) =>{
+export const getTaskById = async (id) =>{
   const res = await axiosInstance.get(`${API_URL}/Task/${id}`);
   console.log(res.data);
   return res.data;

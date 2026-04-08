@@ -43,7 +43,7 @@ export const fetchTasksByProjectId = createAsyncThunk(
 );
 
 export const fetchTaskById = createAsyncThunk(
-  "tasks/fetchTaskById " , async (id , {rejectWithValue}) =>{
+  "tasks/fetchTaskById" , async (id , {rejectWithValue}) =>{
     try{
       const data = await getTaskById(id);
       return data;
@@ -112,7 +112,7 @@ const taskSlice = createSlice({
         state.error = null;
       }).addCase(fetchTaskById.fulfilled , (state,action)=>{
         state.loading = false;
-        state.tasks = action.payload;
+        state.SelectedTask = action.payload;
       })
       .addCase(fetchTaskById.rejected, (state, action) => {
         state.loading = false;
