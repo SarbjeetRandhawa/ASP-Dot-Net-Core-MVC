@@ -33,6 +33,7 @@
     "lucide-react": "^1.7.0",
     "prose": "^0.0.1",
     "react": "^19.2.4",
+    "react-creative-cursor": "^1.2.7",
     "react-dom": "^19.2.4",
     "react-dropzone": "^15.0.0",
     "react-hook-form": "^7.71.2",
