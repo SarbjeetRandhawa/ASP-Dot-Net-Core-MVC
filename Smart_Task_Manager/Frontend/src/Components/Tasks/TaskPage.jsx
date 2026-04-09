@@ -79,6 +79,13 @@ function TaskPage() {
     setsearch("");
   };
 
+   const createSlug = (name) => {
+    return name.toLowerCase().replace(/\s+/g, "-");
+  };
+
+   const HandleProjectInfoNavigate = (projectid , projectname) => {
+    navigate(`/projects/${projectid}-${createSlug(projectname)}`);
+  };
   
   const HandleTaskInfoNavigate = (task) => {
     navigate(`/tasks/${task.id}-${task.taskCode}`);
@@ -234,7 +241,7 @@ function TaskPage() {
                                 <div
                                   className={`w-3 h-3 rounded-full ${colors[(index + 3) % colors.length]}`}
                                 ></div>
-                                <p className="text-[12px] font-semibold text-[#64748B]">
+                                <p className="text-[12px] font-semibold text-[#64748B] cursor-pointer hover:underline" onClick={()=>HandleProjectInfoNavigate(task.projectId , task.projectName)}>
                                   {task.projectName}
                                 </p>
                               </div>

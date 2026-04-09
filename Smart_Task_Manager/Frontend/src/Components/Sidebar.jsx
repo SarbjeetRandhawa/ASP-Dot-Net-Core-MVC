@@ -145,8 +145,8 @@ function Sidebar() {
         <div className="flex mb-[56px] sm:mb-0 items-center border-t-[1px] border-t-[#ffffff25] p-2 sm:p-3 gap-3 text-white justify-between">
           <div className="flex items-center gap-2 ">
             <div className="flex items-center justify-center h-9 w-9 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">
-              {user.firstName.charAt(0)}
-              {user.lastName.charAt(0)}
+              {user.firstName.charAt(0).toUpperCase()}
+              {user.lastName.charAt(0).toUpperCase()}
             </div>
             <div>
               <h1 className="text-[11px] font-semibold ">

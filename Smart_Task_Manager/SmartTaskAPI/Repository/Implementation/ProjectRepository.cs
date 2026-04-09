@@ -109,6 +109,7 @@ namespace SmartTaskAPI.Repository.Implementation
                 }).ToList(),
                 EndDate = x.EndDate,
                 colorTheme = x.colorTheme,
+                progress = x.Tasks.Count() == 0 ? 0 : Math.Round((double)x.Tasks.Count(t => t.Status == 1) * 100 / x.Tasks.Count(), 0),
                 Status = x.Status,
                 Icon = x.Icon
 

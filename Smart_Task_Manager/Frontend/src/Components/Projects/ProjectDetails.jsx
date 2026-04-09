@@ -9,14 +9,11 @@ import {
   archiveProjectById,
   fetchProjectById,
 } from "../../features/project/projectSlice";
-import { useLocation } from "react-router-dom";
 
 import { fetchTasksByProjectId } from "../../features/Task/TaskSlice";
 
 function ProjectDetails() {
   const navigate = useNavigate();
-  const {state} = useLocation();
-  const progress = state?.progress || 0;
   const [TaskStatus, setTaskStatus] = useState("overdue");
   const [TaskMenuOpen, setTaskMenuOpen] = useState(null);
   const [IsChecked, setIsChecked] = useState(false);
@@ -279,10 +276,10 @@ function ProjectDetails() {
                 </div>
                 <div className=" w-1/3 p-4 relative overflow-hidden flex flex-col justify-center md:items-end">
                   <div className="flex  flex-col text-white  items-center ">
-                    <h1 className="  md:text-5xl font-extrabold">{progress}%</h1>
+                    <h1 className="  md:text-5xl font-extrabold">{selectedProject.progress}%</h1>
                     <p className="text-[11px] text-[#ffffffb3]">Completed</p>
                     <div className="w-24 md:w-40 h-2 mt-2 bg-[#FFFFFF26] rounded-lg">
-                      <div className={`h-[7px] bg-[#c1d3d5]  rounded-lg `} style={{ width: `${progress}%` }}></div>
+                      <div className={`h-[7px] bg-[#c1d3d5]  rounded-lg `} style={{ width: `${selectedProject.progress}%` }}></div>
                     </div>
                   </div>
                   <div className="absolute w-36 h-32   md:w-44 md:h-44 bg-[#ffffff23] rounded-full top-0 -right-10 md:-top-10 md:-right-10"></div>

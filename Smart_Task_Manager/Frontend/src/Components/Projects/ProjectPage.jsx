@@ -60,9 +60,7 @@ function ProjectPage() {
   };
 
   const HandleProjectInfoNavigate = (project) => {
-    navigate(`/projects/${project.id}-${createSlug(project.name)}`, {
-      state: { progress: project.progress },
-    });
+    navigate(`/projects/${project.id}-${createSlug(project.name)}`);
   };
 
   const HandleMenuClick = (e, projectId) => {

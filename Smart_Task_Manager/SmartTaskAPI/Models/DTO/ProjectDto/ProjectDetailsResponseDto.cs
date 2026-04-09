@@ -13,6 +13,7 @@
         public string Status { get; set; }
         public string Icon { get; set; }
         public string colorTheme { get; set; }
+        public double progress { get; set; }
         public List<ProjectDetailsMemberResponseDto> Members { get; set; } = new();
     }
 }

@@ -110,15 +110,19 @@ namespace SmartTaskAPI.Services.Implementation
                 Status = Task.Status,
                 Priority = Task.Priority,
                 DueDate = Task.DueDate,
+                CreatedAt=Task.CreatedAt,
+                UpdatedAt = Task.UpdatedAt,
                 ProjectName = Task.Project.Name,
                 AssignedToName = Task.AssignedToUser?.FirstName + " " + Task.AssignedToUser?.LastName,
                 AssignedByName = Task.CreatedByUser?.FirstName + " " + Task.CreatedByUser?.LastName,
                 Files = Task.Attachments.Select(a => new AttachmentDto
                 {
                     Id = a.Id,
+                    OrignalName = a.OrignalName,
                     FileName = a.FileName,
                     FilePath = a.FilePath,
                     FileSize = a.FileSize,
+                    UploadedAt = a.UploadedAt,
                     UploadedByUser = a.UploadedByUser.FirstName + " " + a.UploadedByUser.LastName
                 }).ToList(),
 
