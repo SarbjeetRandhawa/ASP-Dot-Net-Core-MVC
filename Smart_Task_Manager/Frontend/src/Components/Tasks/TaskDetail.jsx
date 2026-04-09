@@ -6,13 +6,17 @@ import { fetchTaskById } from "../../features/Task/TaskSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify"
+
 
 
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [preview , setPreview] = useState(null);
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const { taskIdSlug } = useParams();
   const projectId = taskIdSlug.split("-")[0];
@@ -34,7 +38,14 @@ function TaskDetail() {
     2: "high",
   };
   console.log(SelectedTask);
-  const safeHtml = DOMPurify.sanitize(SelectedTask.description);
+
+  const isImage = (file) => {
+
+    file?.fileName?.match(/\.(jpg|png|jpeg|gif|webp)$/i);
+  }
+  const isPdf = (file) => {
+    file?.fileName?.match(/\.pdf$/i);
+  }
 
   return (
     <>
@@ -82,6 +93,25 @@ function TaskDetail() {
 
           {/* ------------------------------------- */}
 
+          {
+            preview && (
+              <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" >
+                  <div className="bg-white w-[80%] h-[80%] rounded-lg p-4 relative">
+                    <button className="absolute top-2 right-4 text-black text-xl " onClick={(e) => {e.preventDefault() , setPreview(null)}}>
+                      X
+                    </button>
+                    <div className="w-full h-full flex justify-center items-center">
+                      {isImage(preview) && (<img src={API_URL + preview?.filePath}  className="max-h-full max-w-full object-contain"/>)}
+                      {isPdf(preview?.file)&&(<iframe src={API_URL + preview?.filePath} className="w-full h-full" title="pdf-preview?" />)}
+                      {isImage(preview)&& !isPdf(preview) && (
+                        <div className="text-center"> <p>No Preview available</p> <a href={(API_URL)+(preview?.filePath)} download className="text-blue-500 underline" >Download File</a> </div>
+                      )}
+                    </div>
+                  </div>
+              </div>
+            )
+          }
+
           <div className="flex lg:flex-row flex-col gap-2 p-4">
             {loading ? (
               <div className="flex flex-col gap-2 animate-pulse  p-4 h-64">
@@ -123,12 +153,13 @@ function TaskDetail() {
                       </h1>
                     </div>
 
-                    <div>
-                      <h1 className="font-semibold text-[12px] text-[#64748B] tracking-wider">
+                    <div className="prose">
+                      <h1 className="font-semibold text-[12px] text-[#64748B] mb-2 tracking-wider">
                         Descripion
                       </h1>
+                      <div dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(SelectedTask?.description)}} />
                     </div>
-                    <div dangerouslySetInnerHTML={{__html:safeHtml}}/> 
+
                   </div>
 
                   <div className="shadow-md bg-white border-2 rounded-xl p-4">
@@ -151,6 +182,7 @@ function TaskDetail() {
                       {SelectedTask?.files?.map((f) => (
                         <div
                           key={f.id}
+                          onClick={()=>setPreview(f)}
                           className="hover:shadow-md cursor-pointer border p-6 rounded-md flex flex-col gap-2 items-center text-[#64748B] text-[10px]  w-[190px]"
                         >
                           <img
@@ -357,7 +389,7 @@ function TaskDetail() {
 
                       <div>
                         <h1 className="text-[11px] text-[#94A3B8] font-semibold tracking-widest">
-                          Priority
+                          PRIORITY
                         </h1>
                         <div className="flex items-center gap-2 mt-2">
                           <div

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using SmartTaskAPI.Data;
 using SmartTaskAPI.Middleware;
@@ -81,7 +82,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+var provider = new FileExtensionContentTypeProvider();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider,
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers["Content-Disposition"] = "inline";
+    }
+});
+    
 
 using (var scope = app.Services.CreateScope())
 {

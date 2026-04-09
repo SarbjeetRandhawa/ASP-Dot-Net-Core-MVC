@@ -40,6 +40,9 @@ namespace SmartTaskAPI.Repository.Implementation
 
         public async Task<(IEnumerable<TaskItem>, int)> GetAllAsync(string userId, QueryParams query)
         {
+            var now = DateTime.UtcNow;
+            await _context.Tasks.Where(t => t.DueDate < now && t.Status != 1).ExecuteUpdateAsync(t => t.SetProperty(x => x.Status ,3));
+
             var projectIds = await _context.ProjectMembers
                 .Where(pm => pm.UserId == userId)
                 .Select(pm => pm.ProjectId)
@@ -50,6 +53,7 @@ namespace SmartTaskAPI.Repository.Implementation
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
                 .Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId || projectIds.Contains(t.ProjectId))
+
        ;
 
             if (query.MyTasks)

@@ -3,13 +3,13 @@ import axiosInstance from "../api/axiosInstance";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const getAllUsers = async () => {
-  const res = await axiosInstance.get(`${API_URL}/users`);
+  const res = await axiosInstance.get(`${API_URL}/api/users`);
   // console.log(res.data);
   return res.data;
 };
 
 const deleteUser = async (userId) => {
-  const response = await axiosInstance.delete(`${API_URL}/users/${userId}`);
+  const response = await axiosInstance.delete(`${API_URL}/api/users/${userId}`);
   return response.data;
 };
 const userService = {

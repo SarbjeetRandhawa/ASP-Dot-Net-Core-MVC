@@ -19,8 +19,17 @@ background-color: #f8f8f8;
   cursor: pointer;
   color: blue;
 }
+.prose *{
+  
+  margin: 7px;
+}
+.prose hr{
+  
+  margin: 0;
+}
 .ProseMirror *{
   margin: 0;
+  padding: 0;
 }
 .ProseMirror p.is-editor-empty:first-child::before{
   content: attr(data-placeholder);

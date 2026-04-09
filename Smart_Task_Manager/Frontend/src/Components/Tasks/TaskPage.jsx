@@ -22,7 +22,7 @@ function TaskPage() {
   //   priority: "",
   //   Status: 0
   //  });
-  const PageSize = 10;
+  const PageSize = 8;
   const [FilterBar, setFilterBar] = useState("All");
   // const [priority, setPriority] = useState("medium");
   const colors = [
