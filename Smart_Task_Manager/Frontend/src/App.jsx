@@ -16,7 +16,7 @@ useEffect(()=>{
     <BrowserRouter>
       <Routes>
         <Route path="*" element={<h1>404 Not Found</h1>} />
-        <Route path="/" element={token ? <Navigate to="/projects" /> : <Navigate to="/login" /> } />
+        <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" /> } />
         {AuthRoutes}
         {DashBoardRoutes}
         {/* <Route path="/login" element={ <ProtectedRoute><AuthRoute/></ProtectedRoute> } />

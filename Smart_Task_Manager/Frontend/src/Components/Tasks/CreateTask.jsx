@@ -18,7 +18,7 @@ function CreateTask() {
   const [DescriptionError, setDescriptionError] = useState("");
 
   const location = useLocation();
-  console.log(Files);
+  // console.log(Files);
   
 
   const [TaskFormData, setTaskFormData] = useState({
@@ -127,7 +127,7 @@ function CreateTask() {
       <div className="flex ">
         <Sidebar />
 
-        <div className="w-full lg:pl-[16.66%]  md:pt-0 md:pl-[33%] pt-14">
+        <div className="w-full lg:pl-[16.66%] lg:pt-0 pt-14">
           <form action="" method="post" onSubmit={handleSubmit(onSubmit)}>
             <div className="Navbar border bg-white  flex gap-1 sm:gap-2 h-12 w-full  items-center px-4">
               <div className=" p-3 mx-0 sm:mx-4 ">

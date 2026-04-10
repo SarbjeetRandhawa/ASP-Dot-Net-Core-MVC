@@ -153,7 +153,7 @@ function CreateProject() {
   return (
     <div className="flex ">
       <Sidebar />
-      <div className="w-full lg:pl-[16.66%] bg-white md:pt-0 md:pl-[33%] pt-14">
+      <div className="w-full lg:pl-[16.66%] lg:pt-0 bg-white pt-14">
         <form method="post" onSubmit={handleSubmit(onSubmit)}>
           <div className="Navbar border  flex gap-1 sm:gap-2 h-12 w-full">
             <div className=" p-3 mx-0 sm:mx-4  ">

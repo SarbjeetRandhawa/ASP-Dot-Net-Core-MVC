@@ -25,7 +25,7 @@ namespace SmartTaskAPI.Repository.Implementation
         {
             return await _context.Tasks.Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
-                .Where(t => (t.AssignedToUserId == userId || t.CreatedByUserId == userId) && t.ProjectId == id).ToListAsync();
+                .Where(t =>  t.ProjectId == id).ToListAsync();
         }
 
         public async Task<TaskItem> GetByIdAsync(int id)

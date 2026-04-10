@@ -11,7 +11,7 @@ function Sidebar() {
 
   return (
     <>
-      <div className="md:hidden fixed top-0  left-0 w-full gap-2 flex items-center bg-gray-50 text-black p-5 z-40">
+      <div className="lg:hidden fixed top-0  left-0 w-full gap-2 flex items-center bg-gray-50 text-black p-5 z-40">
         <button onClick={() => setIsOpen(!isOpen)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,14 +31,14 @@ function Sidebar() {
       </div>
       {isOpen && (
         <div
-          className="fixed z-30 inset-0  bg-black bg-opacity-50 md:hidden"
+          className="fixed z-30 inset-0  bg-black bg-opacity-50 lg:hidden"
           onClick={() => setIsOpen(false)}
         ></div>
       )}
 
       <div
-        className={`z-30 w-64 md:w1/5 lg:w-1/6 flex flex-col justify-between md:flex md:flex-col md:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
-      fixed overflow-y-scroll top-14 md:top-0 left-0  transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:block`}
+        className={`z-30 w-64  lg:w-1/6 flex flex-col justify-between lg:flex lg:flex-col lg:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
+      fixed overflow-y-scroll top-14 lg:top-0 left-0  transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:block`}
       >
         <div>
           <div className="border-b border-[#ffffff31] flex h-20 p-4 gap-2">
@@ -106,15 +106,7 @@ function Sidebar() {
                   <div className="text-white rounded-md">👥</div>
                   <span>Team Members</span>
                 </NavLink>
-                <NavLink
-                  to="/activity"
-                  className={({ isActive }) =>
-                    `hover:bg-[#FFFFFF26] hover:rounded-lg  p-2 flex gap-2 text-[13px] text-[#FFFFFFA6] ${isActive ? "bg-[#FFFFFF26] rounded-lg" : ""}`
-                  }
-                >
-                  <div className="text-white">🕒</div>
-                  <span>Activity Log</span>
-                </NavLink>
+                
               </div>
             </div>
             <div className="text-white p-1 px-4 sm:p-4">
@@ -142,7 +134,7 @@ function Sidebar() {
             </div>
           </div>
         </div>
-        <div className="flex mb-[56px] sm:mb-0 items-center border-t-[1px] border-t-[#ffffff25] p-2 sm:p-3 gap-3 text-white justify-between">
+        <div className="flex mb-[56px] md:mb-[56px] lg:mb-0 items-center border-t-[1px] border-t-[#ffffff25] p-2 sm:p-3 gap-3 text-white justify-between">
           <div className="flex items-center gap-2 ">
             <div className="flex items-center justify-center h-9 w-9 rounded-full bg-[linear-gradient(to_bottom,#06B6D4,#7C3AED)] font-semibold">
               {user.firstName.charAt(0).toUpperCase()}

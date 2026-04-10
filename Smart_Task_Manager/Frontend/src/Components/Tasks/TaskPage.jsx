@@ -110,7 +110,7 @@ function TaskPage() {
       <div className="flex ">
         <Sidebar />
 
-        <div className="w-full lg:pl-[16.66%]   md:pt-0 md:pl-[33%] pt-14">
+        <div className="w-full lg:pl-[16.66%] lg:pt-0 pt-14">
           <div className="Navbar border bg-white justify-between  flex gap-1 sm:gap-2 h-12 w-full  items-center px-8">
             <div className="  ">
               <h1 className="font-bold  text-[#0F172A] text-[12px] md:text-[14px]  lg:text-[17px]">

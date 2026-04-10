@@ -7,6 +7,7 @@ import ProjectDetails from "../Components/Projects/ProjectDetails";
 import CreateTask from "../Components/Tasks/CreateTask";
 import TaskPage from "../Components/Tasks/TaskPage";
 import TaskDetail from "../Components/Tasks/TaskDetail";
+import Dashboard from "../Components/Dashboard/Dashboard";
 // import ProtectedRoute from './Components/ProtectedRoute'
 
 export const DashBoardRoutes = [
@@ -16,7 +17,7 @@ export const DashBoardRoutes = [
     path="/dashboard"
     element={
       <ProtectedRoute>
-        <h1>Dashboard</h1>
+        <Dashboard/>
       </ProtectedRoute>
     }
   />,

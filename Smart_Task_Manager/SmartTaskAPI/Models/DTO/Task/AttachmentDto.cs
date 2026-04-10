@@ -7,6 +7,7 @@
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public long FileSize { get; set; }
+        public string type { get; set; }
         public string UploadedByUser { get; set; }
         public DateTime UploadedAt { get; set; }
 

@@ -6,15 +6,13 @@ import { fetchTaskById } from "../../features/Task/TaskSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import DOMPurify from "dompurify"
-
-
+import DOMPurify from "dompurify";
 
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [preview , setPreview] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -40,19 +38,18 @@ function TaskDetail() {
   console.log(SelectedTask);
 
   const isImage = (file) => {
-
-    file?.fileName?.match(/\.(jpg|png|jpeg|gif|webp)$/i);
-  }
+    return file?.fileName?.match(/\.(jpg|png|jpeg|gif|webp)$/i);
+  };
   const isPdf = (file) => {
-    file?.fileName?.match(/\.pdf$/i);
-  }
+    return file?.fileName?.match(/\.pdf$/i);
+  };
 
   return (
     <>
       <div className="flex ">
         <Sidebar />
 
-        <div className="w-full lg:pl-[16.66%]  md:pt-0 md:pl-[33%] pt-14">
+        <div className="w-full lg:pl-[16.66%] lg:pt-0 pt-14">
           <div className="Navbar border bg-white  flex gap-1 sm:gap-2 h-12 w-full  items-center px-4">
             <div className=" p-3 mx-0 sm:mx-4 ">
               <p className="text-[7px] sm:text-[11px] font-semibold text-[#64748B]">
@@ -93,24 +90,60 @@ function TaskDetail() {
 
           {/* ------------------------------------- */}
 
-          {
-            preview && (
-              <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50" >
-                  <div className="bg-white w-[80%] h-[80%] rounded-lg p-4 relative">
-                    <button className="absolute top-2 right-4 text-black text-xl " onClick={(e) => {e.preventDefault() , setPreview(null)}}>
-                      X
-                    </button>
-                    <div className="w-full h-full flex justify-center items-center">
-                      {isImage(preview) && (<img src={API_URL + preview?.filePath}  className="max-h-full max-w-full object-contain"/>)}
-                      {isPdf(preview?.file)&&(<iframe src={API_URL + preview?.filePath} className="w-full h-full" title="pdf-preview?" />)}
-                      {isImage(preview)&& !isPdf(preview) && (
-                        <div className="text-center"> <p>No Preview available</p> <a href={(API_URL)+(preview?.filePath)} download className="text-blue-500 underline" >Download File</a> </div>
-                      )}
+          {preview && (
+            <div
+              className="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
+              onClick={() => setPreview(null)}
+            >
+              <div className="bg-white w-[80%] h-[90%] rounded-lg p-4 relative">
+                <button
+                  className="absolute top-4 right-4 text-red-600  text-xl "
+                  onClick={(e) => {
+                    (e.preventDefault(), setPreview(null));
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    class="bi bi-x-circle-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                  </svg>
+                </button>
+                <div className="w-full h-full flex justify-center items-center">
+                  {isImage(preview) && (
+                    <img
+                      src={API_URL + preview?.filePath}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  )}
+                  {isPdf(preview) && (
+                    <iframe
+                      src={API_URL + preview?.filePath}
+                      className="w-full h-full"
+                      title="pdf-preview?"
+                    />
+                  )}
+                  {!isImage(preview) && !isPdf(preview) && (
+                    <div className="text-center">
+                      {" "}
+                      <p>No Preview available</p>{" "}
+                      <a
+                        href={API_URL + preview?.filePath}
+                        download
+                        className="text-blue-500 underline"
+                      >
+                        Download File
+                      </a>{" "}
                     </div>
-                  </div>
+                  )}
+                </div>
               </div>
-            )
-          }
+            </div>
+          )}
 
           <div className="flex lg:flex-row flex-col gap-2 p-4">
             {loading ? (
@@ -124,11 +157,27 @@ function TaskDetail() {
                 <div className=" w-full lg:w-2/3  flex flex-col gap-3 ">
                   <div className=" shadow-md bg-white rounded-xl border-2 p-4 flex flex-col gap-3">
                     <div className="flex gap-2">
-                      <div className={`px-4 py-1 font-semibold text-[12px]  rounded-full ${SelectedTask?.status == 0 ? "text-[#64748B] bg-[#F1F5F9]" :SelectedTask?.status == 1 ? "text-[#10B981] bg-[#F0FDF4]" : SelectedTask?.status == 2 ? "text-[#3B82F6] bg-[#EFF6FF]" :  " text-[#EF4444] border-[#EF4444] bg-[#fef2f2]"}`}>
-                        {SelectedTask?.status == 0 ? "⌛" :SelectedTask?.status == 1 ? "✅" : SelectedTask?.status == 2 ? "✏️" :  "❌"} {StatusMap[SelectedTask?.status]}
+                      <div
+                        className={`px-4 py-1 font-semibold text-[12px]  rounded-full ${SelectedTask?.status == 0 ? "text-[#64748B] bg-[#F1F5F9]" : SelectedTask?.status == 1 ? "text-[#10B981] bg-[#F0FDF4]" : SelectedTask?.status == 2 ? "text-[#3B82F6] bg-[#EFF6FF]" : " text-[#EF4444] border-[#EF4444] bg-[#fef2f2]"}`}
+                      >
+                        {SelectedTask?.status == 0
+                          ? "⌛"
+                          : SelectedTask?.status == 1
+                            ? "✅"
+                            : SelectedTask?.status == 2
+                              ? "✏️"
+                              : "❌"}{" "}
+                        {StatusMap[SelectedTask?.status]}
                       </div>
-                      <div className={`px-4 py-1 font-semibold text-[12px]  ${SelectedTask?.priority == 0 ? "text-[#10B981] bg-[#F0FDF4]" : SelectedTask?.priority == 1 ?  "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEE2E2]"} rounded-full`}>
-                        {SelectedTask?.priority == 0 ? "🟢" :SelectedTask?.priority == 1 ?  "🟡" : "🔴"} {PriorityMap[SelectedTask?.priority]}
+                      <div
+                        className={`px-4 py-1 font-semibold text-[12px]  ${SelectedTask?.priority == 0 ? "text-[#10B981] bg-[#F0FDF4]" : SelectedTask?.priority == 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEE2E2]"} rounded-full`}
+                      >
+                        {SelectedTask?.priority == 0
+                          ? "🟢"
+                          : SelectedTask?.priority == 1
+                            ? "🟡"
+                            : "🔴"}{" "}
+                        {PriorityMap[SelectedTask?.priority]}
                       </div>
                       {StatusMap[SelectedTask?.status] == 3 && (
                         <div className="px-4 py-1 flex  font-semibold text-[12px] text-[#EF4444] bg-[#FEE2E2] rounded-full">
@@ -157,9 +206,12 @@ function TaskDetail() {
                       <h1 className="font-semibold text-[12px] text-[#64748B] mb-2 tracking-wider">
                         Descripion
                       </h1>
-                      <div dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(SelectedTask?.description)}} />
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(SelectedTask?.description),
+                        }}
+                      />
                     </div>
-
                   </div>
 
                   <div className="shadow-md bg-white border-2 rounded-xl p-4">
@@ -182,14 +234,44 @@ function TaskDetail() {
                       {SelectedTask?.files?.map((f) => (
                         <div
                           key={f.id}
-                          onClick={()=>setPreview(f)}
+                          onClick={() => setPreview(f)}
                           className="hover:shadow-md cursor-pointer border p-6 rounded-md flex flex-col gap-2 items-center text-[#64748B] text-[10px]  w-[190px]"
                         >
-                          <img
-                            src="/public/pdf_4726010.png"
-                            className="w-10"
-                            alt=""
-                          />
+                          {f.type.startsWith("image/") ? (
+                            <img
+                              src={API_URL + f.filePath}
+                              className="h-14 w-14"
+                              alt=""
+                            />
+                          ) : f.type.startsWith("application/pdf") ? (
+                            <img
+                              src={"/public/pdf_4726010.png"}
+                              className="h-14 w-14"
+                              alt=""
+                            />
+                          ) : f.type.startsWith("application/msword") ||
+                            f.type.startsWith(
+                              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            ) ? (
+                            <img
+                              src={"/public/doc_10301478.png"}
+                              className="h-14 w-14"
+                              alt=""
+                            />
+                          ) : f.type.startsWith(
+                              "application/vnd.ms-excel",
+                            ) ||
+                            f.type.startsWith(
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            ) ? (
+                            <img
+                              src={"/public/excel-file_11384076.png"}
+                              className="h-14 w-14"
+                              alt=""
+                            />
+                          ) : (
+                            ""
+                          )}
                           <h1 className="text-black font-semibold text-[12px]">
                             {f.orignalName}
                           </h1>

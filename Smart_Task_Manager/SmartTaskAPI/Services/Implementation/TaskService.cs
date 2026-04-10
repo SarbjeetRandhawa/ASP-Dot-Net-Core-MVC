@@ -121,6 +121,7 @@ namespace SmartTaskAPI.Services.Implementation
                     OrignalName = a.OrignalName,
                     FileName = a.FileName,
                     FilePath = a.FilePath,
+                    type = a.MimeType,
                     FileSize = a.FileSize,
                     UploadedAt = a.UploadedAt,
                     UploadedByUser = a.UploadedByUser.FirstName + " " + a.UploadedByUser.LastName
