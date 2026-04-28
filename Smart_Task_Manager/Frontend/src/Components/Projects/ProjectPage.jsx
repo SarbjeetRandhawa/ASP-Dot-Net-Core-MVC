@@ -18,6 +18,13 @@ function ProjectPage() {
   const [debounceSearch, setDebounceSearch] = useState("");
   const CurrentUser = useSelector((state) => state.auth.user);
 
+   const [animate, setAnimate] = useState(false);
+    useEffect(()=>{
+      setTimeout(() => 
+        setAnimate(true),
+      200);
+    })
+
   const ArchievedProjects = projects.filter(
     (u) => u.status === "Archived",
   ).length;
@@ -270,8 +277,8 @@ function ProjectPage() {
                             {p.icon}
                           </div>
                           <div>
-                            <h1 className="font-semibold text-[13px]">
-                              {p.name}
+                            <h1 className="font-semibold text-[14px] text-black">
+                              {p.name} 
                             </h1>
                             <p className="text-[11px] font-semibold text-[#94A3B8]">
                               {formFullDate(
@@ -344,8 +351,8 @@ function ProjectPage() {
                       </div>
                       <div className="progressbar w-full bg-[#E2E8F0] h-1 rounded-lg">
                         <div
-                          className={`h-1 rounded-lg bg-[${p.colorTheme}]`}
-                          style={{ width: `${p.progress}%` }}
+                          className={`h-1 rounded-lg bg-[${p.colorTheme }]  transition-all duration-1000 ease-in-out `}
+                          style={{  width: animate ? `${p.progress}%` : "0px"}}
                         ></div>
                       </div>
                       <div className="flex justify-between relative">

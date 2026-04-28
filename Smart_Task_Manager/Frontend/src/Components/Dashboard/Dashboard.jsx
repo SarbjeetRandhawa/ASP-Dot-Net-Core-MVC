@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 
 function Dashboard() {
+  const [animate, setAnimate] = useState(false);
+  useEffect(() => {
+    setTimeout(() => setAnimate(true), 200);
+  });
+
   return (
     <>
       <div className="flex ">
@@ -134,180 +139,184 @@ function Dashboard() {
               </div>
             </div>
 
-            <div className="flex w-full gap-3">
-              <div className="shadow-md border-2 p-4 w-full bg-white rounded-lg">
-                <div className="border-b pb-2">
-                  <h1 className="text-[14px] font-bold">Tasks by Status</h1>
-                  <p className="text-[12px] text-[#64748B]">
-                    Distribution overview
-                  </p>
+            <div className="flex flex-col md:flex-row lg:flex-row  w-full gap-3">
+              <div className=" flex flex-col w-full lg:w-2/3 lg:flex-row gap-2">
+                <div className="shadow-md border-2 p-4 w-full bg-white rounded-lg">
+                  <div className="border-b pb-2">
+                    <h1 className="text-[14px] font-bold">Tasks by Status</h1>
+                    <p className="text-[12px] text-[#64748B]">
+                      Distribution overview
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col mt-6 items-center justify-center">
+                    <div className="flex  justify-center items-center ">
+                      <div className="px-12 py-4">
+                        <h1 className="text-[18px] leading-5 font-extrabold">
+                          84
+                        </h1>
+                        <p className="text-[9px] text-[#94A3B8]">Total</p>
+                      </div>
+                      <div className="flex flex-col  ">
+                        <div className="flex justify-between ">
+                          {" "}
+                          <div className="flex items-center gap-2 ">
+                            <div className="r w-2 rounded-full bg-green-600 h-2"></div>
+                            <h1 className="text-[12px] text-[#64748B]">Done</h1>
+                          </div>
+                          <h1 className="text-[13px] font-bold">52</h1>
+                        </div>
+                        <div className="flex justify-between ">
+                          {" "}
+                          <div className="flex items-center gap-2 w-24">
+                            <div className=" w-2 rounded-full bg-blue-600 h-2"></div>
+                            <h1 className="text-[12px] text-[#64748B]">
+                              In Progress
+                            </h1>
+                          </div>
+                          <h1 className="text-[13px] font-bold">19</h1>
+                        </div>
+                        <div className="flex justify-between ">
+                          {" "}
+                          <div className="flex items-center gap-2 ">
+                            <div className=" w-2 rounded-full bg-yellow-600 h-2"></div>
+                            <h1 className="text-[12px] text-[#64748B]">Todo</h1>
+                          </div>
+                          <h1 className="text-[13px] font-bold">13</h1>
+                        </div>
+                        <div className="flex justify-between ">
+                          {" "}
+                          <div className="flex items-center gap-2 ">
+                            <div className=" w-2 rounded-full bg-red-600 h-2"></div>
+                            <h1 className="text-[12px] text-[#64748B]">
+                              Overdue
+                            </h1>
+                          </div>
+                          <h1 className="text-[13px] font-bold">7</h1>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={` mt-6 h-[6px] flex transition-all duration-[3s] ease-in-out ${animate ? "w-full" : "w-0"}`}
+                    >
+                      <div className="border h-full w-[50%] border-r-0 rounded-l-lg bg-green-500"></div>
+                      <div className="border h-full w-[20%] border-x-0 bg-blue-500"></div>
+                      <div className="border h-full w-[20%] border-x-0 bg-yellow-500"></div>
+                      <div className="border h-full w-[10%] border-l-0 rounded-r-lg bg-red-500"></div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex flex-col mt-6 items-center justify-center">
-                  <div className="flex  justify-center items-center ">
-                    <div className="px-12 py-4">
-                      <h1 className="text-[18px] leading-5 font-extrabold">
-                        84
-                      </h1>
-                      <p className="text-[9px] text-[#94A3B8]">Total</p>
-                    </div>
-                    <div className="flex flex-col  ">
-                      <div className="flex justify-between ">
-                        {" "}
-                        <div className="flex items-center gap-2 ">
-                          <div className="r w-2 rounded-full bg-green-600 h-2"></div>
-                          <h1 className="text-[12px] text-[#64748B]">Done</h1>
-                        </div>
-                        <h1 className="text-[13px] font-bold">52</h1>
-                      </div>
-                      <div className="flex justify-between ">
-                        {" "}
-                        <div className="flex items-center gap-2 w-24">
-                          <div className=" w-2 rounded-full bg-blue-600 h-2"></div>
-                          <h1 className="text-[12px] text-[#64748B]">
-                            In Progress
+                <div className="shadow-md border-2 p-4 w-full bg-white rounded-lg">
+                  <div className="border-b pb-2">
+                    <h1 className="text-[14px] font-bold">Weekly Activity</h1>
+                    <p className="text-[12px] text-[#64748B]">
+                      Tasks completed per day
+                    </p>
+                  </div>
+
+                  <div className=" h-auto relative gap- flex flex-col mt-6 items-end ">
+                    <h1 className="text-[10px] text-[#bcc5cf] -left-6 -top-3 absolute">
+                      100
+                    </h1>
+                    <h1 className="text-[10px] text-[#bcc5cf] -left-6 top-[22%] absolute">
+                      75
+                    </h1>
+                    <h1 className="text-[10px] text-[#bcc5cf] -left-6 top-[47%] absolute">
+                      50
+                    </h1>
+                    <h1 className="text-[10px] text-[#bcc5cf] -left-6 top-[72%] absolute">
+                      25
+                    </h1>
+                    <h1 className="text-[10px] text-[#bcc5cf] -left-6 top-[97%] absolute">
+                      0
+                    </h1>
+
+                    <div className="border-dashed border-[#F1F5F9] border top-0 w-full absolute"></div>
+                    <div className="border-dashed border-[#F1F5F9] border top-[25%] w-full absolute"></div>
+                    <div className="border-dashed border-[#F1F5F9] border top-[50%] z-10 w-full absolute"></div>
+                    <div className="border-dashed border-[#F1F5F9] border top-[75%] w-full absolute"></div>
+
+                    <div className="flex h-40 gap-2 w-full">
+                      <div className=" w-1/6 flex flex-col  z-20  justify-end items-center">
+                        <div
+                          className={`border relative w-full bottom bg-[#4F46E5]/50   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[50%]" : "h-0"}`}
+                        >
+                          <h1 className="text-[9px] absolute -top-4 left-[45%]">
+                            5
                           </h1>
                         </div>
-                        <h1 className="text-[13px] font-bold">19</h1>
                       </div>
-                      <div className="flex justify-between ">
-                        {" "}
-                        <div className="flex items-center gap-2 ">
-                          <div className=" w-2 rounded-full bg-yellow-600 h-2"></div>
-                          <h1 className="text-[12px] text-[#64748B]">Todo</h1>
-                        </div>
-                        <h1 className="text-[13px] font-bold">13</h1>
-                      </div>
-                      <div className="flex justify-between ">
-                        {" "}
-                        <div className="flex items-center gap-2 ">
-                          <div className=" w-2 rounded-full bg-red-600 h-2"></div>
-                          <h1 className="text-[12px] text-[#64748B]">
-                            Overdue
+                      <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
+                        <div
+                          className={`border  relative w-full bottom bg-[#4F46E5]/70   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[70%]" : "h-0"}`}
+                        >
+                          <h1 className="text-[9px] absolute -top-4 left-[45%]">
+                            7
                           </h1>
                         </div>
-                        <h1 className="text-[13px] font-bold">7</h1>
+                      </div>
+                      <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
+                        <div
+                          className={`border  relative w-full bottom bg-[#4F46E5]/40 rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[40%]" : "h-0"}`}
+                        >
+                          <h1 className="text-[9px] absolute -top-4 left-[45%]">
+                            4
+                          </h1>
+                        </div>
+                      </div>
+                      <div className=" z-20  w-1/6 flex flex-col   justify-end items-center">
+                        <div
+                          className={`border relative w-full bottom bg-[#4F46E5]/100   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[100%]" : "h-0"}`}
+                        >
+                          <h1 className="text-[9px] absolute -top-4 left-[45%]">
+                            10
+                          </h1>
+                        </div>
+                      </div>
+                      <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
+                        <div
+                          className={`border  relative w-full bottom bg-[#4F46E5]/60   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[60%]" : "h-0"}`}
+                        >
+                          <h1 className="text-[9px] absolute -top-4 left-[45%]">
+                            6
+                          </h1>
+                        </div>
+                      </div>
+                      <div className=" w-1/6 z-20  flex flex-col    justify-end items-center">
+                        <div
+                          className={`border relative w-full bottom bg-[#4F46E5]/30   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[30%]" : "h-0"}`}
+                        >
+                          {" "}
+                          <h1 className="text-[9px]  absolute -top-4 left-[45%]">
+                            3
+                          </h1>
+                        </div>
+                      </div>
+                      <div className=" w-1/6 z-20   flex flex-col    justify-end items-center">
+                        <div
+                          className={`border relative  w-full bottom bg-[#4F46E5]/10   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[10%]" : "h-0"}`}
+                        >
+                          <h1 className="text-[9px] absolute -top-4 left-[45%]">
+                            1
+                          </h1>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="  w-full mt-6 h-[6px] flex">
-                    <div className="border h-full w-[50%] border-r-0 rounded-l-lg bg-green-500"></div>
-                    <div className="border h-full w-[20%] border-x-0 bg-blue-500"></div>
-                    <div className="border h-full w-[20%] border-x-0 bg-yellow-500"></div>
-                    <div className="border h-full w-[10%] border-l-0 rounded-r-lg bg-red-500"></div>
+                  <div className=" w-full flex gap-2 justify-around">
+                    <h1 className="  text-[10px] text-[#94A3B8]">Mon</h1>
+                    <h1 className="text-[10px]  text-[#94A3B8]">Tue</h1>
+                    <h1 className="text-[10px]  text-[#94A3B8]">Wed</h1>
+                    <h1 className="text-[10px]  text-[#94A3B8]">Thu</h1>
+                    <h1 className="text-[10px]  text-[#94A3B8]">Fri</h1>
+                    <h1 className="text-[10px]  text-[#94A3B8]">Sat</h1>
+                    <h1 className="text-[10px]  text-[#94A3B8]">Sun</h1>
                   </div>
                 </div>
               </div>
 
-              <div className="shadow-md border-2 p-4 w-full bg-white rounded-lg">
-                <div className="border-b pb-2">
-                  <h1 className="text-[14px] font-bold">Weekly Activity</h1>
-                  <p className="text-[12px] text-[#64748B]">
-                    Tasks completed per day
-                  </p>
-                </div>
-
-                <div className=" h-auto relative gap- flex flex-col mt-6 items-end ">
-                  <h1 className="text-[10px] text-[#bcc5cf] -left-6 -top-3 absolute">
-                    100
-                  </h1>
-                  <h1 className="text-[10px] text-[#bcc5cf] -left-6 top-[22%] absolute">
-                    75
-                  </h1>
-                  <h1 className="text-[10px] text-[#bcc5cf] -left-6 top-[47%] absolute">
-                    50
-                  </h1>
-                  <h1 className="text-[10px] text-[#bcc5cf] -left-6 top-[72%] absolute">
-                    25
-                  </h1>
-                  <h1 className="text-[10px] text-[#bcc5cf] -left-6 top-[97%] absolute">
-                    0
-                  </h1>
-
-                  <div className="border-dashed border-[#F1F5F9] border top-0 w-full absolute"></div>
-                  <div className="border-dashed border-[#F1F5F9] border top-[25%] w-full absolute"></div>
-                  <div className="border-dashed border-[#F1F5F9] border top-[50%] z-10 w-full absolute"></div>
-                  <div className="border-dashed border-[#F1F5F9] border top-[75%] w-full absolute"></div>
-
-                  <div className="flex h-40 gap-2 w-full">
-                    <div className=" w-1/6 flex flex-col  z-20  justify-end items-center">
-                      <div
-                        className={`border h-[50%] relative w-full bottom bg-[#4F46E5]/50   rounded-t-md`}
-                      >
-                        <h1 className="text-[9px] absolute -top-4 left-[45%]">
-                          5
-                        </h1>
-                      </div>
-                    </div>
-                    <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
-                      <div
-                        className={`border h-[75%] relative w-full bottom bg-[#4F46E5]/70   rounded-t-md`}
-                      >
-                        <h1 className="text-[9px] absolute -top-4 left-[45%]">
-                          7
-                        </h1>
-                      </div>
-                    </div>
-                    <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
-                      <div
-                        className={`border h-[40%] relative w-full bottom bg-[#4F46E5]/40 rounded-t-md`}
-                      >
-                        <h1 className="text-[9px] absolute -top-4 left-[45%]">
-                          4
-                        </h1>
-                      </div>
-                    </div>
-                    <div className=" z-20  w-1/6 flex flex-col   justify-end items-center">
-                      <div
-                        className={`border h-[100%] relative w-full bottom bg-[#4F46E5]/100   rounded-t-md`}
-                      >
-                        <h1 className="text-[9px] absolute -top-4 left-[45%]">
-                          10
-                        </h1>
-                      </div>
-                    </div>
-                    <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
-                      <div
-                        className={`border h-[60%] relative w-full bottom bg-[#4F46E5]/60   rounded-t-md`}
-                      >
-                        <h1 className="text-[9px] absolute -top-4 left-[45%]">
-                          6
-                        </h1>
-                      </div>
-                    </div>
-                    <div className=" w-1/6 z-20  flex flex-col    justify-end items-center">
-                      <div
-                        className={`border h-[30%] relative w-full bottom bg-[#4F46E5]/30   rounded-t-md`}
-                      >
-                        {" "}
-                        <h1 className="text-[9px]  absolute -top-4 left-[45%]">
-                          3
-                        </h1>
-                      </div>
-                    </div>
-                    <div className=" w-1/6 z-20   flex flex-col    justify-end items-center">
-                      <div
-                        className={`border relative h-[10%] w-full bottom bg-[#4F46E5]/10   rounded-t-md`}
-                      >
-                        <h1 className="text-[9px] absolute -top-4 left-[45%]">
-                          1
-                        </h1>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className=" w-full flex gap-2 justify-around">
-                  <h1 className="  text-[10px] text-[#94A3B8]">Mon</h1>
-                  <h1 className="text-[10px]  text-[#94A3B8]">Tue</h1>
-                  <h1 className="text-[10px]  text-[#94A3B8]">Wed</h1>
-                  <h1 className="text-[10px]  text-[#94A3B8]">Thu</h1>
-                  <h1 className="text-[10px]  text-[#94A3B8]">Fri</h1>
-                  <h1 className="text-[10px]  text-[#94A3B8]">Sat</h1>
-                  <h1 className="text-[10px]  text-[#94A3B8]">Sun</h1>
-                </div>
-              </div>
-
-              <div className="shadow-md border-2 p-4 w-full bg-white rounded-lg">
+              <div className="shadow-md w-full lg:w-1/3 border-2 p-4  bg-white rounded-lg">
                 <div className="border-b pb-2 flex items-center justify-between">
                   <div>
                     <h1 className="text-[14px] font-bold">Active Projects</h1>
@@ -332,7 +341,9 @@ function Dashboard() {
                         18 tasks - 3 overdue
                       </p>
                       <div className="mt-1 rounded-full h-[6px] bg-[#E2E8F0] w-full">
-                        <div className="border h-[6px] w-[72%] bg-[#4F46E5] rounded-full"></div>
+                        <div
+                          className={`border h-[6px]  bg-[#4F46E5] rounded-full transition-all duration-[2s] ease-in-out ${animate ? "w-[72%]" : "w-0"}`}
+                        ></div>
                       </div>
                     </div>
                     <div>
@@ -352,7 +363,9 @@ function Dashboard() {
                         18 tasks - 3 overdue
                       </p>
                       <div className="mt-1 rounded-full h-[6px] bg-[#E2E8F0] w-full">
-                        <div className="border h-[6px] w-[45%] bg-[#10B981] rounded-full"></div>
+                        <div
+                          className={`border h-[6px]  bg-[#10B981] rounded-full transition-all duration-[2s] ease-in-out ${animate ? "w-[45%]" : "w-0"}`}
+                        ></div>
                       </div>
                     </div>
                     <div>
@@ -372,7 +385,9 @@ function Dashboard() {
                         18 tasks - 3 overdue
                       </p>
                       <div className="mt-1 rounded-full h-[6px] bg-[#E2E8F0] w-full">
-                        <div className="border h-[6px] w-[88%] bg-[#F59E0B] rounded-full"></div>
+                        <div
+                          className={`border h-[6px]  bg-[#F59E0B] rounded-full transition-all duration-[2s] ease-in-out ${animate ? "w-[88%]" : "w-0"}`}
+                        ></div>
                       </div>
                     </div>
 
@@ -393,7 +408,9 @@ function Dashboard() {
                         18 tasks - 3 overdue
                       </p>
                       <div className="mt-1 rounded-full h-[6px] bg-[#E2E8F0] w-full">
-                        <div className="border h-[6px] w-[30%] bg-[#EF4444] rounded-full"></div>
+                        <div
+                          className={`border h-[6px]  bg-[#EF4444] rounded-full transition-all duration-[2s] ease-in-out ${animate ? "w-[30%]" : "w-0"}`}
+                        ></div>
                       </div>
                     </div>
                     <div>
@@ -406,8 +423,8 @@ function Dashboard() {
               </div>
             </div>
 
-            <div className="flex gap-2 w-full">
-              <div className="shadow-md border-2 p-4 w-3/5 bg-white rounded-xl">
+            <div className="flex flex-col md:flex-row gap-2 w-full">
+              <div className="shadow-md border-2 p-4 w-full md:w-3/5 bg-white rounded-xl">
                 <div className="border-b pb-2 flex items-center justify-between">
                   <div>
                     <h1 className="text-[14px] font-bold">My Tasks</h1>
@@ -423,35 +440,63 @@ function Dashboard() {
                 </div>
 
                 <div className="py-2 mt-2 flex flex-col gap-2">
-                    <div className="flex justify-between items-center ">
-                      <div className="flex gap-3 items-center">
-                        <div className=" text-green-500 rounded-full w-4 h-4"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-</svg></div>
-                        <div>
-                          <h1 className="font-semibold text-[#94A3B8] line-through text-[13px]">Set up pipline configuration</h1>
-                          <p className="text-[#94A3B8] text-[11px]">E-Commerce Rebuild - <span className="text-green-500">Completed</span></p>
-                        </div>
+                  <div className="flex justify-between items-center ">
+                    <div className="flex gap-3 items-center">
+                      <div className=" text-green-500 rounded-full w-4 h-4">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-check-circle-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                        </svg>
                       </div>
-                      <p className="text-[11px] text-[#64748B]">Mar 10</p>
+                      <div>
+                        <h1 className="font-semibold text-[#94A3B8] line-through text-[13px]">
+                          Set up pipline configuration
+                        </h1>
+                        <p className="text-[#94A3B8] text-[11px]">
+                          E-Commerce Rebuild -{" "}
+                          <span className="text-green-500">Completed</span>
+                        </p>
+                      </div>
                     </div>
+                    <p className="text-[11px] text-[#64748B]">Mar 10</p>
+                  </div>
 
-                    <div className="flex justify-between items-center ">
-                      <div className="flex gap-3 items-center">
-                        <div className="border-4 rounded-full w-4 h-4"></div>
-                        <div>
-                          <h1 className="font-semibold text-[13px]">Set up pipline configuration</h1>
-                          <p className="text-[#94A3B8] text-[11px]">E-Commerce Rebuild - <span>Completed</span></p>
-                        </div>
+                  <div className="flex justify-between items-center ">
+                    <div className="flex gap-3 items-center">
+                      <div className="border-4 rounded-full w-4 h-4"></div>
+                      <div>
+                        <h1 className="font-semibold text-[13px]">
+                          Set up pipline configuration
+                        </h1>
+                        <p className="text-[#94A3B8] text-[11px]">
+                          E-Commerce Rebuild - <span>Completed</span>
+                        </p>
                       </div>
-                      <p className="text-[11px] text-[#64748B] flex gap-1 text-red-500">Mar 10 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-</svg></p>
                     </div>
+                    <p className="text-[11px] text-[#64748B] flex gap-1 text-red-500">
+                      Mar 10{" "}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="10"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-exclamation-triangle-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                      </svg>
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="shadow-md border-2 p-4 w-2/5 rounded-xl bg-white">
+              <div className="shadow-md border-2 p-4 w-full md:w-2/5 rounded-xl bg-white">
                 <div className="border-b pb-2 flex items-center justify-between">
                   <div>
                     <h1 className="text-[14px] font-bold">Recent Activity</h1>
@@ -464,27 +509,37 @@ function Dashboard() {
                   </div>
                 </div>
                 <div className="py-2 mt-2 flex flex-col gap-2">
-                    <div className="flex justify-between items-center ">
-                      <div className="flex gap-3 items-center">
-                        <div className=" bg-[#eafde7] rounded-full p-2 text-[11px]">✅</div>
-                        <div>
-                          <h1 className="font-semibold text-[13px]">Set up pipline configuration</h1>
-                          <p className="text-[#94A3B8] text-[11px]">E-Commerce Rebuild </p>
-                        </div>
+                  <div className="flex justify-between items-center ">
+                    <div className="flex gap-3 items-center">
+                      <div className=" bg-[#eafde7] rounded-full p-2 text-[11px]">
+                        ✅
+                      </div>
+                      <div>
+                        <h1 className="font-semibold text-[13px]">
+                          Set up pipline configuration
+                        </h1>
+                        <p className="text-[#94A3B8] text-[11px]">
+                          E-Commerce Rebuild{" "}
+                        </p>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="flex justify-between items-center ">
-                      <div className="flex gap-3 items-center">
-                        <div className=" bg-[#e7f2fd] rounded-full p-2 text-[11px]">💬</div>
-                        <div>
-                          <h1 className="font-semibold text-[13px]">Set up pipline configuration</h1>
-                          <p className="text-[#94A3B8] text-[11px]">E-Commerce Rebuild </p>
-                        </div>
+                  <div className="flex justify-between items-center ">
+                    <div className="flex gap-3 items-center">
+                      <div className=" bg-[#e7f2fd] rounded-full p-2 text-[11px]">
+                        💬
+                      </div>
+                      <div>
+                        <h1 className="font-semibold text-[13px]">
+                          Set up pipline configuration
+                        </h1>
+                        <p className="text-[#94A3B8] text-[11px]">
+                          E-Commerce Rebuild{" "}
+                        </p>
                       </div>
                     </div>
-
-                   
+                  </div>
                 </div>
               </div>
             </div>

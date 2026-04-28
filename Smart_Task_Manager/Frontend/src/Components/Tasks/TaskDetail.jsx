@@ -258,9 +258,7 @@ function TaskDetail() {
                               className="h-14 w-14"
                               alt=""
                             />
-                          ) : f.type.startsWith(
-                              "application/vnd.ms-excel",
-                            ) ||
+                          ) : f.type.startsWith("application/vnd.ms-excel") ||
                             f.type.startsWith(
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                             ) ? (
@@ -335,6 +333,46 @@ function TaskDetail() {
                                 Reply
                               </span>
                             </p>
+                            <div className="border-l-2 p-2 mt-2">
+                              <div className="p-4 ">
+                                <div className="flex ">
+                                  <div>
+                                    <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
+                                      <span className="text-white text-[10px] font-bold">
+                                        JD
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="ml-4  w-full">
+                                    <div className="flex justify-between ">
+                                      <h1 className="font-bold text-[13px]">
+                                        John Doe{" "}
+                                        <span className="ml-3  text-[10px] font-semibold px-2 py-1 rounded-full bg-[#F5F3FF] text-[#7C3AED]">
+                                          Admin
+                                        </span>
+                                      </h1>
+                                      <p className="text-[12px] text-[#94A3B8]">
+                                        Mar 12, 2023 at 2:30 PM
+                                      </p>
+                                    </div>
+                                    <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
+                                      Emma, please make sure the checkout flow
+                                      is aligned with our mobile-first approach.
+                                      Reference the design system doc I shared
+                                      earlier. Also, please include a guest
+                                      checkout option.
+                                    </p>
+                                    <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
+                                      <HeartIcon className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
+                                      2 &nbsp;{" "}
+                                      <span className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer">
+                                        Reply
+                                      </span>
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

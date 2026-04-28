@@ -14,7 +14,7 @@ using SmartTaskAPI.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container.`
 
 builder.Services.AddControllers();
 
@@ -96,18 +96,20 @@ app.UseStaticFiles(new StaticFileOptions
 
 using (var scope = app.Services.CreateScope())
 {
+
     var rolemanager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
     string[] roles = new string[] { "Admin", "Manager", "Employee" };
 
     foreach (var role in roles)
     {
+
         if (!await rolemanager.RoleExistsAsync(role))
         {
             await rolemanager.CreateAsync(new IdentityRole(role));
         }
     }
-}
-;
+};
 
 app.UseCors("AllowFrontend");
 
