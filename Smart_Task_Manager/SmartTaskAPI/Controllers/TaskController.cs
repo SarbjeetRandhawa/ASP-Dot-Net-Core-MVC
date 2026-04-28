@@ -20,7 +20,9 @@ namespace SmartTaskAPI.Controllers
 
         private string GetUserId()
         {
+
             return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
         }
 
         [HttpPost]

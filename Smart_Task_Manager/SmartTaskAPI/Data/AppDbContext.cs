@@ -53,12 +53,31 @@ namespace SmartTaskAPI.Data
                     Name = "Dev"
                 }
             );
+
+            builder.Entity<Comment>()
+                .HasOne(c => c.Task)
+                .WithMany()
+                .HasForeignKey(c => c.TaskId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Comment>()
+                .HasOne(c => c.ParentComment)
+                .WithMany(c => c.Replies)
+                .HasForeignKey(c => c.ParentCommentId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Comment>()
+                .HasOne(c => c.CommentedByUser)
+                .WithMany()
+                .HasForeignKey(c => c.CommentedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
         }
         public DbSet<ProjectMember> ProjectMembers { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<TaskItem> Tasks { get; set; }
         public DbSet<TaskAttachment> TaskAttachments { get; set; }
         public DbSet<Models.DB.ProjectRole> projectRoles { get; set; }
+        public DbSet<Comment> comments { get; set; }
     }
 
 

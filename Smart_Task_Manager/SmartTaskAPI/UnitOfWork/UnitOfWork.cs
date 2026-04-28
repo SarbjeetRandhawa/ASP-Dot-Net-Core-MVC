@@ -15,6 +15,8 @@ namespace SmartTaskAPI.UnitOfWork
         public ITaskRepository TaskRepository { get; }
         public ITaskAttachmentRepository TaskAttachmentRepository { get; }
 
+        public ICommentRepository CommentRepository { get; }
+
         public UnitOfWork(AppDbContext context, IUserRepository userRepository)
         {
             this._context=context;
@@ -25,6 +27,7 @@ namespace SmartTaskAPI.UnitOfWork
             this.ProjectRoleRepository = new ProjectRoleRepository(context);
             this.TaskRepository = new TaskRepository(context);
             this.TaskAttachmentRepository = new TaskAttachmentRepository(context);
+            this.CommentRepository = new CommentRepository(context);
         }
 
         public async Task SaveAsync() 

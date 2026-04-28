@@ -12,6 +12,8 @@ namespace SmartTaskAPI.UnitOfWork
         public ITaskRepository TaskRepository { get; }
         public ITaskAttachmentRepository TaskAttachmentRepository { get; }
 
+        public ICommentRepository CommentRepository { get; }
+
 
 
         Task SaveAsync();
