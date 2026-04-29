@@ -21,7 +21,7 @@ namespace SmartTaskAPI.Controllers
         {
         
             this.commentService = commentService;
-            this.commentLikeService = commentLikeService;
+            this.commentLikeService = commentLikesService;
 
         }
 

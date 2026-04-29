@@ -378,9 +378,10 @@ function TaskDetail() {
 
                               <p className="mt-2 flex text-[#94A3B8] gap-1 items-center">
                                 <HeartIcon
-                                onClick={()=> dispatch(likeComment(c.id))}
+                                onClick={()=> dispatch(likeComment({commentId : c.id , taskId : SelectedTask?.id }))}
+                                
                                  className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
-                                2 &nbsp;{" "}
+                                2 &nbsp;{" "} 
                                 <span
                                   className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer"
                                   onClick={() => {

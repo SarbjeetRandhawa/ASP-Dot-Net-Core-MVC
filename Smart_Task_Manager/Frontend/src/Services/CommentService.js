@@ -14,5 +14,7 @@ export const addComment = (data) => {
 };
 
 export const toogleLike = (commentId) => {
+    console.log(commentId);
+    
     return axiosInstance.post(`${API_URL}/api/Comment/like/${commentId}`);
 }
