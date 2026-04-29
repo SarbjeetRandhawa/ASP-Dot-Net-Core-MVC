@@ -15,6 +15,7 @@ namespace SmartTaskAPI.Services.Implementation
         }
         public async Task AddCommentAsync(CreateCommentDto dto , string userId)
         {
+
             var Comment = new Comment
             {
                 TaskId = dto.TaskId,
@@ -24,24 +25,27 @@ namespace SmartTaskAPI.Services.Implementation
             };
             await _uow.CommentRepository.AddCommentAsync(Comment);
             await _uow.SaveAsync();
+
         }
 
-        public async Task<List<ResponseCommentDto>> GetCommentsAsync(int taskId)
+        public async Task<List<ResponseCommentDto>> GetCommentsAsync(int taskId ,string userId)
         {
+
             var comments = await _uow.CommentRepository.GetCommentsByIdAsync(taskId);
 
             return comments.Select(c => new ResponseCommentDto
             {
                 Id = c.Id,
                 CommentText = c.CommentText,
-                LikeCount = c.LikeCount,
                 CommentedbyUserName = c.CommentedByUser.FirstName + " " + c.CommentedByUser.LastName,
                 CreatedAt = c.CreatedAt,
+                LikeCount = c.Likes.Count,
+                isLikedByCurrentUser = c.Likes.Any(l => l.userId == userId),
                 Replies = c.Replies.Select(r => new ResponseCommentDto
                 {
                     Id = r.Id,
                     CommentText= r.CommentText,
-                    LikeCount= r.LikeCount,
+                    CommentedbyUserName = r.CommentedByUser.FirstName + " " + r.CommentedByUser.LastName,
                     CreatedAt= r.CreatedAt
                 }).ToList()
 

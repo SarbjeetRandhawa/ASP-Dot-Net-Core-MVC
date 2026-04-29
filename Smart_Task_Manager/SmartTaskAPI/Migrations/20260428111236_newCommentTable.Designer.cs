@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartTaskAPI.Data;
 
@@ -11,9 +12,11 @@ using SmartTaskAPI.Data;
 namespace SmartTaskAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260428111236_newCommentTable")]
+    partial class newCommentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,6 +177,9 @@ namespace SmartTaskAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("LikeCount")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ParentCommentId")
                         .HasColumnType("int");
 
@@ -189,31 +195,6 @@ namespace SmartTaskAPI.Migrations
                     b.HasIndex("TaskId");
 
                     b.ToTable("comments");
-                });
-
-            modelBuilder.Entity("SmartTaskAPI.Models.DB.CommentsLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CommentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("userId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("userId");
-
-                    b.HasIndex("CommentId", "userId")
-                        .IsUnique();
-
-                    b.ToTable("CommentsLike");
                 });
 
             modelBuilder.Entity("SmartTaskAPI.Models.DB.Project", b =>
@@ -597,25 +578,6 @@ namespace SmartTaskAPI.Migrations
                     b.Navigation("Task");
                 });
 
-            modelBuilder.Entity("SmartTaskAPI.Models.DB.CommentsLike", b =>
-                {
-                    b.HasOne("SmartTaskAPI.Models.DB.Comment", "Comment")
-                        .WithMany("Likes")
-                        .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmartTaskAPI.Models.Identity.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SmartTaskAPI.Models.DB.ProjectMember", b =>
                 {
                     b.HasOne("SmartTaskAPI.Models.DB.Project", "project")
@@ -689,8 +651,6 @@ namespace SmartTaskAPI.Migrations
 
             modelBuilder.Entity("SmartTaskAPI.Models.DB.Comment", b =>
                 {
-                    b.Navigation("Likes");
-
                     b.Navigation("Replies");
                 });
 

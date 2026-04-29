@@ -1,28 +1,51 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Paperclip, HeartIcon, AtSign, AtSignIcon } from "lucide-react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
 import { fetchTaskById } from "../../features/Task/TaskSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { fetchComments, createComment } from "../../features/Task/CommentSlice";
 import { useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify";
+import { likeComment } from "../../features/Task/CommentSlice";
 
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
+  const { comments } = useSelector((state) => state.comments);
+  const [text, settext] = useState("");
+  const [replyingto, setreplyingto] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
   const [showReplies, setShowReplies] = useState(false);
+  const TextAreaRef = useRef(null);
+  const wrapperRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
+  console.log(comments);
 
   const { taskIdSlug } = useParams();
   const projectId = taskIdSlug.split("-")[0];
 
   useEffect(() => {
     dispatch(fetchTaskById(projectId));
-  }, [dispatch]);
+    dispatch(fetchComments(SelectedTask?.id));
+  }, [dispatch, SelectedTask?.id]);
+
+  const handleAdd = () => {
+    console.log(replyingto);
+
+    if (!text.trim()) return;
+    dispatch(
+      createComment({
+        taskId: SelectedTask?.id,
+        commentText: text,
+        parentCommentId: replyingto,
+      }),
+    );
+    settext("");
+  };
 
   const StatusMap = {
     0: "ToDo",
@@ -36,7 +59,7 @@ function TaskDetail() {
     1: "medium",
     2: "high",
   };
-  console.log(SelectedTask);
+  // console.log(SelectedTask);
 
   const isImage = (file) => {
     return file?.fileName?.match(/\.(jpg|png|jpeg|gif|webp)$/i);
@@ -44,6 +67,19 @@ function TaskDetail() {
   const isPdf = (file) => {
     return file?.fileName?.match(/\.pdf$/i);
   };
+
+  useEffect(()=>{
+    const handleClickOutside = (event) => {
+      if(wrapperRef.current && !wrapperRef.current.contains(event.target)){
+        setreplyingto(null);
+      }
+    };
+
+    document.addEventListener("mousedown" , handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown" , handleClickOutside);
+    }
+  },[])
 
   return (
     <>
@@ -269,7 +305,7 @@ function TaskDetail() {
                               alt=""
                             />
                           ) : (
-                            ""
+                            " "
                           )}
                           <h1 className="text-black font-semibold text-[12px]">
                             {f.orignalName}
@@ -278,6 +314,7 @@ function TaskDetail() {
                           <p>
                             {new Date(f.uploadedAt).toLocaleDateString(
                               undefined,
+
                               {
                                 month: "short",
                                 day: "2-digit",
@@ -296,111 +333,161 @@ function TaskDetail() {
                         <div>
                           <h1 className="font-bold text-[14px]">Comments</h1>
                           <p className="text-[12px] tracking-wide font-semibold text-[#64748B]">
-                            4 Comments
+                            {comments.length} Comments
                           </p>
                         </div>
                       </div>
-                      <div className="border-t p-4 ">
-                        <div className="flex ">
-                          <div>
-                            <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
-                              <span className="text-white text-[10px] font-bold">
-                                JD
-                              </span>
-                            </div>
-                          </div>
-                          <div className="ml-4  w-full">
-                            <div className="flex justify-between ">
-                              <h1 className="font-bold text-[13px]">
-                                John Doe{" "}
-                                <span className="ml-3  text-[10px] font-semibold px-2 py-1 rounded-full bg-[#F5F3FF] text-[#7C3AED]">
-                                  Admin
+                      <div className="border-t px-4 ">
+                        {comments.map((c) => (
+                          <div className="flex my-6 " key={c.id}>
+                            <div>
+                              <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
+                                <span className="text-white text-[10px] font-bold">
+                                  {c.commentedbyUserName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
                                 </span>
-                              </h1>
-                              <p className="text-[12px] text-[#94A3B8]">
-                                Mar 12, 2023 at 2:30 PM
-                              </p>
+                              </div>
                             </div>
-                            <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
-                              Emma, please make sure the checkout flow is
-                              aligned with our mobile-first approach. Reference
-                              the design system doc I shared earlier. Also,
-                              please include a guest checkout option.
-                            </p>
-                            <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
-                              <HeartIcon className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
-                              2 &nbsp;{" "}
-                              <span className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer">
-                                Reply &nbsp;{" "}
-                              </span>
-                              <span
-                                onClick={() => setShowReplies(!showReplies)}
-                                className="text-[12px] font-semibold tracking-wider cursor-pointer"
-                              >
-                                {showReplies
-                                  ? "Hide Replies"
-                                  : "Show 2 Replies"}
-                              </span>
-                            </p>
-                            {showReplies && (
-                              <div className="border-l-2 p-2 mt-2">
-                                <div className="p-4 ">
-                                  <div className="flex ">
-                                    <div>
-                                      <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
-                                        <span className="text-white text-[10px] font-bold">
-                                          JD
-                                        </span>
+                            <div className="ml-4  w-full">
+                              <div className="flex justify-between ">
+                                <h1 className="font-bold text-[13px]">
+                                  {c.commentedbyUserName}{" "}
+                                  <span className="ml-3  text-[10px] font-semibold px-2 py-1 rounded-full bg-[#F5F3FF] text-[#7C3AED]">
+                                    Admin
+                                  </span>
+                                </h1>
+                                <p className="text-[12px] text-[#94A3B8]">
+                                  {new Date(
+                                                c?.createdAt,
+                                              ).toLocaleDateString(undefined, {
+                                                month: "short",
+                                                day: "2-digit",
+                                                year: "numeric",
+                                                hour: "2-digit",
+                                                minute : "2-digit"
+                                              })}
+                                </p>
+                              </div>
+
+                              <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
+                                {c.commentText}
+                              </p>
+
+                              <p className="mt-2 flex text-[#94A3B8] gap-1 items-center">
+                                <HeartIcon
+                                onClick={()=> dispatch(likeComment(c.id))}
+                                 className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
+                                2 &nbsp;{" "}
+                                <span
+                                  className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer"
+                                  onClick={() => {
+                                    console.log(c.id);
+                                    setreplyingto(c?.id);
+
+                                    setTimeout(() => {
+                                      TextAreaRef.current?.focus();
+                                    }, 0);
+                                  }}
+                                >
+                                  Reply &nbsp;{" "}
+                                </span>
+                                <span
+                                  onClick={() => setShowReplies(!showReplies)}
+                                  className="text-[12px] font-semibold tracking-wider cursor-pointer"
+                                >
+                                  {c.replies.length > 0 &&
+                                    (showReplies
+                                      ? "Hide Replies"
+                                      : `Show ${c.replies.length} Replies`)}
+                                </span>
+                              </p>
+                              {showReplies &&
+                                c.replies?.map((r) => (
+                                  <div className="border-l-2 p-2 " key={r.id}>
+                                    <div className="p-4 ">
+                                      <div className="flex ">
+                                        <div>
+                                          <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
+                                            <span className="text-white text-[10px] font-bold">
+                                              {c.commentedbyUserName
+                                                .split(" ")
+                                                .map((n) => n[0])
+                                                .join("")
+                                                .toUpperCase()}
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div className="ml-4  w-full">
+                                          <div className="flex justify-between ">
+                                            <h1 className="font-bold text-[13px]">
+                                              {r.commentedbyUserName}{" "}
+                                              <span className="ml-3  text-[10px] font-semibold px-2 py-1 rounded-full bg-[#F5F3FF] text-[#7C3AED]">
+                                                Admin
+                                              </span>
+                                            </h1>
+                                            <p className="text-[12px] text-[#94A3B8]">
+                                              {new Date(
+                                                r?.createdAt,
+                                              ).toLocaleDateString(undefined, {
+                                                month: "short",
+                                                day: "2-digit",
+                                                year: "numeric",
+                                                hour: "2-digit",
+                                                minute : "2-digit"
+                                              })}
+                                            </p>
+                                          </div>
+                                          <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
+                                            {r.commentText}
+                                          </p>
+                                          <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
+                                            <HeartIcon className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
+                                            2 &nbsp;{" "}
+                                            <span
+                                              className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer"
+                                              onClick={() => {
+                                                console.log(c.id);
+                                                setreplyingto(c?.id);
+
+                                                setTimeout(() => {
+                                                  TextAreaRef.current?.focus();
+                                                }, 0);
+                                              }}
+                                            >
+                                              Reply
+                                            </span>
+                                          </p>
+                                        </div>
                                       </div>
-                                    </div>
-                                    <div className="ml-4  w-full">
-                                      <div className="flex justify-between ">
-                                        <h1 className="font-bold text-[13px]">
-                                          John Doe{" "}
-                                          <span className="ml-3  text-[10px] font-semibold px-2 py-1 rounded-full bg-[#F5F3FF] text-[#7C3AED]">
-                                            Admin
-                                          </span>
-                                        </h1>
-                                        <p className="text-[12px] text-[#94A3B8]">
-                                          Mar 12, 2023 at 2:30 PM
-                                        </p>
-                                      </div>
-                                      <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
-                                        Emma, please make sure the checkout flow
-                                        is aligned with our mobile-first
-                                        approach. Reference the design system
-                                        doc I shared earlier. Also, please
-                                        include a guest checkout option.
-                                      </p>
-                                      <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
-                                        <HeartIcon className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
-                                        2 &nbsp;{" "}
-                                        <span className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer">
-                                          Reply
-                                        </span>
-                                      </p>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
-                            )}
+                                ))}
+                            </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
 
-                    <div className="p-4  flex ">
+                    <div className="p-4 border flex ">
                       <div className="  gap-4 w-full ">
-                        <div className="flex gap-4 items-start mb-2">
+                        <div className="flex gap-4 items-start mb-2" 
+                              ref={wrapperRef}>
                           <div className="w-[35px] h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
                             <span className="text-white text-[10px] font-bold">
                               AK
                             </span>
                           </div>
+                          
                           <div className="w-full">
                             <textarea
+                              value={text}
+                              ref={TextAreaRef}
+                              onChange={(e) => settext(e.target.value)}
                               className="w-full h-20 resize-none border rounded-md p-2 text-[12px] font-semibold hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Write a comment..."
+                              placeholder={replyingto ? `Replying to ${replyingto}` : "Write a comment..."}
                             ></textarea>
                           </div>
                         </div>
@@ -410,7 +497,7 @@ function TaskDetail() {
                               className="border-2 cursor-pointer flex items-center 
                      px-4 h-8 text-[12px] font-semibold rounded-md hover:shadow-md"
                             >
-                              <Paperclip className="w-4 h-4 mr-2" />
+                              <Paperclip className="w-4 h-4 mr-2" />v
                               Attach
                             </div>
                             <div
@@ -421,12 +508,13 @@ function TaskDetail() {
                               Mention
                             </div>
                           </div>
-                          <div
+                          <button
+                            onClick={handleAdd}
                             className="border-2 cursor-pointer flex items-center 
                      px-4 h-8 text-[12px] font-semibold rounded-md bg-[#4F46E5] text-white hover:bg-[#6059e5]"
                           >
                             Post Comment
-                          </div>
+                          </button>
                         </div>
                       </div>
                     </div>

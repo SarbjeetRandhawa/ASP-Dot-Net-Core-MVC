@@ -1,4 +1,5 @@
-﻿using SmartTaskAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartTaskAPI.Data;
 using SmartTaskAPI.Models.DB;
 using SmartTaskAPI.Repository.Interface;
 
@@ -18,9 +19,9 @@ namespace SmartTaskAPI.Repository.Implementation
             
         }
 
-        public Task<List<Comment>> GetCommentsByIdAsync(int TaskId)
+        public async Task<List<Comment>> GetCommentsByIdAsync(int TaskId)
         {
-
+            return await _context.comments.Where(c => c.TaskId == TaskId && c.ParentCommentId == null).Include(c => c.Replies).ThenInclude(r => r.CommentedByUser).ToListAsync();
         }
     }
 }

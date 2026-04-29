@@ -13,6 +13,7 @@ namespace SmartTaskAPI.UnitOfWork
         public ITaskAttachmentRepository TaskAttachmentRepository { get; }
 
         public ICommentRepository CommentRepository { get; }
+        public ICommentLikes CommentLikesRepository { get; }
 
 
 
