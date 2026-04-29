@@ -21,7 +21,7 @@ export const createComment = createAsyncThunk(
 );
 
 export const likeComment = createAsyncThunk(
-  "comments/likeComment", async (commentId , taskId , {dispatch}) => {
+  "comments/likeComment", async ({commentId , taskId} , {dispatch}) => {
     console.log(commentId);
     
     await toogleLike(commentId);

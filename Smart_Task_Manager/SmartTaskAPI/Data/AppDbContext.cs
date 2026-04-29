@@ -77,9 +77,9 @@ namespace SmartTaskAPI.Data
             builder.Entity<CommentsLike>()
                 .HasOne(c1 => c1.User)
                 .WithMany()
-                .HasForeignKey(c1 => c1.userId);
+                .HasForeignKey(c1 => c1.UserId);
             builder.Entity<CommentsLike>()
-                .HasIndex(c1 => new { c1.CommentId, c1.userId }).IsUnique();
+                .HasIndex(c1 => new { c1.CommentId, c1.UserId }).IsUnique();
                 
 
 
@@ -90,7 +90,7 @@ namespace SmartTaskAPI.Data
         public DbSet<TaskAttachment> TaskAttachments { get; set; }
         public DbSet<Models.DB.ProjectRole> projectRoles { get; set; }
         public DbSet<Comment> comments { get; set; }
-        public DbSet<CommentsLike> commentsLike { get; set; }
+        public DbSet<CommentsLike> CommentsLike { get; set; }
     }
 
 

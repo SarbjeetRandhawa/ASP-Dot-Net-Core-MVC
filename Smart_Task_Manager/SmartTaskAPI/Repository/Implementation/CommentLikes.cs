@@ -17,15 +17,15 @@ namespace SmartTaskAPI.Repository.Implementation
 
         public async Task ToggleLike(int commentId, string userId)
         {
-           var existing = await _context.commentsLike.FirstOrDefaultAsync(x => x.CommentId == commentId && x.userId == userId);
+           var existing = await _context.CommentsLike.FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
             if (existing != null) { 
-                _context.commentsLike.Remove(existing);
+                _context.CommentsLike.Remove(existing);
             }
             else {
-                await _context.commentsLike.AddAsync(new CommentsLike
+                await _context.CommentsLike.AddAsync(new CommentsLike
                 {
                     CommentId = commentId,
-                    userId = userId
+                    UserId = userId
                 });
             }
         }
