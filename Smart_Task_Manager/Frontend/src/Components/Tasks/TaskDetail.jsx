@@ -380,8 +380,9 @@ function TaskDetail() {
                                 <HeartIcon
                                 onClick={()=> dispatch(likeComment({commentId : c.id , taskId : SelectedTask?.id }))}
                                 
-                                 className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
-                                2 &nbsp;{" "} 
+                                 className={`w-4 h-4 text-black cursor-pointer ${c.isLikedByCurrentUser ? " fill-red-600 text-red-600" : ""
+}  `} />{" "}
+                                {c.likeCount} &nbsp;{" "} 
                                 <span
                                   className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer"
                                   onClick={() => {
@@ -445,8 +446,12 @@ function TaskDetail() {
                                             {r.commentText}
                                           </p>
                                           <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
-                                            <HeartIcon className="w-4 h-4 text-black cursor-pointer hover:fill-red-600 hover:text-red-600 " />{" "}
-                                            2 &nbsp;{" "}
+                                            <HeartIcon
+                                            
+                                onClick={()=> dispatch(likeComment({commentId : r.id , taskId : SelectedTask?.id }))}
+                                             className={`w-4 h-4 text-black cursor-pointer ${r.isLikedByCurrentUser ? " fill-red-600 text-red-600" : ""
+}  `} />{" "}
+                                            {r.likeCount} &nbsp;{" "}
                                             <span
                                               className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer"
                                               onClick={() => {
@@ -472,10 +477,10 @@ function TaskDetail() {
                       </div>
                     </div>
 
-                    <div className="p-4 border flex ">
+                    <div className="p-4 border flex "ref={wrapperRef}>
                       <div className="  gap-4 w-full ">
                         <div className="flex gap-4 items-start mb-2" 
-                              ref={wrapperRef}>
+                            >
                           <div className="w-[35px] h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
                             <span className="text-white text-[10px] font-bold">
                               AK
@@ -494,13 +499,7 @@ function TaskDetail() {
                         </div>
                         <div className="flex justify-between">
                           <div className="flex gap-2 ml-12">
-                            <div
-                              className="border-2 cursor-pointer flex items-center 
-                     px-4 h-8 text-[12px] font-semibold rounded-md hover:shadow-md"
-                            >
-                              <Paperclip className="w-4 h-4 mr-2" />v
-                              Attach
-                            </div>
+                            
                             <div
                               className="border-2 cursor-pointer flex items-center 
                      px-4 h-8 text-[12px] font-semibold rounded-md  hover:shadow-md"

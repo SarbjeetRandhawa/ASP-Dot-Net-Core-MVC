@@ -45,6 +45,8 @@ namespace SmartTaskAPI.Services.Implementation
                 {
                     Id = r.Id,
                     CommentText= r.CommentText,
+                    LikeCount = r.Likes.Count,
+                    isLikedByCurrentUser = r.Likes.Any(l => l.UserId == userId),
                     CommentedbyUserName = r.CommentedByUser.FirstName + " " + r.CommentedByUser.LastName,
                     CreatedAt= r.CreatedAt
                 }).ToList()

@@ -21,7 +21,13 @@ namespace SmartTaskAPI.Repository.Implementation
 
         public async Task<List<Comment>> GetCommentsByIdAsync(int TaskId)
         {
-            return await _context.comments.Where(c => c.TaskId == TaskId && c.ParentCommentId == null).Include(c => c.Replies).ThenInclude(r => r.CommentedByUser).ToListAsync();
+            return await _context.comments.Where(c => c.TaskId == TaskId && c.ParentCommentId == null)
+                .Include(c => c.CommentedByUser)
+                .Include(c => c.Likes)
+                .Include(c => c.Replies)
+                .ThenInclude(r => r.CommentedByUser)
+                .Include(c => c.Replies)
+                .ThenInclude(r => r.Likes).ToListAsync();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace SmartTaskAPI.Repository.Implementation
 
         public async Task ToggleLike(int commentId, string userId)
         {
-           var existing = await _context.CommentsLike.FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
+           var existing = await _context.CommentsLike.AsNoTracking().FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
             if (existing != null) { 
                 _context.CommentsLike.Remove(existing);
             }
