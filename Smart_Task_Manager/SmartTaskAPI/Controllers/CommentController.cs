@@ -16,12 +16,14 @@ namespace SmartTaskAPI.Controllers
 
         private readonly ICommentService commentService;
         private readonly ICommentLikeService commentLikeService;
+        private readonly IUserService userService;
 
-        public CommentController(ICommentService commentService, ICommentLikeService commentLikesService)
+        public CommentController(ICommentService commentService, ICommentLikeService commentLikesService , IUserService userService)
         {
         
             this.commentService = commentService;
             this.commentLikeService = commentLikesService;
+            this.userService = userService;
 
         }
 
@@ -59,5 +61,15 @@ namespace SmartTaskAPI.Controllers
             await commentLikeService.ToogleLike(commentId, userId);
             return Ok();
         }
+
+
+        [HttpGet("search-users")]
+        public async Task<IActionResult> SearchUsers(string query)
+        {
+            var Users = await userService.SearchUsersAsync(query);
+            return Ok(Users);
+        }
+
+
     }
 }

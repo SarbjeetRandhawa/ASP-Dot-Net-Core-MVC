@@ -9,6 +9,7 @@ namespace SmartTaskAPI.Repository.Interface
         Task<string> GetUserRoleAsync(string userId);
         Task DeleteUserWithProjectRelationAsync(string userId);
 
+        Task<List<ApplicationUser>> SearchUserAsync(string query);
         
     }
 }

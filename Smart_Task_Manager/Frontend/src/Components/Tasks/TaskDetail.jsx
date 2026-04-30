@@ -15,11 +15,15 @@ function TaskDetail() {
   const { comments } = useSelector((state) => state.comments);
   const [text, settext] = useState("");
   const [replyingto, setreplyingto] = useState(null);
+  const [replyingtoName, setreplyingtoName] = useState(null);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
-  const [showReplies, setShowReplies] = useState(false);
-  const TextAreaRef = useRef(null);
+  // const [showReplies, setShowReplies] = useState(false);
+  const TextAreaRef = useRef(null);  
+  const [isReplyOpen, setisReplyOpen] = useState(null);
+  
   const wrapperRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
@@ -80,6 +84,11 @@ function TaskDetail() {
       document.removeEventListener("mousedown" , handleClickOutside);
     }
   },[])
+
+  const HandleMenuClick = (e, commentId) => {
+    e.stopPropagation();
+    setisReplyOpen((prev) => (prev === commentId ? null : commentId));
+  };
 
   return (
     <>
@@ -388,6 +397,7 @@ function TaskDetail() {
                                   onClick={() => {
                                     console.log(c.id);
                                     setreplyingto(c?.id);
+                                    setreplyingtoName(c?.commentedbyUserName);
 
                                     setTimeout(() => {
                                       TextAreaRef.current?.focus();
@@ -397,16 +407,17 @@ function TaskDetail() {
                                   Reply &nbsp;{" "}
                                 </span>
                                 <span
-                                  onClick={() => setShowReplies(!showReplies)}
+                                  onClick={(e) => HandleMenuClick(e, c.id)}
+                                  
                                   className="text-[12px] font-semibold tracking-wider cursor-pointer"
                                 >
                                   {c.replies.length > 0 &&
-                                    (showReplies
+                                    (isReplyOpen === c.id
                                       ? "Hide Replies"
                                       : `Show ${c.replies.length} Replies`)}
                                 </span>
                               </p>
-                              {showReplies &&
+                              {isReplyOpen === c.id &&
                                 c.replies?.map((r) => (
                                   <div className="border-l-2 p-2 " key={r.id}>
                                     <div className="p-4 ">
@@ -457,6 +468,8 @@ function TaskDetail() {
                                               onClick={() => {
                                                 console.log(c.id);
                                                 setreplyingto(c?.id);
+                                                
+                                                setreplyingtoName(r?.commentedbyUserName);
 
                                                 setTimeout(() => {
                                                   TextAreaRef.current?.focus();
@@ -493,7 +506,7 @@ function TaskDetail() {
                               ref={TextAreaRef}
                               onChange={(e) => settext(e.target.value)}
                               className="w-full h-20 resize-none border rounded-md p-2 text-[12px] font-semibold hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder={replyingto ? `Replying to ${replyingto}` : "Write a comment..."}
+                              placeholder={replyingto ? `Replying to ${replyingtoName}` : "Write a comment..."}
                             ></textarea>
                           </div>
                         </div>

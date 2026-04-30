@@ -57,5 +57,9 @@ namespace SmartTaskAPI.Repository.Implementation
             return role ?? "";
         }
 
+        public async Task<List<ApplicationUser>> SearchUserAsync(string query)
+        {
+            return await _context.Users.Where(u => u.FirstName.Contains(query) ||  u.LastName.Contains(query)).Take(5).ToListAsync();
+        }
     }
 }

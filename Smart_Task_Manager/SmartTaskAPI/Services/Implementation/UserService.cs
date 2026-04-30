@@ -27,5 +27,15 @@ namespace SmartTaskAPI.Services.Implementation
         {
             return await _uow.UserRepository.GetUserRoleAsync(userId);
         }
+
+        public async Task<List<UserSearchDto>> SearchUsersAsync(string query)
+        {
+            var users = await _uow.UserRepository.SearchUserAsync(query);
+            return  users.Select(u => new UserSearchDto
+            {
+                Id = u.Id,
+                Name = u.FirstName + " " + u.LastName,
+            }).ToList();
+        }
     }
 }
