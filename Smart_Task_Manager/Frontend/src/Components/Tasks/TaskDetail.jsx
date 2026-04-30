@@ -123,22 +123,31 @@ function TaskDetail() {
   };
 
   const renderCommentText = (text) => {
-    const parts = text.split(/(@[\w\s]+)/g);
+  const regex = /@\w+(?:\s\w+)*/g;
 
-    return parts.map((part, index)=>{
-      if(part.startsWith("@")){
-        return (
-          <span key={index}
+  const parts = text.split(regex);
+  const matches = text.match(regex);
+
+  let result = [];
+
+  parts.forEach((part, i) => {
+    result.push(<span key={`text-${i}`}>{part}</span>);
+
+    if (matches && matches[i]) {
+      result.push(
+        <span
+          key={`mention-${i}`}
           className="text-blue-600 font-semibold cursor-pointer hover:underline"
-          onClick={()=>HandleMentionClick(part)}>
-            {part}
+          onClick={() => handleMentionClick(matches[i])}
+        >
+          {matches[i]}
+        </span>
+      );
+    }
+  });
 
-          </span>
-        )
-      }
-      return <span key={index}>{part}</span>
-    })
-  }
+  return result;
+};
 
   const HandleMentionClick = (mention) => {
     console.log("", mention);
