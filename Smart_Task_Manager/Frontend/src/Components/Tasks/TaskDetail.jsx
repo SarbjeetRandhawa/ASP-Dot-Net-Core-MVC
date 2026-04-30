@@ -14,7 +14,7 @@ import { searchUsers } from "../../features/users/userSlice";
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
   const { comments } = useSelector((state) => state.comments);
-  const { suggestion } = useSelector((state) => state.user);
+  const { suggestions } = useSelector((state) => state.user);
   const [text, settext] = useState("");
   const [query, setQuery] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
@@ -41,6 +41,8 @@ function TaskDetail() {
     dispatch(fetchComments(SelectedTask?.id));
   }, [dispatch, SelectedTask?.id]);
 
+
+
   const handleAdd = () => {
     console.log(replyingto);
 
@@ -56,10 +58,12 @@ function TaskDetail() {
   };
 
   const StatusMap = {
+
     0: "ToDo",
     1: "Done",
     2: "In Progress",
     3: "Overdue",
+
   };
 
   const PriorityMap = {
