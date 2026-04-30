@@ -11,35 +11,10 @@ import DOMPurify from "dompurify";
 import { likeComment } from "../../features/Task/CommentSlice";
 import { searchUsers } from "../../features/users/userSlice";
 
-
-<div className="relative w-full">
-  <textarea
-    value={text}
-    onChange={handleChange}
-    className="w-full border p-2 rounded"
-    placeholder="Write a comment... use @ to mention"
-  />
-
-  {showSuggestions && (
-    <div className="absolute bg-white border w-full shadow rounded mt-1 z-10">
-      {suggestions?.map((user) => (
-        <div
-          key={user.id}
-          onClick={() => handleSelectUser(user)}
-          className="p-2 cursor-pointer hover:bg-gray-200"
-        >
-          {user.name}
-        </div>
-      ))}
-    </div>
-  )}
-</div>
-
-
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
   const { comments } = useSelector((state) => state.comments);
-  const {suggestion} = useSelector((state)=> state.user);
+  const { suggestion } = useSelector((state) => state.user);
   const [text, settext] = useState("");
   const [query, setQuery] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
@@ -124,25 +99,24 @@ function TaskDetail() {
     settext(value);
 
     const cursor = e.target.selectionStart;
-    const textTillCursor = value.slice(0,cursor);
+    const textTillCursor = value.slice(0, cursor);
 
     const match = textTillCursor.match(/@(\w*)$/);
 
-
-    if(match){
+    if (match) {
       setQuery(match[1]);
       setShowSuggestion(true);
       dispatch(searchUsers(match[1]));
-    }else{
+    } else {
       setShowSuggestion(false);
     }
   };
 
- const  handleSelectUser = (user) => {
-    const newText = text.replace(/@(\w*)$/,`@${user.name}`);
+  const handleSelectUser = (user) => {
+    const newText = text.replace(/@(\w*)$/, `@${user.name}`);
     settext(newText);
     setShowSuggestion(false);
-  }
+  };
 
   return (
     <>
@@ -575,18 +549,27 @@ function TaskDetail() {
                             </span>
                           </div>
 
-                          <div className="w-full">
+                          <div className="relative w-full">
                             <textarea
                               value={text}
-                              ref={TextAreaRef}
-                              onChange={(e) => settext(e.target.value)}
-                              className="w-full h-20 resize-none border rounded-md p-2 text-[12px] font-semibold hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder={
-                                replyingto
-                                  ? `Replying to ${replyingtoName}`
-                                  : "Write a comment..."
-                              }
-                            ></textarea>
+                              onChange={handleChange}
+                              className="w-full border p-2 rounded"
+                              placeholder="Write a comment... use @ to mention"
+                            />
+
+                            {showSuggestion && (
+                              <div className="absolute bg-white border w-full shadow rounded mt-1 z-10">
+                                {suggestion?.map((user) => (
+                                  <div
+                                    key={user.id}
+                                    onClick={() => handleSelectUser(user)}
+                                    className="p-2 cursor-pointer hover:bg-gray-200"
+                                  >
+                                    {user.name}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                         <div className="flex justify-between">
