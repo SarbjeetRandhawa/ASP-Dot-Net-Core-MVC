@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Paperclip, HeartIcon, AtSign, AtSignIcon } from "lucide-react";
+import { Paperclip, HeartIcon, AtSign, AtSignIcon, Handshake } from "lucide-react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
 import { fetchTaskById } from "../../features/Task/TaskSlice";
@@ -14,7 +14,7 @@ import { searchUsers } from "../../features/users/userSlice";
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
   const { comments } = useSelector((state) => state.comments);
-  const { suggestions } = useSelector((state) => state.user);
+  const { suggestions } = useSelector((state) => state.users);
   const [text, settext] = useState("");
   const [query, setQuery] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
@@ -105,7 +105,7 @@ function TaskDetail() {
     const cursor = e.target.selectionStart;
     const textTillCursor = value.slice(0, cursor);
 
-    const match = textTillCursor.match(/@(\w*)$/);
+    const match = textTillCursor.match(/@([\w\s]*)$/);
 
     if (match) {
       setQuery(match[1]);
@@ -117,10 +117,33 @@ function TaskDetail() {
   };
 
   const handleSelectUser = (user) => {
-    const newText = text.replace(/@(\w*)$/, `@${user.name}`);
+    const newText = text.replace(/@([\w\s]*)$/, `@${user.name}`);
     settext(newText);
     setShowSuggestion(false);
   };
+
+  const renderCommentText = (text) => {
+    const parts = text.split(/(@[\w\s]+)/g);
+
+    return parts.map((part, index)=>{
+      if(part.startsWith("@")){
+        return (
+          <span key={index}
+          className="text-blue-600 font-semibold cursor-pointer hover:underline"
+          onClick={()=>HandleMentionClick(part)}>
+            {part}
+
+          </span>
+        )
+      }
+      return <span key={index}>{part}</span>
+    })
+  }
+
+  const HandleMentionClick = (mention) => {
+    console.log("", mention);
+    
+  }
 
   return (
     <>
@@ -205,9 +228,12 @@ function TaskDetail() {
                       title="pdf-preview?"
                     />
                   )}
+
                   {!isImage(preview) && !isPdf(preview) && (
                     <div className="text-center">
+
                       {" "}
+
                       <p>No Preview available</p>{" "}
                       <a
                         href={API_URL + preview?.filePath}
@@ -415,7 +441,7 @@ function TaskDetail() {
                               </div>
 
                               <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
-                                {c.commentText}
+                                {renderCommentText(c.commentText)}
                               </p>
 
                               <p className="mt-2 flex text-[#94A3B8] gap-1 items-center">
@@ -496,7 +522,7 @@ function TaskDetail() {
                                             </p>
                                           </div>
                                           <p className="mt-2  bg-[#F1F5F9] p-3 pr-10 rounded-xl text-[13px]  text-[#374151]">
-                                            {r.commentText}
+                                            {renderCommentText(r.commentText)}
                                           </p>
                                           <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
                                             <HeartIcon
@@ -556,14 +582,15 @@ function TaskDetail() {
                           <div className="relative w-full">
                             <textarea
                               value={text}
+                              
                               onChange={handleChange}
-                              className="w-full border p-2 rounded"
-                              placeholder="Write a comment... use @ to mention"
+                              className="w-full border p-2 rounded resize-none"
+                              placeholder={replyingto ? `Replying to ${replyingtoName} ` : "Write comment... type @ for Mention"}
                             />
 
                             {showSuggestion && (
-                              <div className="absolute bg-white border w-full shadow rounded mt-1 z-10">
-                                {suggestion?.map((user) => (
+                              <div className="absolute z-30 bg-white border w-full shadow rounded mt-1 ">
+                                {suggestions?.map((user) => (
                                   <div
                                     key={user.id}
                                     onClick={() => handleSelectUser(user)}
@@ -578,13 +605,7 @@ function TaskDetail() {
                         </div>
                         <div className="flex justify-between">
                           <div className="flex gap-2 ml-12">
-                            <div
-                              className="border-2 cursor-pointer flex items-center 
-                     px-4 h-8 text-[12px] font-semibold rounded-md  hover:shadow-md"
-                            >
-                              <AtSignIcon className="w-4 h-4 mr-2" />
-                              Mention
-                            </div>
+                            
                           </div>
                           <button
                             onClick={handleAdd}

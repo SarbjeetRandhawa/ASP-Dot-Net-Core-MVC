@@ -11,7 +11,7 @@ function Sidebar() {
 
   return (
     <>
-      <div className="lg:hidden fixed top-0  left-0 w-full gap-2 flex items-center bg-gray-50 text-black p-5 z-40">
+      <div className="lg:hidden fixed top-0  left-0 w-full gap-2 flex items-center bg-gray-50 text-black p-5 z-50">
         <button onClick={() => setIsOpen(!isOpen)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,13 +31,13 @@ function Sidebar() {
       </div>
       {isOpen && (
         <div
-          className="fixed z-30 inset-0  bg-black bg-opacity-50 lg:hidden"
+          className="fixed z-40 inset-0  bg-black bg-opacity-50 lg:hidden"
           onClick={() => setIsOpen(false)}
         ></div>
       )}
 
       <div
-        className={`z-30 w-64  lg:w-1/6 flex flex-col justify-between lg:flex lg:flex-col lg:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
+        className={`z-40 w-64  lg:w-1/6 flex flex-col justify-between lg:flex lg:flex-col lg:justify-between h-screen bg-[linear-gradient(to_bottom_right,#1E1B4B,#312E81,#3730A3)]
       fixed overflow-y-scroll top-14 lg:top-0 left-0  transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:block`}
       >
         <div>
