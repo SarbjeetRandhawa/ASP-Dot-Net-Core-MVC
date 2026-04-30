@@ -15,7 +15,7 @@ import { searchUsers } from "../../features/users/userSlice";
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
   const { comments } = useSelector((state) => state.comments);
-  const {suggestions} = useSelector((state)=> state.user);
+  const {suggestion} = useSelector((state)=> state.user);
   const [text, settext] = useState("");
   const [query, setQuery] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
@@ -94,6 +94,31 @@ function TaskDetail() {
     e.stopPropagation();
     setisReplyOpen((prev) => (prev === commentId ? null : commentId));
   };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    settext(value);
+
+    const cursor = e.target.selectionStart;
+    const textTillCursor = value.slice(0,cursor);
+
+    const match = textTillCursor.match(/@(\w*)$/);
+
+
+    if(match){
+      setQuery(match[1]);
+      setShowSuggestion(true);
+      dispatch(searchUsers(match[1]));
+    }else{
+      setShowSuggestion(false);
+    }
+  };
+
+ const  handleSelectUser = (user) => {
+    const newText = text.replace(/@(\w*)$/,`@${user.name}`);
+    settext(newText);
+    setShowSuggestion(false);
+  }
 
   return (
     <>
