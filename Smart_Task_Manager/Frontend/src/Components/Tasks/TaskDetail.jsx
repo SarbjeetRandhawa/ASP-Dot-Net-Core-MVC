@@ -12,6 +12,30 @@ import { likeComment } from "../../features/Task/CommentSlice";
 import { searchUsers } from "../../features/users/userSlice";
 
 
+<div className="relative w-full">
+  <textarea
+    value={text}
+    onChange={handleChange}
+    className="w-full border p-2 rounded"
+    placeholder="Write a comment... use @ to mention"
+  />
+
+  {showSuggestions && (
+    <div className="absolute bg-white border w-full shadow rounded mt-1 z-10">
+      {suggestions?.map((user) => (
+        <div
+          key={user.id}
+          onClick={() => handleSelectUser(user)}
+          className="p-2 cursor-pointer hover:bg-gray-200"
+        >
+          {user.name}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
   const { comments } = useSelector((state) => state.comments);
