@@ -9,11 +9,16 @@ import { fetchComments, createComment } from "../../features/Task/CommentSlice";
 import { useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { likeComment } from "../../features/Task/CommentSlice";
+import { searchUsers } from "../../features/users/userSlice";
+
 
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
   const { comments } = useSelector((state) => state.comments);
+  const {suggestions} = useSelector((state)=> state.user);
   const [text, settext] = useState("");
+  const [query, setQuery] = useState("");
+  const [showSuggestion, setShowSuggestion] = useState(false);
   const [replyingto, setreplyingto] = useState(null);
   const [replyingtoName, setreplyingtoName] = useState(null);
 
@@ -21,9 +26,9 @@ function TaskDetail() {
   const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
   // const [showReplies, setShowReplies] = useState(false);
-  const TextAreaRef = useRef(null);  
+  const TextAreaRef = useRef(null);
   const [isReplyOpen, setisReplyOpen] = useState(null);
-  
+
   const wrapperRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
@@ -72,18 +77,18 @@ function TaskDetail() {
     return file?.fileName?.match(/\.pdf$/i);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const handleClickOutside = (event) => {
-      if(wrapperRef.current && !wrapperRef.current.contains(event.target)){
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setreplyingto(null);
       }
     };
 
-    document.addEventListener("mousedown" , handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown" , handleClickOutside);
-    }
-  },[])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const HandleMenuClick = (e, commentId) => {
     e.stopPropagation();
@@ -369,15 +374,16 @@ function TaskDetail() {
                                   </span>
                                 </h1>
                                 <p className="text-[12px] text-[#94A3B8]">
-                                  {new Date(
-                                                c?.createdAt,
-                                              ).toLocaleDateString(undefined, {
-                                                month: "short",
-                                                day: "2-digit",
-                                                year: "numeric",
-                                                hour: "2-digit",
-                                                minute : "2-digit"
-                                              })}
+                                  {new Date(c?.createdAt).toLocaleDateString(
+                                    undefined,
+                                    {
+                                      month: "short",
+                                      day: "2-digit",
+                                      year: "numeric",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    },
+                                  )}
                                 </p>
                               </div>
 
@@ -387,11 +393,21 @@ function TaskDetail() {
 
                               <p className="mt-2 flex text-[#94A3B8] gap-1 items-center">
                                 <HeartIcon
-                                onClick={()=> dispatch(likeComment({commentId : c.id , taskId : SelectedTask?.id }))}
-                                
-                                 className={`w-4 h-4 text-black cursor-pointer ${c.isLikedByCurrentUser ? " fill-red-600 text-red-600" : ""
-}  `} />{" "}
-                                {c.likeCount} &nbsp;{" "} 
+                                  onClick={() =>
+                                    dispatch(
+                                      likeComment({
+                                        commentId: c.id,
+                                        taskId: SelectedTask?.id,
+                                      }),
+                                    )
+                                  }
+                                  className={`w-4 h-4 text-black cursor-pointer ${
+                                    c.isLikedByCurrentUser
+                                      ? " fill-red-600 text-red-600"
+                                      : ""
+                                  }  `}
+                                />{" "}
+                                {c.likeCount} &nbsp;{" "}
                                 <span
                                   className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer"
                                   onClick={() => {
@@ -408,7 +424,6 @@ function TaskDetail() {
                                 </span>
                                 <span
                                   onClick={(e) => HandleMenuClick(e, c.id)}
-                                  
                                   className="text-[12px] font-semibold tracking-wider cursor-pointer"
                                 >
                                   {c.replies.length > 0 &&
@@ -449,7 +464,7 @@ function TaskDetail() {
                                                 day: "2-digit",
                                                 year: "numeric",
                                                 hour: "2-digit",
-                                                minute : "2-digit"
+                                                minute: "2-digit",
                                               })}
                                             </p>
                                           </div>
@@ -458,18 +473,30 @@ function TaskDetail() {
                                           </p>
                                           <p className="mt-2 flex text-[#94A3B8] gap-1 items-center ">
                                             <HeartIcon
-                                            
-                                onClick={()=> dispatch(likeComment({commentId : r.id , taskId : SelectedTask?.id }))}
-                                             className={`w-4 h-4 text-black cursor-pointer ${r.isLikedByCurrentUser ? " fill-red-600 text-red-600" : ""
-}  `} />{" "}
+                                              onClick={() =>
+                                                dispatch(
+                                                  likeComment({
+                                                    commentId: r.id,
+                                                    taskId: SelectedTask?.id,
+                                                  }),
+                                                )
+                                              }
+                                              className={`w-4 h-4 text-black cursor-pointer ${
+                                                r.isLikedByCurrentUser
+                                                  ? " fill-red-600 text-red-600"
+                                                  : ""
+                                              }  `}
+                                            />{" "}
                                             {r.likeCount} &nbsp;{" "}
                                             <span
                                               className="text-[12px] text-blue-600 font-semibold tracking-wider cursor-pointer"
                                               onClick={() => {
                                                 console.log(c.id);
                                                 setreplyingto(c?.id);
-                                                
-                                                setreplyingtoName(r?.commentedbyUserName);
+
+                                                setreplyingtoName(
+                                                  r?.commentedbyUserName,
+                                                );
 
                                                 setTimeout(() => {
                                                   TextAreaRef.current?.focus();
@@ -490,29 +517,31 @@ function TaskDetail() {
                       </div>
                     </div>
 
-                    <div className="p-4 border flex "ref={wrapperRef}>
+                    <div className="p-4 border flex " ref={wrapperRef}>
                       <div className="  gap-4 w-full ">
-                        <div className="flex gap-4 items-start mb-2" 
-                            >
+                        <div className="flex gap-4 items-start mb-2">
                           <div className="w-[35px] h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
                             <span className="text-white text-[10px] font-bold">
                               AK
                             </span>
                           </div>
-                          
+
                           <div className="w-full">
                             <textarea
                               value={text}
                               ref={TextAreaRef}
                               onChange={(e) => settext(e.target.value)}
                               className="w-full h-20 resize-none border rounded-md p-2 text-[12px] font-semibold hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder={replyingto ? `Replying to ${replyingtoName}` : "Write a comment..."}
+                              placeholder={
+                                replyingto
+                                  ? `Replying to ${replyingtoName}`
+                                  : "Write a comment..."
+                              }
                             ></textarea>
                           </div>
                         </div>
                         <div className="flex justify-between">
                           <div className="flex gap-2 ml-12">
-                            
                             <div
                               className="border-2 cursor-pointer flex items-center 
                      px-4 h-8 text-[12px] font-semibold rounded-md  hover:shadow-md"
