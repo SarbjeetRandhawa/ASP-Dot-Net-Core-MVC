@@ -56,8 +56,8 @@ function KanbanBoard() {
 
     if (!destination) return;
 
-    const sourceStatus = Number(source.dropableId);
-    const desStatus = Number(destination.dropableId);
+    const sourceStatus = Number(source.droppableId);
+    const desStatus = Number(destination.droppableId);
     if (sourceStatus === desStatus) return;
 
     // try{
@@ -112,6 +112,7 @@ function KanbanBoard() {
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
+                      {...provided.placeholder}
                       className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
                     >
                       {TodoTasks.map((t, index) => (
@@ -124,9 +125,8 @@ function KanbanBoard() {
                             <div
                               className=" px-3  "
                               ref={provided.innerRef}
-                              {...provided.droppableProps}
+                              {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              key={t.id}
                             >
                               <div
                                 className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
