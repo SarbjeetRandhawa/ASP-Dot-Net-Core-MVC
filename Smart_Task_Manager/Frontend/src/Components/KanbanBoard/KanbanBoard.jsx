@@ -11,7 +11,10 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 
+import { useDroppable } from "@dnd-kit/core";
+
 import { CSS } from "@dnd-kit/utilities";
+import { Droppable } from "@adaptabletools/react-beautiful-dnd";
 
 function KanbanBoard() {
   const navigate = useNavigate();
@@ -63,6 +66,18 @@ function KanbanBoard() {
       transition,
     };
 
+    function Droppable({ id, children }) {
+      const { setNodeRef } = useDroppable({
+        id,
+      });
+
+      return (
+        <div ref={setNodeRef} className="h-full">
+          {children}
+        </div>
+      );
+    }
+
     return (
       <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
         {children}
@@ -107,86 +122,88 @@ function KanbanBoard() {
             onDragEnd={handleDragEnd}
           >
             <div className="p-4  flex gap-4">
-              <div
-                className="border-2 overflow-hidden rounded-lg 
+              <Droppable id="todo">
+                <div
+                  className="border-2 overflow-hidden rounded-lg 
                  border-t-[5px]   w-1/4 "
-              >
-                <div className="bg-white flex gap-2 items-center  p-4">
-                  <div>⬜</div>
-                  <h1 className="font-bold text-[13px]">Todo</h1>
-                  <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#F1F5F9] text-[#64748B]">
-                    {TodoTasks.length}
+                >
+                  <div className="bg-white flex gap-2 items-center  p-4">
+                    <div>⬜</div>
+                    <h1 className="font-bold text-[13px]">Todo</h1>
+                    <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#F1F5F9] text-[#64748B]">
+                      {TodoTasks.length}
+                    </div>
                   </div>
-                </div>
-                <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
-                  <SortableContext
-                    items={TodoTasks.map((t) => t.id)}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {TodoTasks.map((t) => (
-                      <SortableItems id={t.id} key={t.id}>
-                        <div className=" px-3  " key={t.id}>
-                          <div
-                            className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
-                          >
-                            <div className="flex gap-2 items-center">
-                              <div
-                                className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                              >
-                                {" "}
+                  <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
+                    <SortableContext
+                      items={TodoTasks.map((t) => t.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      {TodoTasks.map((t) => (
+                        <SortableItems id={t.id} key={t.id}>
+                          <div className=" px-3  " key={t.id}>
+                            <div
+                              className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
+                            >
+                              <div className="flex gap-2 items-center">
                                 <div
-                                  className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
-                                ></div>{" "}
-                                {t.priority === 0
-                                  ? "Low"
-                                  : t.priority === 1
-                                    ? "Medium"
-                                    : "High"}
+                                  className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
+                                >
+                                  {" "}
+                                  <div
+                                    className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
+                                  ></div>{" "}
+                                  {t.priority === 0
+                                    ? "Low"
+                                    : t.priority === 1
+                                      ? "Medium"
+                                      : "High"}
+                                </div>
+                                <p className="text-[11px] text-[#94A3B8]">
+                                  {t.taskCode}
+                                </p>
                               </div>
-                              <p className="text-[11px] text-[#94A3B8]">
-                                {t.taskCode}
-                              </p>
-                            </div>
-                            <div className=" py-2">
-                              <h1
-                                className="text-[14px] font-semibold hover:underline cursor-pointer"
-                                onClick={(e) => HandleTaskInfoNavigate(e, t)}
-                              >
-                                {t.title}
-                              </h1>
-                              <p className="text-[12px] text-[#94A3B8]">
-                                <span className="text-white">💬</span> 2
-                                comments {""}
-                                <span className="text-white">📎</span>{" "}
-                                {t.filesCount} files
-                              </p>
-                            </div>
-                            <div className="border-t-2 flex justify-between items-center pt-2">
-                              <p className="text-[11px]">
-                                <span className="text-white">📅</span>
-                                {new Date(t.dueDate).toLocaleDateString(
-                                  undefined,
-                                  {
-                                    month: "short",
-                                    day: "numeric",
-                                  },
-                                )}
-                              </p>
-                              <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                                {t.assignedByName
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")
-                                  .toUpperCase()}
+                              <div className=" py-2">
+                                <h1
+                                  className="text-[14px] font-semibold hover:underline cursor-pointer"
+                                  onClick={(e) => HandleTaskInfoNavigate(e, t)}
+                                >
+                                  {t.title}
+                                </h1>
+                                <p className="text-[12px] text-[#94A3B8]">
+                                  <span className="text-white">💬</span> 2
+                                  comments {""}
+                                  <span className="text-white">📎</span>{" "}
+                                  {t.filesCount} files
+                                </p>
+                              </div>
+                              <div className="border-t-2 flex justify-between items-center pt-2">
+                                <p className="text-[11px]">
+                                  <span className="text-white">📅</span>
+                                  {new Date(t.dueDate).toLocaleDateString(
+                                    undefined,
+                                    {
+                                      month: "short",
+                                      day: "numeric",
+                                    },
+                                  )}
+                                </p>
+                                <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
+                                  {t.assignedByName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </SortableItems>
-                    ))}
-                  </SortableContext>
+                        </SortableItems>
+                      ))}
+                    </SortableContext>
+                  </div>
                 </div>
-              </div>
+              </Droppable>
               <div
                 className="border-2 overflow-hidden rounded-lg 
                  border-t-[5px]   w-1/4"
