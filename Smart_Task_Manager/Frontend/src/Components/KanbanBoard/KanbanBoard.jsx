@@ -4,11 +4,14 @@ import Sidebar from "../Sidebar";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTasks } from "../../features/Task/TaskSlice";
 import { useNavigate } from "react-router-dom";
+import { DndContext, closestCorners } from "@dnd-kit/core";
 import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-} from "@adaptabletools/react-beautiful-dnd";
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+
+import { CSS } from "@dnd-kit/utilities";
 
 function KanbanBoard() {
   const navigate = useNavigate();
@@ -51,21 +54,26 @@ function KanbanBoard() {
 
   console.log(TodoTasks);
 
-  const handleDragEnd = async (result) => {
-    const { source, destination } = result;
+  function SortableItems({ id, children }) {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id });
 
-    if (!destination) return;
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
 
-    const sourceStatus = Number(source.droppableId);
-    const desStatus = Number(destination.droppableId);
-    if (sourceStatus === desStatus) return;
+    return (
+      <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        {children}
+      </div>
+    );
+  }
 
-    // try{
-    //   await updatetaskStatus(draggableId, desStatus);
-    // }catch(err){
-    //   console.log(err);
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
 
-    // }
+    if (!over) return;
   };
 
   return (
@@ -94,7 +102,10 @@ function KanbanBoard() {
             </div>
           </div>
 
-          <DragDropContext onDragEnd={handleDragEnd}>
+          <DndContext
+            collisionDetection={closestCorners}
+            onDragEnd={handleDragEnd}
+          >
             <div className="p-4  flex gap-4">
               <div
                 className="border-2 overflow-hidden rounded-lg 
@@ -107,91 +118,74 @@ function KanbanBoard() {
                     {TodoTasks.length}
                   </div>
                 </div>
-                <Droppable droppableId="0">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      {...provided.placeholder}
-                      className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
-                    >
-                      {TodoTasks.map((t, index) => (
-                        <Draggable
-                          key={t.id}
-                          draggableId={t.id.toString()}
-                          index={index}
-                        >
-                          {(provided) => (
-                            <div
-                              className=" px-3  "
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
+                <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
+                  <SortableContext
+                    items={TodoTasks.map((t) => t.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {TodoTasks.map((t) => (
+                      <SortableItems id={t.id} key={t.id}>
+                        <div className=" px-3  " key={t.id}>
+                          <div
+                            className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
+                          >
+                            <div className="flex gap-2 items-center">
                               <div
-                                className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
+                                className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
                               >
-                                <div className="flex gap-2 items-center">
-                                  <div
-                                    className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                                  >
-                                    {" "}
-                                    <div
-                                      className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
-                                    ></div>{" "}
-                                    {t.priority === 0
-                                      ? "Low"
-                                      : t.priority === 1
-                                        ? "Medium"
-                                        : "High"}
-                                  </div>
-                                  <p className="text-[11px] text-[#94A3B8]">
-                                    {t.taskCode}
-                                  </p>
-                                </div>
-                                <div className=" py-2">
-                                  <h1
-                                    className="text-[14px] font-semibold hover:underline cursor-pointer"
-                                    onClick={(e) =>
-                                      HandleTaskInfoNavigate(e, t)
-                                    }
-                                  >
-                                    {t.title}
-                                  </h1>
-                                  <p className="text-[12px] text-[#94A3B8]">
-                                    <span className="text-white">💬</span> 2
-                                    comments {""}
-                                    <span className="text-white">📎</span>{" "}
-                                    {t.filesCount} files
-                                  </p>
-                                </div>
-                                <div className="border-t-2 flex justify-between items-center pt-2">
-                                  <p className="text-[11px]">
-                                    <span className="text-white">📅</span>
-                                    {new Date(t.dueDate).toLocaleDateString(
-                                      undefined,
-                                      {
-                                        month: "short",
-                                        day: "numeric",
-                                      },
-                                    )}
-                                  </p>
-                                  <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                                    {t.assignedByName
-                                      .split(" ")
-                                      .map((n) => n[0])
-                                      .join("")
-                                      .toUpperCase()}
-                                  </div>
-                                </div>
+                                {" "}
+                                <div
+                                  className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
+                                ></div>{" "}
+                                {t.priority === 0
+                                  ? "Low"
+                                  : t.priority === 1
+                                    ? "Medium"
+                                    : "High"}
+                              </div>
+                              <p className="text-[11px] text-[#94A3B8]">
+                                {t.taskCode}
+                              </p>
+                            </div>
+                            <div className=" py-2">
+                              <h1
+                                className="text-[14px] font-semibold hover:underline cursor-pointer"
+                                onClick={(e) => HandleTaskInfoNavigate(e, t)}
+                              >
+                                {t.title}
+                              </h1>
+                              <p className="text-[12px] text-[#94A3B8]">
+                                <span className="text-white">💬</span> 2
+                                comments {""}
+                                <span className="text-white">📎</span>{" "}
+                                {t.filesCount} files
+                              </p>
+                            </div>
+                            <div className="border-t-2 flex justify-between items-center pt-2">
+                              <p className="text-[11px]">
+                                <span className="text-white">📅</span>
+                                {new Date(t.dueDate).toLocaleDateString(
+                                  undefined,
+                                  {
+                                    month: "short",
+                                    day: "numeric",
+                                  },
+                                )}
+                              </p>
+                              <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
+                                {t.assignedByName
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                                  .toUpperCase()}
                               </div>
                             </div>
-                          )}
-                        </Draggable>
-                      ))}
-                    </div>
-                  )}
-                </Droppable>
+                          </div>
+                        </div>
+                      </SortableItems>
+                    ))}
+                  </SortableContext>
+                </div>
               </div>
               <div
                 className="border-2 overflow-hidden rounded-lg 
@@ -205,62 +199,72 @@ function KanbanBoard() {
                   </div>
                 </div>
                 <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
-                  {InProgressTasks.map((t) => (
-                    <div className=" px-3  " key={t.id}>
-                      <div
-                        className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
-                      >
-                        <div className="flex gap-2 items-center">
+                  <SortableContext
+                    items={InProgressTasks.map((t) => t.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {InProgressTasks.map((t) => (
+                      <SortableItems id={t.id} key={t.id}>
+                        <div className=" px-3  " key={t.id}>
                           <div
-                            className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
+                            className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
                           >
-                            {" "}
-                            <div
-                              className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
-                            ></div>{" "}
-                            {t.priority === 0
-                              ? "Low"
-                              : t.priority === 1
-                                ? "Medium"
-                                : "High"}
+                            <div className="flex gap-2 items-center">
+                              <div
+                                className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
+                              >
+                                {" "}
+                                <div
+                                  className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
+                                ></div>{" "}
+                                {t.priority === 0
+                                  ? "Low"
+                                  : t.priority === 1
+                                    ? "Medium"
+                                    : "High"}
+                              </div>
+                              <p className="text-[11px] text-[#94A3B8]">
+                                {t.taskCode}
+                              </p>
+                            </div>
+                            <div className=" py-2">
+                              <h1
+                                className="text-[14px] font-semibold cursor-pointer hover:underline"
+                                onClick={(e) => HandleTaskInfoNavigate(e, t)}
+                              >
+                                {t.title}
+                              </h1>
+                              <p className="text-[12px] text-[#94A3B8]">
+                                <span className="text-white">💬</span> 2
+                                comments {""}
+                                <span className="text-white">📎</span>{" "}
+                                {t.filesCount} files
+                              </p>
+                            </div>
+                            <div className="border-t-2 flex justify-between items-center pt-2">
+                              <p className="text-[11px]">
+                                <span className="text-white">📅</span>
+                                {new Date(t.dueDate).toLocaleDateString(
+                                  undefined,
+                                  {
+                                    month: "short",
+                                    day: "numeric",
+                                  },
+                                )}
+                              </p>
+                              <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
+                                {t.assignedByName
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                                  .toUpperCase()}
+                              </div>
+                            </div>
                           </div>
-                          <p className="text-[11px] text-[#94A3B8]">
-                            {t.taskCode}
-                          </p>
                         </div>
-                        <div className=" py-2">
-                          <h1
-                            className="text-[14px] font-semibold cursor-pointer hover:underline"
-                            onClick={(e) => HandleTaskInfoNavigate(e, t)}
-                          >
-                            {t.title}
-                          </h1>
-                          <p className="text-[12px] text-[#94A3B8]">
-                            <span className="text-white">💬</span> 2 comments{" "}
-                            {""}
-                            <span className="text-white">📎</span>{" "}
-                            {t.filesCount} files
-                          </p>
-                        </div>
-                        <div className="border-t-2 flex justify-between items-center pt-2">
-                          <p className="text-[11px]">
-                            <span className="text-white">📅</span>
-                            {new Date(t.dueDate).toLocaleDateString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </p>
-                          <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                            {t.assignedByName
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                      </SortableItems>
+                    ))}
+                  </SortableContext>
                 </div>
               </div>
               <div
@@ -474,7 +478,7 @@ function KanbanBoard() {
                 </div>
               </div>
             </div>
-          </DragDropContext>
+          </DndContext>
         </div>
       </div>
     </>
