@@ -53,7 +53,7 @@ function TaskDetail() {
   useEffect(() => {
     dispatch(fetchTaskById(projectId));
     dispatch(fetchComments(SelectedTask?.id));
-  }, [dispatch, SelectedTask?.id]);
+  }, [dispatch, SelectedTask?.id , projectId]);
 
   const handleAdd = () => {
     console.log(replyingto);
@@ -222,12 +222,14 @@ function TaskDetail() {
                   }}
                 >
                   <svg
+
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
                     height="20"
                     fill="currentColor"
                     class="bi bi-x-circle-fill"
                     viewBox="0 0 16 16"
+
                   >
                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
                   </svg>
@@ -296,7 +298,8 @@ function TaskDetail() {
                           ? "🟢"
                           : SelectedTask?.priority == 1
                             ? "🟡"
-                            : "🔴"}{" "}
+                            : "🔴"
+                            }{" "}
                         {PriorityMap[SelectedTask?.priority]}
                       </div>
                       {StatusMap[SelectedTask?.status] == 3 && (
@@ -337,11 +340,13 @@ function TaskDetail() {
                   <div className="shadow-md bg-white border-2 rounded-xl p-4">
                     <div className="flex  justify-between items-center">
                       <div>
+                        
                         <h1 className="font-bold text-[14px]">Attachments</h1>
                         <p className="text-[12px] tracking-wide font-semibold text-[#64748B]">
                           {SelectedTask?.files?.length} files uploaded
                         </p>
                       </div>
+
                       <div
                         className="border-2 cursor-pointer flex items-center 
                      px-4 h-8 text-[12px] font-semibold rounded-md"
@@ -364,11 +369,13 @@ function TaskDetail() {
                               alt=""
                             />
                           ) : f.type.startsWith("application/pdf") ? (
+                            
                             <img
                               src={"/public/pdf_4726010.png"}
                               className="h-14 w-14"
                               alt=""
                             />
+
                           ) : f.type.startsWith("application/msword") ||
                             f.type.startsWith(
                               "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

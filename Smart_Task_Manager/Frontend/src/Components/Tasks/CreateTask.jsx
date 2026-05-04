@@ -19,7 +19,6 @@ function CreateTask() {
 
   const location = useLocation();
   // console.log(Files);
-  
 
   const [TaskFormData, setTaskFormData] = useState({
     Title: "",
@@ -74,7 +73,7 @@ function CreateTask() {
 
   useEffect(() => {
     dispatch(fetchProjects());
-  }, []);
+  }, [dispatch]);
 
   // console.log(selectedProject);
 
@@ -95,31 +94,32 @@ function CreateTask() {
     formData.append("Priority", TaskFormData.Priority);
     formData.append("DueDate", data.DueDate);
 
-    Files.forEach((file) => {
-      formData.append("Files", file);
-    });
-              
+    if (Files.length > 0) {
+      Files.forEach((file) => {
+        formData.append("Files", file);
+      });
+    } else {
+      formData.append("Files", "");
+    }
+
     for (let pair of formData.entries()) {
       console.log(pair[0] + ": " + pair[1]);
     }
-    try{
+    try {
       const res = await createTask(formData);
-            await Swal.fire({
-              position: "top-end",
-              title: "Created!",
-              text: "Task is Created",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+      await Swal.fire({
+        position: "top-end",
+        title: "Created!",
+        text: "Task is Created",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.log(res);
       navigate("/projects");
     } catch (error) {
       console.error("Error creating task:", error);
-
     }
-
-
   };
 
   return (
@@ -148,7 +148,7 @@ function CreateTask() {
                 <button
                   type="button"
                   onClick={() => {
-                    navigate("/projects");
+                    navigate("/tasks");
                   }}
                   className="border sm:h-8 h-6 text-[8px] sm:text-[11px] font-bold rounded-md px-1 sm:px-3 whitespace-nowrap"
                 >
@@ -251,7 +251,7 @@ function CreateTask() {
                           {p.name}
                         </option>
                       ))}
-                    </select> 
+                    </select>
                     {errors.ProjectId && (
                       <p className="text-red-500 text-sm">
                         {errors.ProjectId.message}
@@ -328,23 +328,22 @@ function CreateTask() {
                       <input
                         type="Date"
                         {...register("DueDate", {
-                        required: "Due Date is required",
-                        onChange: (e) => {
-                          const End = selectedProject.endDate;
-                          const Due = e.target.value;
-                          if (End && Due && Due > End) {
-                            setError("DueDate", {
-                              type: "manual",
-                              message:
-                                "Due Date cannot be Larger than Project End Date",
-                            })
-                          }
-                          else{
+                          required: "Due Date is required",
+                          onChange: (e) => {
+                            const End = selectedProject.endDate;
+                            const Due = e.target.value;
+                            if (End && Due && Due > End) {
+                              setError("DueDate", {
+                                type: "manual",
+                                message:
+                                  "Due Date cannot be Larger than Project End Date",
+                              });
+                            } else {
                               clearErrors("DueDate");
-                            } ;
-                          HandleChange(e);
-                        },
-                      })}
+                            }
+                            HandleChange(e);
+                          },
+                        })}
                         name="DueDate"
                         className="border text-[14px] focus:outline-none focus:border-blue-600 px-4 py-1 rounded-md"
                       />
@@ -372,7 +371,6 @@ function CreateTask() {
                     {TaskFormData.Title || "New Task (Untitled)"}
                   </h1>
                   <div className="flex gap-2 text-[12px]">
-                    
                     <div
                       className={` font-semibold ${TaskFormData.Priority == 0 ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#10B981] " : TaskFormData.Priority == 2 ? "bg-[#FEF2F2] border-[#FECACA] text-[#EF4444]" : "bg-[#FFFBEB] text-[#F59E0B]"}  px-2 rounded-full`}
                     >
