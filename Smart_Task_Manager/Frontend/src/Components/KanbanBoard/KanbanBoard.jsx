@@ -15,26 +15,30 @@ import { CSS } from "@dnd-kit/utilities";
 
 function KanbanBoard() {
   const navigate = useNavigate();
-  const [FilterBar, setFilterBar] = useState("All");
   const dispatch = useDispatch();
   const { tasks } = useSelector((state) => state.tasks);
 
+  const [FilterBar, setFilterBar] = useState("All");
+
+  // ✅ Filter Tasks
   const TodoTasks = tasks.filter((t) => t.status === 0);
   const DoneTasks = tasks.filter((t) => t.status === 1);
   const InProgressTasks = tasks.filter((t) => t.status === 2);
   const OverdueTasks = tasks.filter((t) => t.status === 3);
   const InReviewTasks = tasks.filter((t) => t.status === 4);
 
+  // ✅ Navigate
   const HandleTaskInfoNavigate = (e, task) => {
     e.stopPropagation();
     navigate(`/tasks/${task.id}-${task.taskCode}`);
   };
 
+  // ✅ Fetch Tasks
   useEffect(() => {
     dispatch(fetchTasks({}));
   }, [dispatch]);
 
-  // ✅ DRAG ITEM
+  // ✅ DRAGGABLE ITEM
   function SortableItem({ id, children }) {
     const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({ id });
@@ -52,7 +56,7 @@ function KanbanBoard() {
     );
   }
 
-  // ✅ COLUMN (DROP ZONE)
+  // ✅ DROPPABLE COLUMN
   function Column({ id, children }) {
     const { setNodeRef } = useDroppable({ id });
 
@@ -63,7 +67,7 @@ function KanbanBoard() {
     );
   }
 
-  // ✅ DRAG END
+  // ✅ DRAG END HANDLER
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
@@ -84,11 +88,11 @@ function KanbanBoard() {
 
     console.log("Task moved:", taskId, "→", newStatus);
 
-    // 👉 CALL API HERE
+    // 👉 Call API / Redux here
     // dispatch(updateTaskStatus({ taskId, status: newStatus }));
   };
 
-  // ✅ CARD UI
+  // ✅ TASK CARD UI
   const TaskCard = (t) => (
     <div className="px-3">
       <div
@@ -122,20 +126,34 @@ function KanbanBoard() {
 
         <div className="border-t pt-2 flex justify-between">
           <p className="text-[11px]">
-            {new Date(t.dueDate).toLocaleDateString()}
+            {new Date(t.dueDate).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+            })}
           </p>
+
+          <div className="w-6 h-6 flex items-center justify-center text-[10px] font-bold rounded-full border">
+            {t.assignedByName
+              ?.split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()}
+          </div>
         </div>
       </div>
     </div>
   );
 
-  // ✅ COLUMN RENDER
+  // ✅ COLUMN RENDER FUNCTION
   const renderColumn = (title, items, id) => (
     <Column id={id}>
-      <div className="border-2 rounded-lg">
-        <div className="p-4 font-bold">{title} ({items.length})</div>
+      <div className="border-2 rounded-lg bg-gray-50">
+        <div className="bg-white p-4 flex justify-between items-center">
+          <h1 className="font-bold text-[13px]">{title}</h1>
+          <span className="text-[11px] font-bold">{items.length}</span>
+        </div>
 
-        <div className="h-[70vh] overflow-scroll flex flex-col gap-3">
+        <div className="h-[75vh] overflow-scroll flex flex-col gap-3 pt-3">
           <SortableContext
             items={items.map((t) => t.id)}
             strategy={verticalListSortingStrategy}
@@ -161,7 +179,7 @@ function KanbanBoard() {
 
           <button
             onClick={() => navigate("/Tasks/CreateTask")}
-            className="bg-blue-600 text-white px-3 py-1 rounded"
+            className="bg-[#4F46E5] text-white px-3 py-1 rounded"
           >
             + New Task
           </button>
