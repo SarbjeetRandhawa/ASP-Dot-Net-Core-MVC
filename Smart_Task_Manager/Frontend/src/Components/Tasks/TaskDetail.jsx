@@ -1,5 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { Paperclip, HeartIcon, AtSign, AtSignIcon, Handshake } from "lucide-react";
+import {
+  Paperclip,
+  HeartIcon,
+  AtSign,
+  AtSignIcon,
+  Handshake,
+} from "lucide-react";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
 import { fetchTaskById } from "../../features/Task/TaskSlice";
@@ -16,7 +22,6 @@ function TaskDetail() {
   const { comments } = useSelector((state) => state.comments);
   const { suggestions } = useSelector((state) => state.users);
   const [text, settext] = useState("");
-  const [query, setQuery] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [replyingto, setreplyingto] = useState(null);
   const [replyingtoName, setreplyingtoName] = useState(null);
@@ -30,6 +35,15 @@ function TaskDetail() {
 
   const wrapperRef = useRef(null);
 
+   const colors = [
+    "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#9d00ff)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#eeff00)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#ff00e6)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#00ffff)]",
+  ];
+
   const API_URL = import.meta.env.VITE_API_URL;
   console.log(comments);
 
@@ -41,29 +55,33 @@ function TaskDetail() {
     dispatch(fetchComments(SelectedTask?.id));
   }, [dispatch, SelectedTask?.id]);
 
-
-
   const handleAdd = () => {
     console.log(replyingto);
+    const formattedtext = formattedCommentText(text);
 
     if (!text.trim()) return;
     dispatch(
       createComment({
         taskId: SelectedTask?.id,
-        commentText: text,
+        commentText: formattedtext,
         parentCommentId: replyingto,
       }),
     );
     settext("");
   };
 
-  const StatusMap = {
+  const formattedCommentText = (text) => {
+    return text.replace(/@([\w]+\s[\w]+)/g,
+    (match) => {
+      return `@[${match.substring(1)}]`;
+    }
+  )}
 
+  const StatusMap = {
     0: "ToDo",
     1: "Done",
     2: "In Progress",
     3: "Overdue",
-
   };
 
   const PriorityMap = {
@@ -108,7 +126,6 @@ function TaskDetail() {
     const match = textTillCursor.match(/@([\w\s]*)$/);
 
     if (match) {
-      setQuery(match[1]);
       setShowSuggestion(true);
       dispatch(searchUsers(match[1]));
     } else {
@@ -123,36 +140,28 @@ function TaskDetail() {
   };
 
   const renderCommentText = (text) => {
-  const regex = /@\w+(?:\s\w+)*/g;
+    const regex = /@\[(.*?)\]/g;
 
-  const parts = text.split(regex);
-  const matches = text.match(regex);
+    const parts = text.split(regex);
 
-  let result = [];
-
-  parts.forEach((part, i) => {
-    result.push(<span key={`text-${i}`}>{part}</span>);
-
-    if (matches && matches[i]) {
-      result.push(
-        <span
-          key={`mention-${i}`}
-          className="text-blue-600 font-semibold cursor-pointer hover:underline"
-          onClick={() => handleMentionClick(matches[i])}
-        >
-          {matches[i]}
-        </span>
-      );
-    }
-  });
-
-  return result;
-};
+    return parts.map((part, index) => {
+      if (index % 2 === 1) {
+        return (
+          <span
+            key={index}
+            className="text-blue-600 font-semibold cursor-pointer hover:underline"
+          >
+            @{part}
+          </span>
+        );
+      }
+      return <span key={index}>{part}</span>
+    });
+  };
 
   const HandleMentionClick = (mention) => {
     console.log("", mention);
-    
-  }
+  };
 
   return (
     <>
@@ -240,9 +249,7 @@ function TaskDetail() {
 
                   {!isImage(preview) && !isPdf(preview) && (
                     <div className="text-center">
-
                       {" "}
-
                       <p>No Preview available</p>{" "}
                       <a
                         href={API_URL + preview?.filePath}
@@ -414,10 +421,10 @@ function TaskDetail() {
                         </div>
                       </div>
                       <div className="border-t px-4 ">
-                        {comments.map((c) => (
+                        {comments.map((c,index) => (
                           <div className="flex my-6 " key={c.id}>
                             <div>
-                              <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
+                              <div className={`w-8 h-8 ${colors[index % colors.length]} rounded-full flex items-center justify-center`}>
                                 <span className="text-white text-[10px] font-bold">
                                   {c.commentedbyUserName
                                     .split(" ")
@@ -500,7 +507,7 @@ function TaskDetail() {
                                     <div className="p-4 ">
                                       <div className="flex ">
                                         <div>
-                                          <div className="w-8 h-8 bg-[#096dfa] rounded-full flex items-center justify-center">
+                                          <div className={`w-8 h-8 ${colors[index + 2 % colors.length]} rounded-full flex items-center justify-center`}>
                                             <span className="text-white text-[10px] font-bold">
                                               {c.commentedbyUserName
                                                 .split(" ")
@@ -591,10 +598,13 @@ function TaskDetail() {
                           <div className="relative w-full">
                             <textarea
                               value={text}
-                              
                               onChange={handleChange}
                               className="w-full border p-2 rounded resize-none"
-                              placeholder={replyingto ? `Replying to ${replyingtoName} ` : "Write comment... type @ for Mention"}
+                              placeholder={
+                                replyingto
+                                  ? `Replying to ${replyingtoName} `
+                                  : "Write comment... type @ for Mention"
+                              }
                             />
 
                             {showSuggestion && (
@@ -613,9 +623,7 @@ function TaskDetail() {
                           </div>
                         </div>
                         <div className="flex justify-between">
-                          <div className="flex gap-2 ml-12">
-                            
-                          </div>
+                          <div className="flex gap-2 ml-12"></div>
                           <button
                             onClick={handleAdd}
                             className="border-2 cursor-pointer flex items-center 

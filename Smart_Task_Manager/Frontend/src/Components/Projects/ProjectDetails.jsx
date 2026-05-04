@@ -31,11 +31,24 @@ function ProjectDetails() {
   const projectId = projectIdSlug.split("-")[0];
   const dispatch = useDispatch();
   const { selectedProject, loading } = useSelector((state) => state.projects);
-  const { tasks } = useSelector((state) => state.tasks);
+  const { tasks  } = useSelector((state) => state.tasks);
 
   const CurrentUser = useSelector((state) => state.auth.user);
 
+  const totalTask = tasks.length;
+  const todoTask = tasks.filter((t)=> t.status === 0).length
+
+  const doneTask = tasks.filter((t)=> t.status === 1).length
+  const inProgressTask = tasks.filter((t)=> t.status === 2).length
+  const overdueTask = tasks.filter((t)=> t.status === 3).length
+
+
+
+  
+
+
   useEffect(() => {
+
     dispatch(fetchProjectById(projectId));
     dispatch(fetchTasksByProjectId(projectId));
   }, [projectId , dispatch]);
@@ -293,14 +306,14 @@ function ProjectDetails() {
             <div className="px-4">
               <div className="grid grid-flow-col gap-2 text-nowrap">
                 <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
-                  <h1 className="text-[18px] md:text-[22px] font-bold">18</h1>
+                  <h1 className="text-[18px] md:text-[22px] font-bold">{totalTask}</h1>
                   <p className="text-[10px] md:text-[12px] text-[#64748B]">
                     Total Tasks
                   </p>
                 </div>
                 <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold  text-[#10B981]">
-                    13
+                    {doneTask}
                   </h1>
                   <p className="text-[10px] md:text-[12px] text-[#64748B]">
                     Completed
@@ -308,7 +321,7 @@ function ProjectDetails() {
                 </div>
                 <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold  text-[#3B82F6]">
-                    2
+                    {inProgressTask}
                   </h1>
                   <p className="text-[10px] md:text-[12px] text-[#64748B]">
                     In Progress
@@ -316,7 +329,7 @@ function ProjectDetails() {
                 </div>
                 <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold  text-[#F59E0B]">
-                    3
+                    {todoTask}
                   </h1>
                   <p className="text-[10px] md:text-[12px] text-[#64748B]">
                     To Do
@@ -324,7 +337,7 @@ function ProjectDetails() {
                 </div>
                 <div className="text-center border-2 px-2 py-1  md:px-4 md:py-2 rounded-md bg-white">
                   <h1 className="text-[18px] md:text-[22px] font-bold text-[#EF4444]">
-                    3
+                    {overdueTask}
                   </h1>
                   <p className="text-[10px] md:text-[12px] text-[#64748B]">
                     Overdue

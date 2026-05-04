@@ -11,7 +11,6 @@ namespace SmartTaskAPI.UnitOfWork
         public IProjectMemberRepository ProjectMemberRepository { get; }
         public IProjectRoleRepository ProjectRoleRepository { get; }
         public IUserRepository UserRepository { get; }
-
         public ITaskRepository TaskRepository { get; }
         public ITaskAttachmentRepository TaskAttachmentRepository { get; }
 

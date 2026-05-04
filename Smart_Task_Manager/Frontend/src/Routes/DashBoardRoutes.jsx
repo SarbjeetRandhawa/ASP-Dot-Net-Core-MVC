@@ -8,6 +8,7 @@ import CreateTask from "../Components/Tasks/CreateTask";
 import TaskPage from "../Components/Tasks/TaskPage";
 import TaskDetail from "../Components/Tasks/TaskDetail";
 import Dashboard from "../Components/Dashboard/Dashboard";
+import KanbanBoard from "../Components/KanbanBoard/KanbanBoard";
 // import ProtectedRoute from './Components/ProtectedRoute'
 
 export const DashBoardRoutes = [
@@ -76,6 +77,17 @@ export const DashBoardRoutes = [
       </ProtectedRoute>
     }
   />,
+
+  <Route
+    
+    path="/kanban"
+    element={
+      <ProtectedRoute>
+        <KanbanBoard/>
+      </ProtectedRoute>
+    }
+  />,
+ 
   <Route
     key="team"
     path="/team"

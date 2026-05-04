@@ -109,7 +109,7 @@ function Sidebar() {
                 
               </div>
             </div>
-            <div className="text-white p-1 px-4 sm:p-4">
+            {/* <div className="text-white p-1 px-4 sm:p-4">
               <h1 className="text-[#FFFFFF59] text-[12px]">ADMIN</h1>
               <div className="ml-2  flex flex-col mt-2">
                 <NavLink
@@ -131,7 +131,7 @@ function Sidebar() {
                   <span>Notifications</span>
                 </NavLink>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex mb-[56px] md:mb-[56px] lg:mb-0 items-center border-t-[1px] border-t-[#ffffff25] p-2 sm:p-3 gap-3 text-white justify-between">

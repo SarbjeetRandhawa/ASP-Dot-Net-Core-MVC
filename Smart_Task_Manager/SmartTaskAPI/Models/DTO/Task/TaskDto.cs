@@ -16,6 +16,7 @@
         public int Status { get; set; }
         public DateTime? DueDate { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public int FilesCount { get; set; }
 
         //public List<IFormFile> Files { get; set; }
     }

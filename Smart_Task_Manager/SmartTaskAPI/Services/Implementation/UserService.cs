@@ -6,9 +6,10 @@ namespace SmartTaskAPI.Services.Implementation
 {
     public class UserService : IUserService
     {
+
         private readonly IUnitOfWork _uow;
         public UserService(IUnitOfWork uow)
-        {
+        { 
             _uow = uow;
         }
 

@@ -251,7 +251,7 @@ function TaskPage() {
                                 <div
                                   className={` w-4 h-4 md:w-6 md:h-6 text-[8px] md:text-[10px]  items-center flex justify-center ${colors[index % colors.length]} text-white font-semibold rounded-full`}
                                 >
-                                  {task.assignedByName
+                                  {task.assignedToName
                                     .split(" ")
                                     .map((n) => n[0])
                                     .join("")
