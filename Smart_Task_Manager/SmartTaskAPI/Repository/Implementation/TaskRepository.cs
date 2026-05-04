@@ -50,6 +50,7 @@ namespace SmartTaskAPI.Repository.Implementation
 
             var TaskQuery = _context.Tasks
                 .Include(t => t.Project)
+                .Include(t=>t.Attachments)
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
                 .Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId || projectIds.Contains(t.ProjectId))
@@ -80,10 +81,16 @@ namespace SmartTaskAPI.Repository.Implementation
                 TaskQuery = TaskQuery.Where(t => t.DueDate < DateTime.UtcNow && t.Status != 1);
             }
 
-            var totalCount = await TaskQuery.CountAsync();
-            var tasks = await TaskQuery.OrderByDescending(t => t.CreatedAt).Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
 
+            var totalCount = await TaskQuery.CountAsync();
+            if (query.PageSize > 0)
+            {
+
+            var tasks = await TaskQuery.OrderByDescending(t => t.CreatedAt).Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
             return (tasks, totalCount);
+            }
+            return (TaskQuery, totalCount);
+
         }
 
         public async Task<TaskCountDto> GetTaskCountsAsync(string userId, QueryParams query)

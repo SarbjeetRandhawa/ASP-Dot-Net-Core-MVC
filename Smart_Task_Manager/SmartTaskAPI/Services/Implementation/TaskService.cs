@@ -85,7 +85,8 @@ namespace SmartTaskAPI.Services.Implementation
                 AssignedByName = t.CreatedByUser?.FirstName + " " + t.CreatedByUser?.LastName,
                 Status = t.Status,
                 DueDate = t.DueDate,
-                CreatedAt = t.CreatedAt
+                CreatedAt = t.CreatedAt,
+                FilesCount = t.Attachments.Count()
                 
                 
             });

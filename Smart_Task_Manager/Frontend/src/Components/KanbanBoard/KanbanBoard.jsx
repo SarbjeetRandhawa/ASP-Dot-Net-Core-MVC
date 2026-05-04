@@ -1,7 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
+// import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchTasks } from "../../features/Task/TaskSlice";
 
 function KanbanBoard() {
+
+  // const navigate = useNavigate();
+    const [FilterBar, setFilterBar] = useState("All");
+    const [page, setPage] = useState(1);
+      const [search, setsearch] = useState("");
+  
+  const dispatch = useDispatch();
+  const {tasks} = useSelector((state)=>state.tasks)
+
+  const TodoTasks = tasks.filter((t)=> t.status ===0);
+  const DoneTasks = tasks.filter((t)=>t.status === 1);
+  const InProgressTasks = tasks.filter((t)=>t.status === 2);
+  const OverdueTasks = tasks.filter((t)=>t.status === 3);
+  const InReviewTasks = tasks.filter((t)=>t.status === 4);
+
+
+  useEffect(()=>{
+    let status;
+    const pageSize = 0;  
+    if (FilterBar === "ToDo") status = 0;
+    else if (FilterBar === "Done") status = 1;
+    else if (FilterBar === "inProgress") status = 2;
+    else if (FilterBar === "Overdue") status = 3;
+    else if (FilterBar === "InReview") status = 4;
+
+    const Params = {
+      page,
+      status,
+      search,
+      PageSize: pageSize,
+      myTask: FilterBar === "MyTask" ? true : false,
+      OverDue: FilterBar === "Overdue" ? true : false,
+    };
+    dispatch(fetchTasks(Params))
+  },[FilterBar,dispatch])
+
+  console.log(TodoTasks);
+  
+
+
   return (
     <>
       <div className="flex ">
@@ -37,129 +80,54 @@ function KanbanBoard() {
                 <div>⬜</div>
                 <h1 className="font-bold text-[13px]">Todo</h1>
                 <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#F1F5F9] text-[#64748B]">
-                  4
+                  {TodoTasks.length}
                 </div>
               </div>
               <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
-                <div className=" px-3 ">
-                  <div className="border border-l-[4px] border-[#F59E0B] p-4 rounded-lg bg-white">
+                {TodoTasks.map((t)=>(
+                    <div className=" px-3  " key={t.id}>
+                  <div className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}>
                     <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#FFFBEB] text-[#F59E0B]">
+                      <div className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}>
                         {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#F59E0B]"></div>{" "}
-                        Medium
+                        <div className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}></div>{" "}
+                        {t.priority === 0 ? "Low" : t.priority === 1 ? "Medium" : "High"}
                       </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
+                      <p className="text-[11px] text-[#94A3B8]">{t.taskCode}</p>
                     </div>
                     <div className=" py-2">
                       <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
+                        {t.title}
                       </h1>
                       <p className="text-[12px] text-[#94A3B8]">
                         <span className="text-white">💬</span> 2 comments {""}
-                        <span className="text-white">📎</span> 8 files
+                        <span className="text-white">📎</span> {t.filesCount} files
                       </p>
                     </div>
                     <div className="border-t-2 flex justify-between items-center pt-2">
                       <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
+                        <span className="text-white">📅</span>{new Date(t.dueDate).toLocaleDateString(
+                                    undefined,
+                                    {
+                                      month: "short",
+                                      day: "numeric",
+                                    },
+                                  )}
                       </p>
                       <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
+                        {t.assignedByName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#10B981] p-4 rounded-lg bg-white">
-                    <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#ECFDF5] text-[#10B981]">
-                        {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#10B981]"></div>
-                        {""}
-                        Low
-                      </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
-                    </div>
-                    <div className=" py-2">
-                      <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
-                      </h1>
-                      <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
-                      </p>
-                    </div>
-                    <div className="border-t-2 flex justify-between items-center pt-2">
-                      <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
-                      </p>
-                      <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#10B981] p-4 rounded-lg bg-white">
-                    <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#ECFDF5] text-[#10B981]">
-                        {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#10B981]"></div>
-                        {""}
-                        Low
-                      </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
-                    </div>
-                    <div className=" py-2">
-                      <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
-                      </h1>
-                      <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
-                      </p>
-                    </div>
-                    <div className="border-t-2 flex justify-between items-center pt-2">
-                      <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
-                      </p>
-                      <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#EF4444] p-4 rounded-lg bg-white">
-                    <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#FEF2F2] text-[#EF4444]">
-                        {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#EF4444]"></div>
-                        {""}
-                        Low
-                      </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
-                    </div>
-                    <div className=" py-2">
-                      <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
-                      </h1>
-                      <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
-                      </p>
-                    </div>
-                    <div className="border-t-2 flex justify-between items-center pt-2">
-                      <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
-                      </p>
-                      <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                ))}
+                
+
+             
               </div>
             </div>
             <div
@@ -170,69 +138,52 @@ function KanbanBoard() {
                 <div>⌛</div>
                 <h1 className="font-bold text-[13px]">In Progress</h1>
                 <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#EFF6FF] text-[#3B82F6]">
-                  3
+                  {InProgressTasks.length}
+                  
                 </div>
               </div>
               <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#F59E0B] p-4 rounded-lg bg-white">
+                {InProgressTasks.map((t)=>(
+                    <div className=" px-3  " key={t.id}>
+                  <div className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}>
                     <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#FFFBEB] text-[#F59E0B]">
+                      <div className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}>
                         {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#F59E0B]"></div>{" "}
-                        Medium
+                        <div className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}></div>{" "}
+                        {t.priority === 0 ? "Low" : t.priority === 1 ? "Medium" : "High"}
                       </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
+                      <p className="text-[11px] text-[#94A3B8]">{t.taskCode}</p>
                     </div>
                     <div className=" py-2">
                       <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
+                        {t.title}
                       </h1>
                       <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
+                        <span className="text-white">💬</span> 2 comments {""}
+                        <span className="text-white">📎</span> {t.filesCount} files
                       </p>
                     </div>
                     <div className="border-t-2 flex justify-between items-center pt-2">
                       <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
+                        <span className="text-white">📅</span>{new Date(t.dueDate).toLocaleDateString(
+                                    undefined,
+                                    {
+                                      month: "short",
+                                      day: "numeric",
+                                    },
+                                  )}
                       </p>
                       <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
+                        {t.assignedByName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#10B981] p-4 rounded-lg bg-white">
-                    <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#ECFDF5] text-[#10B981]">
-                        {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#10B981]"></div>
-                        {""}
-                        Low
-                      </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
-                    </div>
-                    <div className=" py-2">
-                      <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
-                      </h1>
-                      <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
-                      </p>
-                    </div>
-                    <div className="border-t-2 flex justify-between items-center pt-2">
-                      <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
-                      </p>
-                      <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div
@@ -243,39 +194,51 @@ function KanbanBoard() {
                 <div>🔍</div>
                 <h1 className="font-bold text-[13px]">In Review</h1>
                 <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#EFF6FF] text-[#3B82F6]">
-                  2
+                  {InReviewTasks.length}
                 </div>
               </div>
               <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#F59E0B] p-4 rounded-lg bg-white">
+                {InReviewTasks.map((t)=>(
+                    <div className=" px-3  " key={t.id}>
+                  <div className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}>
                     <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#FFFBEB] text-[#F59E0B]">
+                      <div className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}>
                         {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#F59E0B]"></div>{" "}
-                        Medium
+                        <div className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}></div>{" "}
+                        {t.priority === 0 ? "Low" : t.priority === 1 ? "Medium" : "High"}
                       </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
+                      <p className="text-[11px] text-[#94A3B8]">{t.taskCode}</p>
                     </div>
                     <div className=" py-2">
                       <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
+                        {t.title}
                       </h1>
                       <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
+                        <span className="text-white">💬</span> 2 comments {""}
+                        <span className="text-white">📎</span> {t.filesCount} files
                       </p>
                     </div>
                     <div className="border-t-2 flex justify-between items-center pt-2">
                       <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
+                        <span className="text-white">📅</span>{new Date(t.dueDate).toLocaleDateString(
+                                    undefined,
+                                    {
+                                      month: "short",
+                                      day: "numeric",
+                                    },
+                                  )}
                       </p>
                       <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
+                        {t.assignedByName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
                       </div>
                     </div>
                   </div>
                 </div>
+                ))}
               </div>
             </div>
             <div
@@ -286,100 +249,108 @@ function KanbanBoard() {
                 <div>✅</div>
                 <h1 className="font-bold text-[13px]">Done</h1>
                 <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#ECFDF5] text-[#10B981]">
-                  5
+                  {DoneTasks.length}
+                  
                 </div>
               </div>
               <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#10B981] p-4 rounded-lg bg-white">
+               {DoneTasks.map((t)=>(
+                    <div className=" px-3  " key={t.id}>
+                  <div className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}>
                     <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#ECFDF5] text-[#10B981]">
+                      <div className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}>
                         {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#10B981]"></div>
-                        {""}
-                        Low
+                        <div className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}></div>{" "}
+                        {t.priority === 0 ? "Low" : t.priority === 1 ? "Medium" : "High"}
                       </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
-                    </div>
-                    <div className=" py-2">
-                      <h1 className="text-[14px] font-semibold text-[#94A3B8] line-through">
-                        Integrated Stripe payment gateway
-                      </h1>
-                      <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
-                      </p>
-                    </div>
-                    <div className="border-t-2 flex justify-between items-center pt-2">
-                      <p className="text-[11px] text-[#10B981]">
-                        <span className="text-white">✅</span> Mar 20
-                      </p>
-                      <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#EF4444] p-4 rounded-lg bg-white">
-                    <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#FEF2F2] text-[#EF4444]">
-                        {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#EF4444]"></div>
-                        {""}
-                        Low
-                      </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
+                      <p className="text-[11px] text-[#94A3B8]">{t.taskCode}</p>
                     </div>
                     <div className=" py-2">
                       <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
+                        {t.title}
                       </h1>
                       <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
+                        <span className="text-white">💬</span> 2 comments {""}
+                        <span className="text-white">📎</span> {t.filesCount} files
                       </p>
                     </div>
                     <div className="border-t-2 flex justify-between items-center pt-2">
                       <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
+                        <span className="text-white">📅</span>{new Date(t.dueDate).toLocaleDateString(
+                                    undefined,
+                                    {
+                                      month: "short",
+                                      day: "numeric",
+                                    },
+                                  )}
                       </p>
                       <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
+                        {t.assignedByName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className=" px-3">
-                  <div className="border border-l-[4px] border-[#10B981] p-4 rounded-lg bg-white">
+                ))}
+              </div>
+            </div>
+            <div
+              className="border-2 overflow-hidden rounded-lg 
+                 border-t-[5px]  p- w-1/4"
+            >
+              <div className="bg-white flex gap-2 items-center p-4">
+                <div>🔴</div>
+                <h1 className="font-bold text-[13px]">OverDue</h1>
+                <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#ECFDF5] text-[#10B981]">
+                  {OverdueTasks.length}
+                  
+                </div>
+              </div>
+              <div className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3">
+               {OverdueTasks.map((t)=>(
+                    <div className=" px-3  " key={t.id}>
+                  <div className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}>
                     <div className="flex gap-2 items-center">
-                      <div className=" flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full bg-[#ECFDF5] text-[#10B981]">
+                      <div className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}>
                         {" "}
-                        <div className="w-2 h-2 rounded-full bg-[#10B981]"></div>
-                        {""}
-                        Low
+                        <div className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}></div>{" "}
+                        {t.priority === 0 ? "Low" : t.priority === 1 ? "Medium" : "High"}
                       </div>
-                      <p className="text-[11px] text-[#94A3B8]">TF-041</p>
+                      <p className="text-[11px] text-[#94A3B8]">{t.taskCode}</p>
                     </div>
                     <div className=" py-2">
                       <h1 className="text-[14px] font-semibold">
-                        Integrated Stripe payment gateway
+                        {t.title}
                       </h1>
                       <p className="text-[12px] text-[#94A3B8]">
-                        <span className="text-white">💬</span> 2 comments{" "}
-                        <span className="text-white">📎</span> 8 files
+                        <span className="text-white">💬</span> 2 comments {""}
+                        <span className="text-white">📎</span> {t.filesCount} files
                       </p>
                     </div>
                     <div className="border-t-2 flex justify-between items-center pt-2">
                       <p className="text-[11px]">
-                        <span className="text-white">📅</span>Mar 20
+                        <span className="text-white">📅</span>{new Date(t.dueDate).toLocaleDateString(
+                                    undefined,
+                                    {
+                                      month: "short",
+                                      day: "numeric",
+                                    },
+                                  )}
                       </p>
                       <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
-                        SC
+                        {t.assignedByName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
                       </div>
                     </div>
                   </div>
                 </div>
+                ))}
               </div>
             </div>
           </div>
