@@ -14,7 +14,7 @@ import {
 import { useDroppable } from "@dnd-kit/core";
 
 import { CSS } from "@dnd-kit/utilities";
-import { Droppable } from "@adaptabletools/react-beautiful-dnd";
+import { Cursor } from "react-creative-cursor";
 
 function KanbanBoard() {
   const navigate = useNavigate();
@@ -64,22 +64,23 @@ function KanbanBoard() {
     const style = {
       transform: CSS.Transform.toString(transform),
       transition,
+      Cursor: "grab",
     };
-
-    function Droppable({ id, children }) {
-      const { setNodeRef } = useDroppable({
-        id,
-      });
-
-      return (
-        <div ref={setNodeRef} className="h-full">
-          {children}
-        </div>
-      );
-    }
 
     return (
       <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        {children}
+      </div>
+    );
+  }
+
+  function Column({ id, children }) {
+    const { setNodeRef } = useDroppable({
+      id,
+    });
+
+    return (
+      <div ref={setNodeRef} className="h-full">
         {children}
       </div>
     );
@@ -122,7 +123,7 @@ function KanbanBoard() {
             onDragEnd={handleDragEnd}
           >
             <div className="p-4  flex gap-4">
-              <Droppable id="todo">
+              <Column id="todo">
                 <div
                   className="border-2 overflow-hidden rounded-lg 
                  border-t-[5px]   w-1/4 "
@@ -203,7 +204,7 @@ function KanbanBoard() {
                     </SortableContext>
                   </div>
                 </div>
-              </Droppable>
+              </Column>
               <div
                 className="border-2 overflow-hidden rounded-lg 
                  border-t-[5px]   w-1/4"
