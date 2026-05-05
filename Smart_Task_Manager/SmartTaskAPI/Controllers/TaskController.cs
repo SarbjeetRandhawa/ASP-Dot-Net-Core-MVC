@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using SmartTaskAPI.Models.DTO.Task;
+
 using SmartTaskAPI.Services.Interfaces;
+
 using System.Security.Claims;
 
 namespace SmartTaskAPI.Controllers
@@ -20,8 +23,10 @@ namespace SmartTaskAPI.Controllers
 
         private string GetUserId()
         {
+            
 
             return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
 
         }
 
@@ -68,10 +73,5 @@ namespace SmartTaskAPI.Controllers
             var taskCounts = await taskService.GetTaskCountsAsync(userId, query);
             return Ok(taskCounts);
         }
-
-       
-
-
-
     }
 }
