@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchTasks } from "../../features/Task/TaskSlice";
 import { useNavigate } from "react-router-dom";
 import { DndContext } from "@dnd-kit/core";
+import { updateTaskStatus } from "../../features/Task/TaskSlice";
 
 function KanbanBoard() {
   const navigate = useNavigate();
@@ -62,15 +63,15 @@ function KanbanBoard() {
   };
 
   const handleDrop = (e, status) => {
-    const taskId = e.dataTransfer.getData("taskId");
+    const taskId = Number(e.dataTransfer.getData("taskId"));
 
     setLocalTasks((prev) =>
-      prev.map((t) => {
-        t.id === taskId ? { ...t, status } : t;
-      }),
+      prev.map((t) => 
+        t.id === taskId ? { ...t, status } : t
+      )
     );
 
-    // dispatch(updateTaskStatus({taskId, status}));
+    dispatch(updateTaskStatus({taskId, status}));
   };
 
   return (
@@ -202,7 +203,7 @@ function KanbanBoard() {
                 <div
                   className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
                   onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDrop(e, 1)}
+                  onDrop={(e) => handleDrop(e, 2)}
                 >
                   {InProgressTasks.map((t) => (
                     <div
@@ -364,7 +365,7 @@ function KanbanBoard() {
                 <div
                   className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
                   onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDrop(e, 2)}
+                  onDrop={(e) => handleDrop(e, 1)}
                 >
                   {DoneTasks.map((t) => (
                     <div

@@ -3,7 +3,8 @@ import {
   getTasks,
   getTaskCounts,
   getTasksByProjectId,
-  getTaskById
+  getTaskById,
+  updateTaskStatusApi
 } from "../../Services/TaskService";
 
 export const fetchTasks = createAsyncThunk(
@@ -54,6 +55,18 @@ export const fetchTaskById = createAsyncThunk(
     }
   }
 )
+  
+export const updateTaskStatus = createAsyncThunk(
+  "tasks/updateTaskStatus",
+  async ({taskId, status}, { rejectWithValue }) => {
+    try {
+      const response = await updateTaskStatusApi({ taskId, status });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error");
+    }
+  }
+);
 
 const taskSlice = createSlice({
   name: "tasks",
@@ -121,7 +134,14 @@ const taskSlice = createSlice({
       .addCase(fetchTaskById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(updateTaskStatus.fulfilled, (state, action) => {
+        const { taskId, status } = action.payload;
+        const task = state.tasks.find((t) => t.id === taskId);
+        if (task) {
+          task.status = status;
+        }
+      })  
   },
 });
 

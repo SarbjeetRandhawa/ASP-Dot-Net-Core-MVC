@@ -11,6 +11,7 @@ namespace SmartTaskAPI.Services.Interfaces
         Task<object> GetAllTasksAsync(string userId, QueryParams query);
 
         Task<TaskCountDto> GetTaskCountsAsync(string userId, QueryParams query);
+        Task<bool> UpdateTaskStatus(UpdateTaskStatusDto dto);
 
 
 

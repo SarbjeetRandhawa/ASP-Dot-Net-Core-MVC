@@ -66,12 +66,20 @@ namespace SmartTaskAPI.Controllers
             return Ok(result);
         }
 
+
         [HttpGet("counts")]
         public async Task<IActionResult> GetTaskCounts([FromQuery] QueryParams query)
         {
             var userId = GetUserId();
             var taskCounts = await taskService.GetTaskCountsAsync(userId, query);
             return Ok(taskCounts);
+        }
+
+        [HttpPut("UpdateStatus")]
+        public async Task<IActionResult> UpdateTaskStatus(UpdateTaskStatusDto dto)
+        {
+            var result = await taskService.UpdateTaskStatus(dto);
+            return Ok(result);
         }
     }
 }

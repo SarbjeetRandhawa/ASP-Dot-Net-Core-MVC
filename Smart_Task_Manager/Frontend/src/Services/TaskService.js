@@ -47,3 +47,8 @@ export const getTaskCounts = async (params) => {
   
   return res.data;
 }
+
+export const updateTaskStatusApi = async (data)=>{
+  const res = await axiosInstance.put(`${API_URL}/api/Task/UpdateStatus` , data);
+  return res.data;
+}
