@@ -60,8 +60,8 @@ export const updateTaskStatus = createAsyncThunk(
   "tasks/updateTaskStatus",
   async ({taskId, status}, { rejectWithValue }) => {
     try {
-      const response = await updateTaskStatusApi({ taskId, status });
-      return response;
+      await updateTaskStatusApi({ taskId, status });
+      return { taskId, status };
     } catch (error) {
       return rejectWithValue(error.response?.data || "Error");
     }
@@ -78,6 +78,8 @@ const taskSlice = createSlice({
     loading: false,
     error: null,
   },
+
+
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -87,7 +89,6 @@ const taskSlice = createSlice({
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
         // console.log(action.payload);
-
         state.loading = false;
         state.tasks = action.payload.data;
         state.TotalCount = action.payload.totalCount;

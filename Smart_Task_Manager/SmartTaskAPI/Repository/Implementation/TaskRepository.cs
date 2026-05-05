@@ -25,13 +25,13 @@ namespace SmartTaskAPI.Repository.Implementation
         {
             return await _context.Tasks.Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
-                .Where(t =>  t.ProjectId == id).ToListAsync();
+                .Where(t => t.ProjectId == id).ToListAsync();
         }
 
         public async Task<TaskItem> GetByIdAsync(int id)
         {
             return await _context.Tasks
-                .Include(t=> t.Project)
+                .Include(t => t.Project)
                 .Include(t => t.Attachments)
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
@@ -40,8 +40,9 @@ namespace SmartTaskAPI.Repository.Implementation
 
         public async Task<(IEnumerable<TaskItem>, int)> GetAllAsync(string userId, QueryParams query)
         {
+
             var now = DateTime.UtcNow;
-            await _context.Tasks.Where(t => t.DueDate < now && t.Status != 1).ExecuteUpdateAsync(t => t.SetProperty(x => x.Status ,3));
+            await _context.Tasks.Where(t => t.DueDate < now && t.Status != 1).ExecuteUpdateAsync(t => t.SetProperty(x => x.Status, 3));
 
             var projectIds = await _context.ProjectMembers
                 .Where(pm => pm.UserId == userId)
@@ -50,12 +51,10 @@ namespace SmartTaskAPI.Repository.Implementation
 
             var TaskQuery = _context.Tasks
                 .Include(t => t.Project)
-                .Include(t=>t.Attachments)
+                .Include(t => t.Attachments)
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.CreatedByUser)
-                .Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId || projectIds.Contains(t.ProjectId))
-
-       ;
+                .Where(t => t.AssignedToUserId == userId || t.CreatedByUserId == userId || projectIds.Contains(t.ProjectId));
 
             if (query.MyTasks)
             {
@@ -86,8 +85,8 @@ namespace SmartTaskAPI.Repository.Implementation
             if (query.PageSize > 0)
             {
 
-            var tasks = await TaskQuery.OrderByDescending(t => t.CreatedAt).Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
-            return (tasks, totalCount);
+                var tasks = await TaskQuery.OrderByDescending(t => t.CreatedAt).Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
+                return (tasks, totalCount);
             }
             return (TaskQuery, totalCount);
 
@@ -117,6 +116,21 @@ namespace SmartTaskAPI.Repository.Implementation
                 OverDue = await baseQuery.Where(t => t.DueDate < DateTime.UtcNow && t.Status != 1).CountAsync()
             };
 
+        }
+
+        public async Task UpdateTaskStatus(int taskId, int status)
+        {
+            var task = await _context.Tasks.FindAsync(taskId);
+            var now = DateTime.UtcNow;
+
+            if (task != null && status != 3)
+            {
+                task.Status = status;
+            }
+            else if (task.Status == 1)
+            {
+                task.Status = status;
+            }
         }
     }
 }

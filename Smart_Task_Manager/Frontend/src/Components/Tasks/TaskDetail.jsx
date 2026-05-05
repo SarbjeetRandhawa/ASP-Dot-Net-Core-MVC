@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { likeComment } from "../../features/Task/CommentSlice";
 import { searchUsers } from "../../features/users/userSlice";
+import { updateTaskStatus } from "../../features/Task/TaskSlice";
+
 
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
@@ -69,6 +71,13 @@ function TaskDetail() {
     );
     settext("");
   };
+
+  const handleDoneClick = () => {
+
+    dispatch(updateTaskStatus({ taskId: SelectedTask?.id, status: 1 }));
+    navigate("/tasks");
+
+  }
 
   const formattedCommentText = (text) => {
     return text.replace(/@([\w]+\s[\w]+)/g,
@@ -162,7 +171,7 @@ function TaskDetail() {
   const HandleMentionClick = (mention) => {
     console.log("", mention);
   };
-
+  
   return (
     <>
       <div className="flex ">
@@ -863,7 +872,8 @@ function TaskDetail() {
                       </h1>
                     </div>
                     <div className="p-4 flex flex-col gap-2">
-                      <div className="shadow-md  hover:border-blue-500  border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
+                      <div className="shadow-md  hover:border-blue-500  border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer"
+                      onClick={handleDoneClick}>
                         ✅ Mark as Done
                       </div>
                       <div className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">

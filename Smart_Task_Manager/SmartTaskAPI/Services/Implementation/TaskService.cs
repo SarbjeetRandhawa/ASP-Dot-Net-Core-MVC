@@ -155,10 +155,7 @@ namespace SmartTaskAPI.Services.Implementation
 
         public async Task<bool> UpdateTaskStatus(UpdateTaskStatusDto dto)
         {
-            var task = await _uow.TaskRepository.GetByIdAsync(dto.TaskId);
-            if (task == null) return false; return false;
-            task.Status = dto.Status;
-            task.UpdatedAt = DateTime.UtcNow;
+            await _uow.TaskRepository.UpdateTaskStatus(dto.TaskId, dto.Status);
             await _uow.SaveAsync();
             return true;    
         }

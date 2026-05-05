@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { DndContext } from "@dnd-kit/core";
 import { updateTaskStatus } from "../../features/Task/TaskSlice";
 
+
 function KanbanBoard() {
   const navigate = useNavigate();
   const [FilterBar, setFilterBar] = useState("All");
@@ -15,6 +16,7 @@ function KanbanBoard() {
   const dispatch = useDispatch();
   const { tasks } = useSelector((state) => state.tasks);
   const [localTasks, setLocalTasks] = useState([]);
+  
 
   const HandleTaskInfoNavigate = (e, task) => {
     e.stopPropagation();
@@ -52,15 +54,24 @@ function KanbanBoard() {
     dispatch(fetchTasks(Params));
   }, [FilterBar, dispatch]);
 
+   const colors = [
+    "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#9d00ff)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#eeff00)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#ff00e6)]",
+    "bg-[linear-gradient(to_bottom_right,#363434,#00ffff)]",
+  ];
+
   console.log(TodoTasks);
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
+  // const handleDragEnd = (event) => {
+  //   const { active, over } = event;
 
-    if (!over) return;
-    const taskId = active.id;
-    const newStatus = over.id;
-  };
+  //   if (!over) return;
+  //   const taskId = active.id;
+  //   const newStatus = over.id;
+  // };
 
   const handleDrop = (e, status) => {
     const taskId = Number(e.dataTransfer.getData("taskId"));
@@ -102,7 +113,6 @@ function KanbanBoard() {
               {/* )} */}
             </div>
           </div>
-          <DndContext onDragEnd={handleDragEnd}>
             <div className="p-4  flex gap-4">
               <div
                 className="border-2 overflow-hidden rounded-lg 
@@ -121,7 +131,7 @@ function KanbanBoard() {
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, 0)}
                 >
-                  {TodoTasks.map((t) => (
+                  {TodoTasks.map((t , index) => (
                     <div
                       className=" px-3  "
                       key={t.id}
@@ -165,7 +175,8 @@ function KanbanBoard() {
                             <span className="text-white">💬</span> 2 comments{" "}
                             {""}
                             <span className="text-white">📎</span>{" "}
-                            {t.filesCount} files
+                            
+                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
                           </p>
                         </div>
                         <div className="border-t-2 flex justify-between items-center pt-2">
@@ -176,7 +187,7 @@ function KanbanBoard() {
                               day: "numeric",
                             })}
                           </p>
-                          <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
+                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[index % colors.length]}`}>
                             {t.assignedByName
                               .split(" ")
                               .map((n) => n[0])
@@ -205,7 +216,7 @@ function KanbanBoard() {
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, 2)}
                 >
-                  {InProgressTasks.map((t) => (
+                  {InProgressTasks.map((t , index) => (
                     <div
                       className=" px-3  "
                       key={t.id}
@@ -223,7 +234,7 @@ function KanbanBoard() {
                           >
                             {" "}
                             <div
-                              className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
+                              className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#d65151]"}`}
                             ></div>{" "}
                             {t.priority === 0
                               ? "Low"
@@ -243,10 +254,10 @@ function KanbanBoard() {
                             {t.title}
                           </h1>
                           <p className="text-[12px] text-[#94A3B8]">
-                            <span className="text-white">💬</span> 2 comments{" "}
-                            {""}
+                            
                             <span className="text-white">📎</span>{" "}
-                            {t.filesCount} files
+                            
+                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
                           </p>
                         </div>
                         <div className="border-t-2 flex justify-between items-center pt-2">
@@ -257,7 +268,7 @@ function KanbanBoard() {
                               day: "numeric",
                             })}
                           </p>
-                          <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
+                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 1) % colors.length]}`}>
                             {t.assignedByName
                               .split(" ")
                               .map((n) => n[0])
@@ -286,7 +297,7 @@ function KanbanBoard() {
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, 4)}
                 >
-                  {InReviewTasks.map((t) => (
+                  {InReviewTasks.map((t,index) => (
                     <div
                       className=" px-3  "
                       key={t.id}
@@ -324,10 +335,10 @@ function KanbanBoard() {
                             {t.title}
                           </h1>
                           <p className="text-[12px] text-[#94A3B8]">
-                            <span className="text-white">💬</span> 2 comments{" "}
-                            {""}
+                            
                             <span className="text-white">📎</span>{" "}
-                            {t.filesCount} files
+                            
+                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
                           </p>
                         </div>
                         <div className="border-t-2 flex justify-between items-center pt-2">
@@ -338,7 +349,7 @@ function KanbanBoard() {
                               day: "numeric",
                             })}
                           </p>
-                          <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
+                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 2) % colors.length]}`}>
                             {t.assignedByName
                               .split(" ")
                               .map((n) => n[0])
@@ -367,7 +378,7 @@ function KanbanBoard() {
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, 1)}
                 >
-                  {DoneTasks.map((t) => (
+                  {DoneTasks.map((t, index) => (
                     <div
                       className=" px-3  "
                       key={t.id}
@@ -405,10 +416,10 @@ function KanbanBoard() {
                             {t.title}
                           </h1>
                           <p className="text-[12px] text-[#94A3B8]">
-                            <span className="text-white">💬</span> 2 comments{" "}
-                            {""}
+                           
                             <span className="text-white">📎</span>{" "}
-                            {t.filesCount} files
+                            
+                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
                           </p>
                         </div>
                         <div className="border-t-2 flex justify-between items-center pt-2">
@@ -419,7 +430,7 @@ function KanbanBoard() {
                               day: "numeric",
                             })}
                           </p>
-                          <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
+                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 3) % colors.length]}`}>
                             {t.assignedByName
                               .split(" ")
                               .map((n) => n[0])
@@ -448,7 +459,7 @@ function KanbanBoard() {
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, 3)}
                 >
-                  {OverdueTasks.map((t) => (
+                  {OverdueTasks.map((t, index) => (
                     <div
                       className=" px-3  "
                       key={t.id}
@@ -486,10 +497,9 @@ function KanbanBoard() {
                             {t.title}
                           </h1>
                           <p className="text-[12px] text-[#94A3B8]">
-                            <span className="text-white">💬</span> 2 comments{" "}
-                            {""}
+                            
                             <span className="text-white">📎</span>{" "}
-                            {t.filesCount} files
+                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
                           </p>
                         </div>
                         <div className="border-t-2 flex justify-between items-center pt-2">
@@ -500,7 +510,7 @@ function KanbanBoard() {
                               day: "numeric",
                             })}
                           </p>
-                          <div className="w-5 h-5 flex items-center text-[10px] font-bold justify-center rounded-full border p-3">
+                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 4) % colors.length]}`}>
                             {t.assignedByName
                               .split(" ")
                               .map((n) => n[0])
@@ -514,7 +524,6 @@ function KanbanBoard() {
                 </div>
               </div>
             </div>
-          </DndContext>
         </div>
       </div>
     </>

@@ -50,5 +50,7 @@ export const getTaskCounts = async (params) => {
 
 export const updateTaskStatusApi = async (data)=>{
   const res = await axiosInstance.put(`${API_URL}/api/Task/UpdateStatus` , data);
+  console.log("called");
+  
   return res.data;
 }

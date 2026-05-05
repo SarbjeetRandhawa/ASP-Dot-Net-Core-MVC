@@ -12,5 +12,6 @@ namespace SmartTaskAPI.Repository.Interface
         Task<(IEnumerable<TaskItem>, int)> GetAllAsync(string userId, QueryParams query);
 
         Task<TaskCountDto> GetTaskCountsAsync(string userId ,QueryParams query);
+        Task UpdateTaskStatus(int taskId, int status);
     }
 }
