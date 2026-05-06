@@ -4,7 +4,8 @@ import {
   getTaskCounts,
   getTasksByProjectId,
   getTaskById,
-  updateTaskStatusApi
+  updateTaskStatusApi,
+  DeleteTask,
 } from "../../Services/TaskService";
 
 export const fetchTasks = createAsyncThunk(
@@ -12,6 +13,18 @@ export const fetchTasks = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     try {
       const data = await getTasks(params);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error");
+    }
+  },
+);
+
+export const deleteTask = createAsyncThunk(
+  "tasks/deleteTask",
+  async (id, { rejectWithValue }) => {
+    try {
+      const data = await DeleteTask(id);
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Error");
@@ -142,7 +155,11 @@ const taskSlice = createSlice({
         if (task) {
           task.status = status;
         }
-      })  
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        const taskId = action.payload;
+        state.tasks = state.tasks.filter((task) => task.id !== taskId);
+      })
   },
 });
 

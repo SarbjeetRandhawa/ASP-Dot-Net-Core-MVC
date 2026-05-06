@@ -10,9 +10,9 @@ import { updateTaskStatus } from "../../features/Task/TaskSlice";
 
 function KanbanBoard() {
   const navigate = useNavigate();
-  const [FilterBar, setFilterBar] = useState("All");
-  const [page, setPage] = useState(1);
-  const [search, setsearch] = useState("");
+  // const [FilterBar, setFilterBar] = useState("All");
+  // const [page, setPage] = useState(1);
+  // const [search, setsearch] = useState("");
   const dispatch = useDispatch();
   const { tasks } = useSelector((state) => state.tasks);
   const [localTasks, setLocalTasks] = useState([]);
@@ -34,14 +34,14 @@ function KanbanBoard() {
   const OverdueTasks = localTasks.filter((t) => t.status === 3);
   const InReviewTasks = localTasks.filter((t) => t.status === 4);
 
+   const pageSize = 0;
+    const FilterBar = "All";
+    const page = 1;
+    const search = "";
+    
   useEffect(() => {
     let status;
-    const pageSize = 0;
-    if (FilterBar === "ToDo") status = 0;
-    else if (FilterBar === "Done") status = 1;
-    else if (FilterBar === "inProgress") status = 2;
-    else if (FilterBar === "Overdue") status = 3;
-    else if (FilterBar === "InReview") status = 4;
+   
 
     const Params = {
       page,
@@ -73,7 +73,7 @@ function KanbanBoard() {
   //   const newStatus = over.id;
   // };
 
-  const handleDrop = (e, status) => {
+  const handleDrop = async (e, status) => {
     const taskId = Number(e.dataTransfer.getData("taskId"));
 
     setLocalTasks((prev) =>
@@ -82,7 +82,7 @@ function KanbanBoard() {
       )
     );
 
-    dispatch(updateTaskStatus({taskId, status}));
+    await dispatch(updateTaskStatus({taskId, status}));
   };
 
   return (

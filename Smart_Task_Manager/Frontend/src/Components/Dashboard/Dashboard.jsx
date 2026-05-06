@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
   useEffect(() => {
     setTimeout(() => setAnimate(true), 200);
   });
 
-  return (
+   return (
     <>
       <div className="flex ">
         <Sidebar />
@@ -16,10 +18,14 @@ function Dashboard() {
           <div className="Navbar border bg-white  flex gap-1 sm:gap-2 h-12 w-full  items-center ">
             <div className="mx-0 sm:mx-4  ">
               <h1 className="font-bold mt-[-3px] text-[#0F172A] text-[17px]">
-                Dashboard{" "}
+                
+                Dashboard
+
                 <span className="font-normal text-[#6c6c6c] text-[13px] pl-3">
                   Good Morning Alex 🖐️
                 </span>
+
+
               </h1>
             </div>
             <div className="flex  sm:flex-nowrap gap-1 sm:gap-2 items-center  w-1/2">
@@ -32,6 +38,7 @@ function Dashboard() {
 
               <button
                 type="button"
+                onClick={()=>navigate("/Tasks/CreateTask")}
                 className={`border sm:h-8 h-6 text-[8px] sm:text-[11px] bg-[#4F46E5] text-white font-bold rounded-md px-2 sm:px-3  whitespace-nowrap`}
               >
                 + New Task
@@ -114,9 +121,11 @@ function Dashboard() {
                   </p>
                 </div>
                 <div className="shadow-md border-2 bg-white rounded-lg w-full flex flex-col items-start p-4">
+
                   <div className="flex p-2 justify-center items-center rounded-xl bg-[#FEF2F2] text-[12px]">
                     ⚠️
                   </div>
+
                   <h1 className="text-[28px] font-extrabold">7</h1>
                   <p className="text-[12px] text-[#64748B]">Overdue</p>
                   <p className="text-[11px] flex font-semibold text-[#f21616]">
@@ -158,6 +167,7 @@ function Dashboard() {
                         <p className="text-[9px] text-[#94A3B8]">Total</p>
                       </div>
                       <div className="flex flex-col  ">
+
                         <div className="flex justify-between ">
                           {" "}
                           <div className="flex items-center gap-2 ">
@@ -247,7 +257,7 @@ function Dashboard() {
                           </h1>
                         </div>
                       </div>
-                      <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
+                      <div className=" w-1/6 z-20 flex flex-col justify-end items-center">
                         <div
                           className={`border  relative w-full bottom bg-[#4F46E5]/70   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[70%]" : "h-0"}`}
                         >
@@ -256,15 +266,18 @@ function Dashboard() {
                           </h1>
                         </div>
                       </div>
-                      <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
+                      <div className=" w-1/6 z-20 flex flex-col justify-end items-center">
                         <div
                           className={`border  relative w-full bottom bg-[#4F46E5]/40 rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[40%]" : "h-0"}`}
                         >
+
                           <h1 className="text-[9px] absolute -top-4 left-[45%]">
                             4
                           </h1>
+
                         </div>
                       </div>
+
                       <div className=" z-20  w-1/6 flex flex-col   justify-end items-center">
                         <div
                           className={`border relative w-full bottom bg-[#4F46E5]/100   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[100%]" : "h-0"}`}
@@ -274,6 +287,9 @@ function Dashboard() {
                           </h1>
                         </div>
                       </div>
+
+                      
+                      
                       <div className=" w-1/6 z-20  flex flex-col   justify-end items-center">
                         <div
                           className={`border  relative w-full bottom bg-[#4F46E5]/60   rounded-t-md transition-all duration-1000 ease-in-out ${animate ? "h-[60%]" : "h-0"}`}
@@ -305,7 +321,7 @@ function Dashboard() {
                     </div>
                   </div>
                   <div className=" w-full flex gap-2 justify-around">
-                    <h1 className="  text-[10px] text-[#94A3B8]">Mon</h1>
+                    <h1 className="text-[10px]  text-[#94A3B8]">Mon</h1>
                     <h1 className="text-[10px]  text-[#94A3B8]">Tue</h1>
                     <h1 className="text-[10px]  text-[#94A3B8]">Wed</h1>
                     <h1 className="text-[10px]  text-[#94A3B8]">Thu</h1>
@@ -350,12 +366,12 @@ function Dashboard() {
                       <h1 className="text-[12px] font-bold text-[#4F46E5]">
                         72%
                       </h1>
-                    </div>
+                    </div> 
                   </div>
 
                   <div className=" py-2 flex gap-3 items-center">
                     <div className="w-3 h-10 rounded-full bg-[#10B981]"></div>
-                    <div className=" w-full flex flex-col gap-">
+                    <div className=" w-full flex flex-col gap-3">
                       <h1 className="text-[13px] font-semibold">
                         E-Commerce Rebuild
                       </h1>

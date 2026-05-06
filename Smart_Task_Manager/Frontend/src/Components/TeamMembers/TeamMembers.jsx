@@ -62,13 +62,13 @@ function TeamMembers() {
             text: "User has been deleted.",
             icon: "success",
           });
-        } catch (error) {
+        } catch (e) {
           Swal.fire({
             title: "Failed",
             text: "Cannot Delete Yourself",
             icon: "error",
           });
-          // console.log(error);
+          console.log(e);
           
         }
       }
@@ -134,7 +134,7 @@ function TeamMembers() {
     <div className="flex ">
       <Sidebar />
 
-      <div className="w-full lg:pl-[16.66%]  lg:pt-0  pt-14">
+      <div className="w-full lg:pl-[16.66%]  lg:pt-0 a pt-14">
         <div className="Navbar border bg-white  flex gap-1 sm:gap-2 h-12 w-full justify-between items-center px-4">
           <h1 className="font-bold">Team Members</h1>
           <div className="flex gap-2 relative">
@@ -150,7 +150,7 @@ function TeamMembers() {
           </div>
         </div>
 
-        {/* --------------------------------------------------------------------- */}
+        {/*  --------------------------------------------------------------------- */}
 
         <div className="Counts  p-4 flex justify-between gap-2">
           <div className="border-2 w-1/4 border-[#C7D2FE] bg-[#EEF2FF] px-4  flex items-center gap-2 rounded-lg">
@@ -200,6 +200,7 @@ function TeamMembers() {
         </div>
 
         {/* ------------------------------------------------------------------- */}
+        
 
         <div className="filter ml-4  flex gap-2 text-[#64748B]">
           <div

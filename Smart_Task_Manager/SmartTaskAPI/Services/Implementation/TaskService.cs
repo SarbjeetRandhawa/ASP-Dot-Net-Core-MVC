@@ -70,6 +70,12 @@ namespace SmartTaskAPI.Services.Implementation
              }
         }
 
+        public async Task DeleteTask(int TaskId)
+        {
+            await _uow.TaskRepository.DeleteAsync(TaskId);
+            await _uow.SaveAsync();
+        }
+
         public async Task<object> GetAllTasksAsync(string userId , QueryParams query)
         {
             var (tasks, totalCount) = await _uow.TaskRepository.GetAllAsync(userId, query);
@@ -153,11 +159,14 @@ namespace SmartTaskAPI.Services.Implementation
             });
         }
 
+
         public async Task<bool> UpdateTaskStatus(UpdateTaskStatusDto dto)
         {
+
             await _uow.TaskRepository.UpdateTaskStatus(dto.TaskId, dto.Status);
             await _uow.SaveAsync();
             return true;    
+
         }
     }
 }

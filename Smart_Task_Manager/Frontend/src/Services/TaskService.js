@@ -54,3 +54,7 @@ export const updateTaskStatusApi = async (data)=>{
   
   return res.data;
 }
+export const DeleteTask = async (id) => {
+  const res = await axiosInstance.delete(`${API_URL}/api/Task/${id}`)
+  return res.data;
+}

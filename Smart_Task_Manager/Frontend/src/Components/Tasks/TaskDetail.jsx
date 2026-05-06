@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from "react";
+import Swal from "sweetalert2";
+
 import {
   Paperclip,
   HeartIcon,
@@ -6,9 +8,10 @@ import {
   AtSignIcon,
   Handshake,
 } from "lucide-react";
+
 import { useState } from "react";
 import Sidebar from "../Sidebar";
-import { fetchTaskById } from "../../features/Task/TaskSlice";
+import { fetchTaskById , deleteTask } from "../../features/Task/TaskSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchComments, createComment } from "../../features/Task/CommentSlice";
@@ -16,8 +19,7 @@ import { useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { likeComment } from "../../features/Task/CommentSlice";
 import { searchUsers } from "../../features/users/userSlice";
-import { updateTaskStatus } from "../../features/Task/TaskSlice";
-
+import toast from "react-hot-toast";
 
 function TaskDetail() {
   const { SelectedTask, loading } = useSelector((state) => state.tasks);
@@ -37,7 +39,7 @@ function TaskDetail() {
 
   const wrapperRef = useRef(null);
 
-   const colors = [
+  const colors = [
     "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
     "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
     "bg-[linear-gradient(to_bottom_right,#363434,#9d00ff)]",
@@ -47,15 +49,66 @@ function TaskDetail() {
   ];
 
   const API_URL = import.meta.env.VITE_API_URL;
-  console.log(comments);
+  console.log(SelectedTask);
 
   const { taskIdSlug } = useParams();
   const projectId = taskIdSlug.split("-")[0];
+  const taskId = taskIdSlug;
 
   useEffect(() => {
     dispatch(fetchTaskById(projectId));
     dispatch(fetchComments(SelectedTask?.id));
-  }, [dispatch, SelectedTask?.id , projectId]);
+  }, [dispatch, SelectedTask?.id, projectId]);
+
+  const handleCopyLink = async () => {
+    const taskLink = `${window.location.origin}/tasks/${taskId}`;
+    try {
+      await navigator.clipboard.writeText(taskLink);
+      await Swal.fire({
+              position: "top-end",
+              title: "Copied!",
+              text: "Task link copied to clipboard",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+    } catch (error) {
+      console.error("Failed to copy link: ", error);
+      toast.error("Failed to copy link");
+    }
+  };
+
+  const HandleDeleteTask = () => {
+    Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              await dispatch(deleteTask(SelectedTask?.id)).unwrap();
+              Swal.fire({
+                title: "Deleted!",
+                text: "Task has been deleted.",
+                icon: "success",
+              });
+              navigate("/tasks");
+            } catch (error) {
+              Swal.fire({
+                title: "Failed",
+                text: "Deleteion failed. Please try again.",
+                icon: "error",
+              });
+              // console.log(error);
+              
+            }
+          }
+        });
+  }
 
   const handleAdd = () => {
     console.log(replyingto);
@@ -72,19 +125,11 @@ function TaskDetail() {
     settext("");
   };
 
-  const handleDoneClick = () => {
-
-    dispatch(updateTaskStatus({ taskId: SelectedTask?.id, status: 1 }));
-    navigate("/tasks");
-
-  }
-
   const formattedCommentText = (text) => {
-    return text.replace(/@([\w]+\s[\w]+)/g,
-    (match) => {
+    return text.replace(/@([\w]+\s[\w]+)/g, (match) => {
       return `@[${match.substring(1)}]`;
-    }
-  )}
+    });
+  };
 
   const StatusMap = {
     0: "ToDo",
@@ -164,14 +209,14 @@ function TaskDetail() {
           </span>
         );
       }
-      return <span key={index}>{part}</span>
+      return <span key={index}>{part}</span>;
     });
   };
 
   const HandleMentionClick = (mention) => {
     console.log("", mention);
   };
-  
+
   return (
     <>
       <div className="flex ">
@@ -210,6 +255,7 @@ function TaskDetail() {
               <button
                 // ${selectedProject?.colorTheme ? `bg-[${selectedProject.colorTheme}] text-white` : "text-black"}
                 className={`border sm:h-8 h-6 text-[8px] sm:text-[11px]  font-bold   rounded-md px-2 sm:px-3  whitespace-nowrap`}
+                onClick={HandleDeleteTask}
               >
                 🗑️ Delete
               </button>
@@ -231,14 +277,12 @@ function TaskDetail() {
                   }}
                 >
                   <svg
-
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
                     height="20"
                     fill="currentColor"
                     class="bi bi-x-circle-fill"
                     viewBox="0 0 16 16"
-
                   >
                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
                   </svg>
@@ -307,8 +351,7 @@ function TaskDetail() {
                           ? "🟢"
                           : SelectedTask?.priority == 1
                             ? "🟡"
-                            : "🔴"
-                            }{" "}
+                            : "🔴"}{" "}
                         {PriorityMap[SelectedTask?.priority]}
                       </div>
                       {StatusMap[SelectedTask?.status] == 3 && (
@@ -349,7 +392,6 @@ function TaskDetail() {
                   <div className="shadow-md bg-white border-2 rounded-xl p-4">
                     <div className="flex  justify-between items-center">
                       <div>
-                        
                         <h1 className="font-bold text-[14px]">Attachments</h1>
                         <p className="text-[12px] tracking-wide font-semibold text-[#64748B]">
                           {SelectedTask?.files?.length} files uploaded
@@ -378,13 +420,11 @@ function TaskDetail() {
                               alt=""
                             />
                           ) : f.type.startsWith("application/pdf") ? (
-                            
                             <img
                               src={"/public/pdf_4726010.png"}
                               className="h-14 w-14"
                               alt=""
                             />
-
                           ) : f.type.startsWith("application/msword") ||
                             f.type.startsWith(
                               "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -437,10 +477,12 @@ function TaskDetail() {
                         </div>
                       </div>
                       <div className="border-t px-4 ">
-                        {comments.map((c,index) => (
+                        {comments.map((c, index) => (
                           <div className="flex my-6 " key={c.id}>
                             <div>
-                              <div className={`w-8 h-8 ${colors[index % colors.length]} rounded-full flex items-center justify-center`}>
+                              <div
+                                className={`w-8 h-8 ${colors[index % colors.length]} rounded-full flex items-center justify-center`}
+                              >
                                 <span className="text-white text-[10px] font-bold">
                                   {c.commentedbyUserName
                                     .split(" ")
@@ -523,7 +565,9 @@ function TaskDetail() {
                                     <div className="p-4 ">
                                       <div className="flex ">
                                         <div>
-                                          <div className={`w-8 h-8 ${colors[index + 2 % colors.length]} rounded-full flex items-center justify-center`}>
+                                          <div
+                                            className={`w-8 h-8 ${colors[index + (2 % colors.length)]} rounded-full flex items-center justify-center`}
+                                          >
                                             <span className="text-white text-[10px] font-bold">
                                               {c.commentedbyUserName
                                                 .split(" ")
@@ -872,17 +916,19 @@ function TaskDetail() {
                       </h1>
                     </div>
                     <div className="p-4 flex flex-col gap-2">
-                      <div className="shadow-md  hover:border-blue-500  border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer"
-                      onClick={handleDoneClick}>
+                      <div className="shadow-md  hover:border-blue-500  border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
                         ✅ Mark as Done
                       </div>
                       <div className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
                         ✉️ Send Reminder
                       </div>
-                      <div className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
+                      <div className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer"
+                      onClick={handleCopyLink}
+                      >
                         🔗 Copy Link
                       </div>
-                      <div className=" border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer text-[#EF4444] border-[#EF4444] bg-[#fef2f2]">
+                      <div className=" border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer text-[#EF4444] border-[#EF4444] bg-[#fef2f2]"
+                      onClick={HandleDeleteTask}>
                         🗑️ Delete Task
                       </div>
                     </div>

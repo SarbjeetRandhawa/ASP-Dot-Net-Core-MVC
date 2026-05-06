@@ -38,6 +38,13 @@ namespace SmartTaskAPI.Controllers
             return Ok("Success");
         }
 
+        [HttpDelete("{TaskId}")]
+        public async Task<IActionResult> DeleteTask(int TaskId)
+        {
+            await taskService.DeleteTask(TaskId);
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetTasks([FromQuery] QueryParams query)
         {

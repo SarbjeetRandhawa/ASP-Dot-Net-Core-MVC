@@ -127,9 +127,18 @@ namespace SmartTaskAPI.Repository.Implementation
             {
                 task.Status = status;
             }
-            else if (task.Status == 1)
+            else if (task.Status == 1 && status != 1)
             {
                 task.Status = status;
+            }
+        }
+
+        public async Task DeleteAsync(int taskId)
+        {
+            var task = await _context.Tasks.FindAsync(taskId);
+            if (task != null)
+            {
+                _context.Tasks.Remove(task);
             }
         }
     }
