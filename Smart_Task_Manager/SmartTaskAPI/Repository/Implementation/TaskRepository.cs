@@ -42,7 +42,8 @@ namespace SmartTaskAPI.Repository.Implementation
         {
 
             var now = DateTime.UtcNow;
-            await _context.Tasks.Where(t => t.DueDate < now && t.Status != 1).ExecuteUpdateAsync(t => t.SetProperty(x => x.Status, 3));
+            
+            await _context.Tasks.Where(t => t.DueDate < now && t.Status != 1 && !t.OverdueFlag).ExecuteUpdateAsync(t => t.SetProperty(x => x.Status, 3));
 
             var projectIds = await _context.ProjectMembers
                 .Where(pm => pm.UserId == userId)
@@ -80,11 +81,9 @@ namespace SmartTaskAPI.Repository.Implementation
                 TaskQuery = TaskQuery.Where(t => t.DueDate < DateTime.UtcNow && t.Status != 1);
             }
 
-
             var totalCount = await TaskQuery.CountAsync();
             if (query.PageSize > 0)
             {
-
                 var tasks = await TaskQuery.OrderByDescending(t => t.CreatedAt).Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToListAsync();
                 return (tasks, totalCount);
             }
@@ -127,10 +126,11 @@ namespace SmartTaskAPI.Repository.Implementation
             {
                 task.Status = status;
             }
-            else if (task.Status == 1 && status != 1)
+            else if (task.DueDate < now)
             {
                 task.Status = status;
             }
+            task.OverdueFlag = task.DueDate < now;
         }
 
         public async Task DeleteAsync(int taskId)

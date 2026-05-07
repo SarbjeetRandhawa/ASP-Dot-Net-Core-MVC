@@ -7,6 +7,7 @@ namespace SmartTaskAPI.Middleware
     {
         private readonly RequestDelegate _next;
         public lastActiveMiddleware(RequestDelegate next)
+
         {
             _next = next;
         }

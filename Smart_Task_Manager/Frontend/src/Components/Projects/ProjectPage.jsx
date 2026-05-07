@@ -18,12 +18,10 @@ function ProjectPage() {
   const [debounceSearch, setDebounceSearch] = useState("");
   const CurrentUser = useSelector((state) => state.auth.user);
 
-   const [animate, setAnimate] = useState(false);
-    useEffect(()=>{
-      setTimeout(() => 
-        setAnimate(true),
-      200);
-    })
+  const [animate, setAnimate] = useState(false);
+  useEffect(() => {
+    setTimeout(() => setAnimate(true), 200);
+  });
 
   const ArchievedProjects = projects.filter(
     (u) => u.status === "Archived",
@@ -72,6 +70,7 @@ function ProjectPage() {
 
   const HandleMenuClick = (e, projectId) => {
     e.stopPropagation();
+
     setIsProjectMenuOpen((prev) => (prev === projectId ? null : projectId));
   };
   const HandleEdit = (id) => {
@@ -278,7 +277,7 @@ function ProjectPage() {
                           </div>
                           <div>
                             <h1 className="font-semibold text-[14px] text-black">
-                              {p.name} 
+                              {p.name}
                             </h1>
                             <p className="text-[11px] font-semibold text-[#94A3B8]">
                               {formFullDate(
@@ -351,14 +350,19 @@ function ProjectPage() {
                       </div>
                       <div className="progressbar w-full bg-[#E2E8F0] h-1 rounded-lg">
                         <div
-                          className={`h-1 rounded-lg bg-[${p.colorTheme }]  transition-all duration-1000 ease-in-out `}
-                          style={{  width: animate ? `${p.progress}%` : "0px"}}
+                          className={`h-1 rounded-lg bg-[${p.colorTheme}]  transition-all duration-1000 ease-in-out `}
+                          style={{ width: animate ? `${p.progress}%` : "0px" }}
                         ></div>
                       </div>
                       <div className="flex justify-between relative">
                         <p className="text-[12px] text-[#64748B]">
-                          {p.totalTasks == 1 ? "1 task" : `${p.totalTasks} tasks`} -{" "}
-                          <span className="text-red-600">{p.overdueTasks} overdue</span>
+                          {p.totalTasks == 1
+                            ? "1 task"
+                            : `${p.totalTasks} tasks`}{" "}
+                          -{" "}
+                          <span className="text-red-600">
+                            {p.overdueTasks} overdue
+                          </span>
                         </p>
                         <AvatarGroup members={p.members} />
                       </div>

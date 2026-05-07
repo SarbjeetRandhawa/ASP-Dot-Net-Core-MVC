@@ -61,7 +61,7 @@ function TaskPage() {
 
     dispatch(fetchTasks(Params));
     dispatch(fetchTaskCounts(Params));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, page, FilterBar, dispatch]);
 
   // const HandleFilterChange = (Key, value) => {
@@ -79,14 +79,14 @@ function TaskPage() {
     setsearch("");
   };
 
-   const createSlug = (name) => {
+  const createSlug = (name) => {
     return name.toLowerCase().replace(/\s+/g, "-");
   };
 
-   const HandleProjectInfoNavigate = (projectid , projectname) => {
+  const HandleProjectInfoNavigate = (projectid, projectname) => {
     navigate(`/projects/${projectid}-${createSlug(projectname)}`);
   };
-  
+
   const HandleTaskInfoNavigate = (task) => {
     navigate(`/tasks/${task.id}-${task.taskCode}`);
   };
@@ -97,6 +97,7 @@ function TaskPage() {
     1: "Done",
     2: "In Progress",
     3: "Overdue",
+    4: "In Review",
   };
 
   const PriorityMap = {
@@ -148,13 +149,13 @@ function TaskPage() {
                 className={` px-2 md:px-5 py-1 cursor-pointer text-[8px] md:text-[12px] font-semibold  ${FilterBar === "All" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"} `}
                 onClick={() => setFilterBar("All")}
               >
-                All Tasks ( {Counts.totalTasks} )
+                All Tasks ({Counts.totalTasks})
               </h1>
               <h1
                 className={`px-2 md:px-5 py-1 font-semibold cursor-pointer text-[8px] md:text-[12px] ${FilterBar === "MyTask" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
                 onClick={() => setFilterBar("MyTask")}
               >
-                My Tasks ( {Counts.myTasks} )
+                My Tasks ( {Counts.myTasks})
               </h1>
               <h1
                 className={`px-2 md:px-5 py-1 font-semibold cursor-pointer text-[8px] md:text-[12px] ${FilterBar === "ToDo" ? "border-blue-600 text-[#4F46E5] border-b-2 " : "text-[#94A3B8] border-gray-300"}`}
@@ -241,7 +242,15 @@ function TaskPage() {
                                 <div
                                   className={`w-3 h-3 rounded-full ${colors[(index + 3) % colors.length]}`}
                                 ></div>
-                                <p className="text-[12px] font-semibold text-[#64748B] cursor-pointer hover:underline" onClick={()=>HandleProjectInfoNavigate(task.projectId , task.projectName)}>
+                                <p
+                                  className="text-[12px] font-semibold text-[#64748B] cursor-pointer hover:underline"
+                                  onClick={() =>
+                                    HandleProjectInfoNavigate(
+                                      task.projectId,
+                                      task.projectName,
+                                    )
+                                  }
+                                >
                                   {task.projectName}
                                 </p>
                               </div>
@@ -274,7 +283,7 @@ function TaskPage() {
                             <td className="pr-4  text-[10px] md:text-[12px] font-semibold ">
                               <div className="flex">
                                 <h1
-                                  className={`rounded-full py-1 px-3 ${task.status === 1 ? "text-[#10B981] bg-[#d5fce1]" : task.status === 0 ? "text-[#64748B] bg-[#F1F5F9]" : task.status === 2 ? "bg-[#EFF6FF] text-[#3B82F6]" : "text-[#EF4444] bg-[#FEF2F2]"} `}
+                                  className={`rounded-full py-1 px-3 ${task.status === 1 ? "text-[#10B981] bg-[#d5fce1]" : task.status === 0 ? "text-[#64748B] bg-[#F1F5F9]" : task.status === 2 ? "bg-[#EFF6FF] text-[#3B82F6]" : task.status === 4 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"} `}
                                 >
                                   {StatusMap[task.status]}
                                 </h1>
@@ -310,17 +319,20 @@ function TaskPage() {
                               </div>
                             </td>
                             <td>
+                              
                               <p
                                 className={`pr-2 text-[10px] md:text-[12px] font-semibold text-[#94A3B8] `}
                               >
+ 
                                 {new Date(task.createdAt).toLocaleDateString(
                                   undefined,
                                   {
-                                    year: "numeric",
+                                    year: "numeric",   
                                     month: "short",
                                     day: "numeric",
                                   },
                                 )}
+                                
                               </p>
                             </td>
 

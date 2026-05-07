@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { DndContext } from "@dnd-kit/core";
 import { updateTaskStatus } from "../../features/Task/TaskSlice";
 
-
 function KanbanBoard() {
   const navigate = useNavigate();
   // const [FilterBar, setFilterBar] = useState("All");
@@ -16,7 +15,6 @@ function KanbanBoard() {
   const dispatch = useDispatch();
   const { tasks } = useSelector((state) => state.tasks);
   const [localTasks, setLocalTasks] = useState([]);
-  
 
   const HandleTaskInfoNavigate = (e, task) => {
     e.stopPropagation();
@@ -24,8 +22,7 @@ function KanbanBoard() {
   };
 
   useEffect(() => {
-      setLocalTasks(tasks);
-    
+    setLocalTasks(tasks);
   }, [tasks]);
 
   const TodoTasks = localTasks.filter((t) => t.status === 0);
@@ -34,14 +31,13 @@ function KanbanBoard() {
   const OverdueTasks = localTasks.filter((t) => t.status === 3);
   const InReviewTasks = localTasks.filter((t) => t.status === 4);
 
-   const pageSize = 0;
-    const FilterBar = "All";
-    const page = 1;
-    const search = "";
-    
+  const pageSize = 0;
+  const FilterBar = "All";
+  const page = 1;
+  const search = "";
+
   useEffect(() => {
     let status;
-   
 
     const Params = {
       page,
@@ -54,7 +50,7 @@ function KanbanBoard() {
     dispatch(fetchTasks(Params));
   }, [FilterBar, dispatch]);
 
-   const colors = [
+  const colors = [
     "bg-[linear-gradient(to_bottom_right,#534545,#ff0000)]",
     "bg-[linear-gradient(to_bottom_right,#363434,#00ff22)]",
     "bg-[linear-gradient(to_bottom_right,#363434,#9d00ff)]",
@@ -77,12 +73,10 @@ function KanbanBoard() {
     const taskId = Number(e.dataTransfer.getData("taskId"));
 
     setLocalTasks((prev) =>
-      prev.map((t) => 
-        t.id === taskId ? { ...t, status } : t
-      )
+      prev.map((t) => (t.id === taskId ? { ...t, status } : t)),
     );
 
-    await dispatch(updateTaskStatus({taskId, status}));
+    await dispatch(updateTaskStatus({ taskId, status }));
   };
 
   return (
@@ -91,7 +85,7 @@ function KanbanBoard() {
         <Sidebar />
 
         <div className="w-full lg:pl-[16.66%] lg:pt-0 pt-14">
-          <div className="Navbar border bg-white justify-between  flex gap-1 sm:gap-2 h-12 w-full  items-center px-8">
+          <div className="Navbar border bg-white justify-between flex gap-1 sm:gap-2 h-12 w-full  items-center px-8">
             <div className="  ">
               <h1 className="font-bold  text-[#0F172A] text-[12px] md:text-[14px]  lg:text-[17px]">
                 Kanban Board
@@ -99,7 +93,7 @@ function KanbanBoard() {
             </div>
 
             <div className="flex gap-2 relative">
-
+              
               {/* {(CurrentUser.role === "Admin" ||
               CurrentUser.role === "Manager") && ( */}
 
@@ -113,417 +107,425 @@ function KanbanBoard() {
               {/* )} */}
             </div>
           </div>
-            <div className="p-4  flex gap-4">
-              <div
-                className="border-2 overflow-hidden rounded-lg 
+          <div className="p-4  flex gap-4">
+            <div
+              className="border-2 overflow-hidden rounded-lg 
                  border-t-[5px]   w-1/4 "
-              >
-                <div className="bg-white flex gap-2 items-center  p-4">
-                  <div>⬜</div>
-                  <h1 className="font-bold text-[13px]">Todo</h1>
-                  <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#F1F5F9] text-[#64748B]">
-                    {TodoTasks.length}
-                  </div>
-                </div>
-
-                <div
-                  className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDrop(e, 0)}
-                >
-                  {TodoTasks.map((t , index) => (
-                    <div
-                      className=" px-3  "
-                      key={t.id}
-                      draggable
-
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData("taskId", t.id);
-                      }}
-                    >
-                      <div
-                        className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
-                      >
-                        <div className="flex gap-2 items-center">
-                          <div
-                            className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                          >
-
-                            {" "}
-
-                            <div
-                              className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
-                            ></div>{" "}
-                            {t.priority === 0
-                              ? "Low"
-                              : t.priority === 1
-                                ? "Medium"
-                                : "High"}
-                          </div>
-                          <p className="text-[11px] text-[#94A3B8]">
-                            {t.taskCode}
-                          </p>
-                        </div>
-                        <div className=" py-2">
-                          <h1
-                            className="text-[14px] font-semibold hover:underline cursor-pointer"
-                            onClick={(e) => HandleTaskInfoNavigate(e, t)}
-                          >
-                            {t.title}
-                          </h1>
-                          <p className="text-[12px] text-[#94A3B8]">
-                            <span className="text-white">💬</span> 2 comments{" "}
-                            {""}
-                            <span className="text-white">📎</span>{" "}
-                            
-                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
-                          </p>
-                        </div>
-                        <div className="border-t-2 flex justify-between items-center pt-2">
-                          <p className="text-[11px]">
-                            <span className="text-white">📅</span>
-                            {new Date(t.dueDate).toLocaleDateString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </p>
-                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[index % colors.length]}`}>
-                            {t.assignedByName
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+            >
+              <div className="bg-white flex gap-2 items-center  p-4">
+                <div>⬜</div>
+                <h1 className="font-bold text-[13px]">Todo</h1>
+                <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#F1F5F9] text-[#64748B]">
+                  {TodoTasks.length}
                 </div>
               </div>
+
               <div
-                className="border-2 overflow-hidden rounded-lg 
-                 border-t-[5px]   w-1/4"
+                className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => handleDrop(e, 0)}
               >
-                <div className="bg-white flex gap-2 items-center  p-4">
-                  <div>⌛</div>
-                  <h1 className="font-bold text-[13px]">In Progress</h1>
-                  <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#EFF6FF] text-[#3B82F6]">
-                    {InProgressTasks.length}
-                  </div>
-                </div>
-                <div
-                  className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDrop(e, 2)}
-                >
-                  {InProgressTasks.map((t , index) => (
+                {TodoTasks.map((t, index) => (
+                  <div
+                    className=" px-3  "
+                    key={t.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("taskId", t.id);
+                    }}
+                  >
                     <div
-                      className=" px-3  "
-                      key={t.id}
-                      draggable
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData("taskId", t.id);
-                      }}
+                      className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
                     >
-                      <div
-                        className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
-                      >
-                        <div className="flex gap-2 items-center">
+                      <div className="flex gap-2 items-center">
+                        <div
+                          className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
+                        >
+                          {" "}
                           <div
-                            className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                          >
-                            {" "}
-                            <div
-                              className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#d65151]"}`}
-                            ></div>{" "}
-                            {t.priority === 0
-                              ? "Low"
-                              : t.priority === 1
-                                ? "Medium"
-                                : "High"}
-                          </div>
-                          <p className="text-[11px] text-[#94A3B8]">
-                            {t.taskCode}
-                          </p>
+                            className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
+                          ></div>{" "}
+                          {t.priority === 0
+                            ? "Low"
+                            : t.priority === 1
+                              ? "Medium"
+                              : "High"}
                         </div>
-                        <div className=" py-2">
-                          <h1
-                            className="text-[14px] font-semibold cursor-pointer hover:underline"
-                            onClick={(e) => HandleTaskInfoNavigate(e, t)}
-                          >
-                            {t.title}
-                          </h1>
-                          <p className="text-[12px] text-[#94A3B8]">
-                            
-                            <span className="text-white">📎</span>{" "}
-                            
-                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
-                          </p>
-                        </div>
-                        <div className="border-t-2 flex justify-between items-center pt-2">
-                          <p className="text-[11px]">
-                            <span className="text-white">📅</span>
-                            {new Date(t.dueDate).toLocaleDateString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </p>
-                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 1) % colors.length]}`}>
-                            {t.assignedByName
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase()}
-                          </div>
+                        <p className="text-[11px] text-[#94A3B8]">
+                          {t.taskCode}
+                        </p>
+                      </div>
+                      <div className=" py-2">
+                        <h1
+                          className="text-[14px] font-semibold hover:underline cursor-pointer"
+                          onClick={(e) => HandleTaskInfoNavigate(e, t)}
+                        >
+                          {t.title}
+                        </h1>
+                        <p className="text-[12px] text-[#94A3B8]">
+                          <span className="text-white">📎</span>
+                          {t.filesCount == 1
+                            ? "1 file"
+                            : `${t.filesCount} files`}
+                        </p>
+                      </div>
+                      <div className="border-t-2 flex justify-between items-center pt-2">
+                        <p className="text-[11px]">
+                          <span className="text-white">📅</span>
+                          {new Date(t.dueDate).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </p>
+                        <div
+                          className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[index % colors.length]}`}
+                        >
+                          {t.assignedByName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()}
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div
-                className="border-2 overflow-hidden rounded-lg 
-                 border-t-[5px]  p- w-1/4"
-              >
-                <div className="bg-white flex gap-2 items-center  p-4">
-                  <div>🔍</div>
-                  <h1 className="font-bold text-[13px]">In Review</h1>
-                  <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#EFF6FF] text-[#3B82F6]">
-                    {InReviewTasks.length}
                   </div>
-                </div>
-                <div
-                  className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDrop(e, 4)}
-                >
-                  {InReviewTasks.map((t,index) => (
-                    <div
-                      className=" px-3  "
-                      key={t.id}
-                      draggable
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData("taskId", t.id);
-                      }}
-                    >
-                      <div
-                        className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
-                      >
-                        <div className="flex gap-2 items-center">
-                          <div
-                            className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                          >
-                            {" "}
-                            <div
-                              className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
-                            ></div>{" "}
-                            {t.priority === 0
-                              ? "Low"
-                              : t.priority === 1
-                                ? "Medium"
-                                : "High"}
-                          </div>
-                          <p className="text-[11px] text-[#94A3B8]">
-                            {t.taskCode}
-                          </p>
-                        </div>
-                        <div className=" py-2">
-                          <h1
-                            className="text-[14px] font-semibold cursor-pointer hover:underline"
-                            onClick={(e) => HandleTaskInfoNavigate(e, t)}
-                          >
-                            {t.title}
-                          </h1>
-                          <p className="text-[12px] text-[#94A3B8]">
-                            
-                            <span className="text-white">📎</span>{" "}
-                            
-                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
-                          </p>
-                        </div>
-                        <div className="border-t-2 flex justify-between items-center pt-2">
-                          <p className="text-[11px]">
-                            <span className="text-white">📅</span>
-                            {new Date(t.dueDate).toLocaleDateString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </p>
-                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 2) % colors.length]}`}>
-                            {t.assignedByName
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div
-                className="border-2 overflow-hidden rounded-lg 
-                 border-t-[5px]  p- w-1/4"
-              >
-                <div className="bg-white flex gap-2 items-center p-4">
-                  <div>✅</div>
-                  <h1 className="font-bold text-[13px]">Done</h1>
-                  <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#ECFDF5] text-[#10B981]">
-                    {DoneTasks.length}
-                  </div>
-                </div>
-                <div
-                  className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDrop(e, 1)}
-                >
-                  {DoneTasks.map((t, index) => (
-                    <div
-                      className=" px-3  "
-                      key={t.id}
-                      draggable
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData("taskId", t.id);
-                      }}
-                    >
-                      <div
-                        className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
-                      >
-                        <div className="flex gap-2 items-center">
-                          <div
-                            className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                          >
-                            {" "}
-                            <div
-                              className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
-                            ></div>{" "}
-                            {t.priority === 0
-                              ? "Low"
-                              : t.priority === 1
-                                ? "Medium"
-                                : "High"}
-                          </div>
-                          <p className="text-[11px] text-[#94A3B8]">
-                            {t.taskCode}
-                          </p>
-                        </div>
-                        <div className=" py-2">
-                          <h1
-                            className="text-[14px] font-semibold cursor-pointer hover:underline"
-                            onClick={(e) => HandleTaskInfoNavigate(e, t)}
-                          >
-                            {t.title}
-                          </h1>
-                          <p className="text-[12px] text-[#94A3B8]">
-                           
-                            <span className="text-white">📎</span>{" "}
-                            
-                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
-                          </p>
-                        </div>
-                        <div className="border-t-2 flex justify-between items-center pt-2">
-                          <p className="text-[11px]">
-                            <span className="text-white">📅</span>
-                            {new Date(t.dueDate).toLocaleDateString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </p>
-                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 3) % colors.length]}`}>
-                            {t.assignedByName
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div
-                className="border-2 overflow-hidden rounded-lg 
-                 border-t-[5px]  p- w-1/4"
-              >
-                <div className="bg-white flex gap-2 items-center p-4">
-                  <div>🔴</div>
-                  <h1 className="font-bold text-[13px]">OverDue</h1>
-                  <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5  text-[#EF4444] bg-[#FEF2F2]">
-                    {OverdueTasks.length}
-                  </div>
-                </div>
-                <div
-                  className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDrop(e, 3)}
-                >
-                  {OverdueTasks.map((t, index) => (
-                    <div
-                      className=" px-3  "
-                      key={t.id}
-                      draggable
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData("taskId", t.id);
-                      }}
-                    >
-                      <div
-                        className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
-                      >
-                        <div className="flex gap-2 items-center">
-                          <div
-                            className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
-                          >
-                            {" "}
-                            <div
-                              className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
-                            ></div>{" "}
-                            {t.priority === 0
-                              ? "Low"
-                              : t.priority === 1
-                                ? "Medium"
-                                : "High"}
-                          </div>
-                          <p className="text-[11px] text-[#94A3B8]">
-                            {t.taskCode}
-                          </p>
-                        </div>
-                        <div className=" py-2">
-                          <h1
-                            className="text-[14px] font-semibold cursor-pointer hover:underline"
-                            onClick={(e) => HandleTaskInfoNavigate(e, t)}
-                          >
-                            {t.title}
-                          </h1>
-                          <p className="text-[12px] text-[#94A3B8]">
-                            
-                            <span className="text-white">📎</span>{" "}
-                            {t.filesCount == 1 ? "1 file" : `${t.filesCount} files`}
-                          </p>
-                        </div>
-                        <div className="border-t-2 flex justify-between items-center pt-2">
-                          <p className="text-[11px]">
-                            <span className="text-white">📅</span>
-                            {new Date(t.dueDate).toLocaleDateString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </p>
-                          <div className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 4) % colors.length]}`}>
-                            {t.assignedByName
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                ))}
               </div>
             </div>
+            <div
+              className="border-2 overflow-hidden rounded-lg 
+                 border-t-[5px]   w-1/4"
+            >
+              <div className="bg-white flex gap-2 items-center  p-4">
+                <div>⌛</div>
+                <h1 className="font-bold text-[13px]">In Progress</h1>
+                <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#EFF6FF] text-[#3B82F6]">
+                  {InProgressTasks.length}
+                </div>
+              </div>
+              <div
+                className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => handleDrop(e, 2)}
+              >
+                {InProgressTasks.map((t, index) => (
+                  <div
+                    className=" px-3  "
+                    key={t.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("taskId", t.id);
+                    }}
+                  >
+                    <div
+                      className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
+                    >
+                      <div className="flex gap-2 items-center">
+                        <div
+                          className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
+                        >
+                          {" "}
+                          <div
+                            className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#d65151]"}`}
+                          ></div>{" "}
+                          {t.priority === 0
+                            ? "Low"
+                            : t.priority === 1
+                              ? "Medium"
+                              : "High"}
+                        </div>
+                        <p className="text-[11px] text-[#94A3B8]">
+                          {t.taskCode}
+                        </p>
+                      </div>
+                      <div className=" py-2">
+                        <h1
+                          className="text-[14px] font-semibold cursor-pointer hover:underline"
+                          onClick={(e) => HandleTaskInfoNavigate(e, t)}
+                        >
+                          {t.title}
+                        </h1>
+                        <p className="text-[12px] text-[#94A3B8]">
+                          <span className="text-white">📎</span>
+                          {t.filesCount == 1
+                            ? "1 file"
+                            : `${t.filesCount} files`}
+                        </p>
+                      </div>
+                      <div className="border-t-2 flex justify-between items-center pt-2">
+                        <p className="text-[11px]">
+                          <span className="text-white">📅</span>
+                          {new Date(t.dueDate).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </p>
+                        <div
+                          className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 1) % colors.length]}`}
+                        >
+                          {t.assignedByName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div
+              className="border-2 overflow-hidden rounded-lg 
+                 border-t-[5px]  p- w-1/4"
+            >
+              <div className="bg-white flex gap-2 items-center  p-4">
+                <div>🔍</div>
+                <h1 className="font-bold text-[13px]">In Review</h1>
+                <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#EFF6FF] text-[#3B82F6]">
+                  {InReviewTasks.length}
+                </div>
+              </div>
+              <div
+                className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => handleDrop(e, 4)}
+              >
+                {InReviewTasks.map((t, index) => (
+                  <div
+                    className=" px-3  "
+                    key={t.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("taskId", t.id);
+                    }}
+                  >
+                    <div
+                      className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
+                    >
+                      <div className="flex gap-2 items-center">
+                        <div
+                          className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
+                        >
+                          {" "}
+                          <div
+                            className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
+                          ></div>{" "}
+                          {t.priority === 0
+                            ? "Low"
+                            : t.priority === 1
+                              ? "Medium"
+                              : "High"}
+                        </div>
+                        <p className="text-[11px] text-[#94A3B8]">
+                          {t.taskCode}
+                        </p>
+                      </div>
+                      <div className=" py-2">
+                        <h1
+                          className="text-[14px] font-semibold cursor-pointer hover:underline"
+                          onClick={(e) => HandleTaskInfoNavigate(e, t)}
+                        >
+                          {t.title}
+                        </h1>
+                        <p className="text-[12px] text-[#94A3B8]">
+                          <span className="text-white">📎</span>
+                          {t.filesCount == 1
+                            ? "1 file"
+                            : `${t.filesCount} files`}
+                        </p>
+                      </div>
+                      <div className="border-t-2 flex justify-between items-center pt-2">
+                        <p className="text-[11px]">
+                          <span className="text-white">📅</span>
+                          {new Date(t.dueDate).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </p>
+                        <div
+                          className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 2) % colors.length]}`}
+                        >
+                          {t.assignedByName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div
+              className="border-2 overflow-hidden rounded-lg 
+                 border-t-[5px]  p- w-1/4"
+            >
+              <div className="bg-white flex gap-2 items-center p-4">
+                <div>✅</div>
+                <h1 className="font-bold text-[13px]">Done</h1>
+                <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5 bg-[#ECFDF5] text-[#10B981]">
+                  {DoneTasks.length}
+                </div>
+              </div>
+              <div
+                className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => handleDrop(e, 1)}
+              >
+                {DoneTasks.map((t, index) => (
+                  <div
+                    className=" px-3  "
+                    key={t.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("taskId", t.id);
+                    }}
+                  >
+                    <div
+                      className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
+                    >
+                      <div className="flex gap-2 items-center">
+                        <div
+                          className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
+                        >
+                          {" "}
+                          <div
+                            className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
+                          ></div>{" "}
+                          {t.priority === 0
+                            ? "Low"
+                            : t.priority === 1
+                              ? "Medium"
+                              : "High"}
+                        </div>
+                        <p className="text-[11px] text-[#94A3B8]">
+                          {t.taskCode}
+                        </p>
+                      </div>
+                      <div className=" py-2">
+                        <h1
+                          className="text-[14px] font-semibold cursor-pointer hover:underline"
+                          onClick={(e) => HandleTaskInfoNavigate(e, t)}
+                        >
+                          {t.title}
+                        </h1>
+                        <p className="text-[12px] text-[#94A3B8]">
+                          <span className="text-white">📎</span>
+
+                          {t.filesCount == 1
+                            ? "1 file"
+                            : `${t.filesCount} files`}
+                        </p>
+                      </div>
+                      <div className="border-t-2 flex justify-between items-center pt-2">
+                        <p className="text-[11px]">
+                          <span className="text-white">📅</span>
+                          {new Date(t.dueDate).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </p>
+                        <div
+                          className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 3) % colors.length]}`}
+                        >
+                          {t.assignedByName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div
+              className="border-2 overflow-hidden rounded-lg 
+                 border-t-[5px]  p- w-1/4"
+            >
+              <div className="bg-white flex gap-2 items-center p-4">
+                <div>🔴</div>
+                <h1 className="font-bold text-[13px]">OverDue</h1>
+                <div className="border w-5 flex items-center justify-center rounded-full text-[11px] font-bold h-5  text-[#EF4444] bg-[#FEF2F2]">
+                  {OverdueTasks.length}
+                </div>
+              </div>
+              <div
+                className="overflow-scroll h-[78vh] pt-3 flex flex-col gap-3"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => handleDrop(e, 3)}
+              >
+                {OverdueTasks.map((t, index) => (
+                  <div
+                    className=" px-3  "
+                    key={t.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("taskId", t.id);
+                    }}
+                  >
+                    <div
+                      className={`border border-l-[4px] ${t.priority === 0 ? "border-[#10B981]" : t.priority === 1 ? "border-[#F59E0B]" : "border-[#EF4444]"} p-4 rounded-lg bg-white`}
+                    >
+                      <div className="flex gap-2 items-center">
+                        <div
+                          className={` flex py-1 text-[10px] font-semibold items-center justify-center gap-1 px-2 rounded-full ${t.priority === 0 ? "text-[#10B981] bg-[#F0FDF4]" : t.priority === 1 ? "text-[#F59E0B] bg-[#FFFBEB]" : "text-[#EF4444] bg-[#FEF2F2]"}`}
+                        >
+                          {" "}
+                          <div
+                            className={`w-2 h-2 rounded-full ${t.priority === 0 ? "bg-[#10B981]" : t.priority === 1 ? "bg-[#F59E0B]" : "bg-[#EF4444]"}`}
+                          ></div>{" "}
+                          {t.priority === 0
+                            ? "Low"
+                            : t.priority === 1
+                              ? "Medium"
+                              : "High"}
+                        </div>
+                        <p className="text-[11px] text-[#94A3B8]">
+                          {t.taskCode}
+                        </p>
+                      </div>
+                      <div className=" py-2">
+                        <h1
+                          className="text-[14px] font-semibold cursor-pointer hover:underline"
+                          onClick={(e) => HandleTaskInfoNavigate(e, t)}
+                        >
+                          {t.title}
+                        </h1>
+                        <p className="text-[12px] text-[#94A3B8]">
+                          <span className="text-white">📎</span>
+                          {t.filesCount == 1
+                            ? "1 file"
+                            : `${t.filesCount} files`}
+                        </p>
+                      </div>
+                      <div className="border-t-2 flex justify-between items-center pt-2">
+                        <p className="text-[11px]">
+                          <span className="text-white">📅</span>
+                          {new Date(t.dueDate).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </p>
+                        <div
+                          className={`w-5 h-5 flex items-center text-white  text-[10px] font-bold justify-center rounded-full border p-3 ${colors[(index + 4) % colors.length]}`}
+                        >
+                          {t.assignedByName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

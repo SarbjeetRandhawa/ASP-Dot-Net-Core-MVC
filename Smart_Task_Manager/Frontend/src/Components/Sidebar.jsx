@@ -149,6 +149,7 @@ function Sidebar() {
               </p>
             </div>
           </div>
+          
           <button
             onClick={() => dispatch(logout())}
             type="button"

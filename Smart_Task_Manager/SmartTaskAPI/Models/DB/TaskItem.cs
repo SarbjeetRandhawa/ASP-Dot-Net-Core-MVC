@@ -13,6 +13,7 @@ namespace SmartTaskAPI.Models.DB
         public string Description { get; set; }
         public int Priority { get; set; }
         public int Status { get; set; }
+        public bool OverdueFlag { get; set; } = false;
         public string AssignedToUserId { get; set; }
         public ApplicationUser AssignedToUser { get; set; }
         public string CreatedByUserId { get; set; }

@@ -11,7 +11,7 @@ import {
 
 import { useState } from "react";
 import Sidebar from "../Sidebar";
-import { fetchTaskById , deleteTask } from "../../features/Task/TaskSlice";
+import { fetchTaskById, deleteTask , updateTaskStatus} from "../../features/Task/TaskSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchComments, createComment } from "../../features/Task/CommentSlice";
@@ -65,13 +65,13 @@ function TaskDetail() {
     try {
       await navigator.clipboard.writeText(taskLink);
       await Swal.fire({
-              position: "top-end",
-              title: "Copied!",
-              text: "Task link copied to clipboard",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+        position: "top-end",
+        title: "Copied!",
+        text: "Task link copied to clipboard",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } catch (error) {
       console.error("Failed to copy link: ", error);
       toast.error("Failed to copy link");
@@ -80,35 +80,34 @@ function TaskDetail() {
 
   const HandleDeleteTask = () => {
     Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#d33",
-          cancelButtonColor: "#3085d6",
-          confirmButtonText: "Yes, delete it!",
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            try {
-              await dispatch(deleteTask(SelectedTask?.id)).unwrap();
-              Swal.fire({
-                title: "Deleted!",
-                text: "Task has been deleted.",
-                icon: "success",
-              });
-              navigate("/tasks");
-            } catch (error) {
-              Swal.fire({
-                title: "Failed",
-                text: "Deleteion failed. Please try again.",
-                icon: "error",
-              });
-              // console.log(error);
-              
-            }
-          }
-        });
-  }
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await dispatch(deleteTask(SelectedTask?.id)).unwrap();
+          Swal.fire({
+            title: "Deleted!",
+            text: "Task has been deleted.",
+            icon: "success",
+          });
+          navigate("/tasks");
+        } catch (error) {
+          Swal.fire({
+            title: "Failed",
+            text: "Deleteion failed. Please try again.",
+            icon: "error",
+          });
+          console.log(error);
+        }
+      }
+    });
+  };
 
   const handleAdd = () => {
     console.log(replyingto);
@@ -216,6 +215,11 @@ function TaskDetail() {
   const HandleMentionClick = (mention) => {
     console.log("", mention);
   };
+
+  const handleDoneClick  = async () => {
+    await dispatch(updateTaskStatus({taskId: SelectedTask?.id, status: 1}));
+    navigate("/tasks");
+  }
 
   return (
     <>
@@ -453,7 +457,6 @@ function TaskDetail() {
                           <p>
                             {new Date(f.uploadedAt).toLocaleDateString(
                               undefined,
-
                               {
                                 month: "short",
                                 day: "2-digit",
@@ -483,6 +486,7 @@ function TaskDetail() {
                               <div
                                 className={`w-8 h-8 ${colors[index % colors.length]} rounded-full flex items-center justify-center`}
                               >
+
                                 <span className="text-white text-[10px] font-bold">
                                   {c.commentedbyUserName
                                     .split(" ")
@@ -779,6 +783,17 @@ function TaskDetail() {
                             {StatusMap[SelectedTask?.status] ===
                               "In Progress" && <div>✅</div>}
                           </div>
+                          <div
+                            className="flex items-center w-32 gap-2 cursor-pointer"
+                            // onClick={() => setTaskStatus("In Progress")}
+                          >
+                            <div className="w-3 h-3 bg-[#56d432] rounded-full"></div>
+                            <p className="text-[12px] font-semibold">
+                              Done
+                            </p>
+                            {StatusMap[SelectedTask?.status] ===
+                              "Done" && <div>✅</div>}
+                          </div>
                         </div>
                       </div>
 
@@ -916,19 +931,25 @@ function TaskDetail() {
                       </h1>
                     </div>
                     <div className="p-4 flex flex-col gap-2">
-                      <div className="shadow-md  hover:border-blue-500  border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
+                      <div 
+                      onClick={handleDoneClick}
+                      className="shadow-md  hover:border-blue-500  border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
+
                         ✅ Mark as Done
                       </div>
                       <div className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer">
                         ✉️ Send Reminder
                       </div>
-                      <div className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer"
-                      onClick={handleCopyLink}
+                      <div
+                        className="shadow-md border-2 hover:border-blue-500 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer"
+                        onClick={handleCopyLink}
                       >
                         🔗 Copy Link
                       </div>
-                      <div className=" border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer text-[#EF4444] border-[#EF4444] bg-[#fef2f2]"
-                      onClick={HandleDeleteTask}>
+                      <div
+                        className=" border-2 px-4 py-2 font-semibold text-[12px] rounded-md cursor-pointer text-[#EF4444] border-[#EF4444] bg-[#fef2f2]"
+                        onClick={HandleDeleteTask}
+                      >
                         🗑️ Delete Task
                       </div>
                     </div>
