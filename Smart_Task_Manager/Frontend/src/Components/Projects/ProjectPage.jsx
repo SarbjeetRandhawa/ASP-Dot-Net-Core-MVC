@@ -57,7 +57,7 @@ function ProjectPage() {
 
 
 
-  const formFullDate = (date) => {search
+  const formFullDate = (date) => {
     if (!date) return "";
 ``
     return new Date(date).toLocaleDateString("en-US", {
