@@ -64,7 +64,7 @@ function ProjectPage() {
       month: "short",
       day: "numeric",
     });
-  };
+  }
 
   const HandleProjectInfoNavigate = (project) => {
     navigate(`/projects/${project.id}-${createSlug(project.name)}`);
