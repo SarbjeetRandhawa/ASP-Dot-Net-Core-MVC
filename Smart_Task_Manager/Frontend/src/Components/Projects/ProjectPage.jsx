@@ -55,7 +55,9 @@ function ProjectPage() {
     return p.name.toLowerCase().includes(debounceSearch.toLowerCase());
   });
 
-  const formFullDate = (date) => {
+
+
+  const formFullDate = (date) => {search
     if (!date) return "";
 ``
     return new Date(date).toLocaleDateString("en-US", {
