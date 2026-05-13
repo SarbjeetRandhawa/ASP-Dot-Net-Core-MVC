@@ -64,8 +64,8 @@ function ProjectPage() {
       month: "short",
       day: "numeric",
     });
-  }
-
+  };
+//adding more comments for git testing
   const HandleProjectInfoNavigate = (project) => {
     navigate(`/projects/${project.id}-${createSlug(project.name)}`);
   };
